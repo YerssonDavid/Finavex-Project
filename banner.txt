@@ -1,0 +1,6 @@
+${AnsiColor.GREEN}${AnsiColor.BRIGHT_GREEN}███████╗██╗███╗   ██╗ █████╗ ██╗   ██╗███████╗██╗  ██╗
+${AnsiColor.GREEN}██╔═══${AnsiColor.BRIGHT_GREEN}═╝██║████╗  ██║██╔══██╗██║   ██║██╔════╝╚█${AnsiColor.GREEN}█╗██╔╝
+${AnsiColor.GREEN}███████╗██║█${AnsiColor.BRIGHT_GREEN}█╔██╗ ██║███████║██║   ██║████${AnsiColor.GREEN}███╗ ╚███╔╝ 
+${AnsiColor.GREEN}██╔════╝██║██║╚██╗${AnsiColor.BRIGHT_GREEN}██║██╔══██║╚██╗ ██${AnsiColor.GREEN}╔╝██╔════╝ ██╔██╗ 
+${AnsiColor.GREEN}██║     ██║██║ ╚████║██║${AnsiColor.BRIGHT_GREEN}  ██║ ${AnsiColor.GREEN}╚████╔╝ ███████╗██╔╝ ╚██
+${AnsiColor.GREEN}╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝${AnsiColor.GREEN}  ╚═╝ ${AnsiColor.BRIGHT_GREEN} ╚═══╝  ╚══════╝╚═╝   ╚═
