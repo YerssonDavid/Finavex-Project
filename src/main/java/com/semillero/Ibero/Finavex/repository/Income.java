@@ -1,4 +1,6 @@
 package com.semillero.Ibero.Finavex.repository;
 
-public interface ingresos {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface Income extends JpaRepository<Income,Long> {
 }

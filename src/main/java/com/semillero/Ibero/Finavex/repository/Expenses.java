@@ -1,4 +1,6 @@
 package com.semillero.Ibero.Finavex.repository;
 
-public interface egresos {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface Expenses extends JpaRepository<Expenses,Long> {
 }
