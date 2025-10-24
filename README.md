@@ -4,7 +4,7 @@
 
 ### _Tu Aliado Inteligente en Finanzas Personales_ 🚀
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
 [![Finance](https://img.shields.io/badge/Category-Personal%20Finance-brightgreen.svg)]()
 [![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red.svg)]()
