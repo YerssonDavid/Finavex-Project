@@ -68,8 +68,8 @@ Encuentra algo que no funciona? [Repórtalo aquí](../../issues/new?labels=bug)
 
 <div align="center">
 
-[![GitHub stars](https://img.shields.io/github/stars/tu-usuario/finavex?style=for-the-badge&logo=github&color=yellow)](https://github.com/tu-usuario/finavex/stargazers)
-[![GitHub watchers](https://img.shields.io/github/watchers/tu-usuario/finavex?style=for-the-badge&logo=github&color=blue)](https://github.com/tu-usuario/finavex/watchers)
+[![GitHub stars](https://img.shields.io/github/stars/YerssonDavid/Finavex-Project?style=for-the-badge&logo=github&color=yellow)](https://github.com/YerssonDavid/Finavex-Project/stargazers)
+[![GitHub watchers](https://img.shields.io/github/watchers/YerssonDavid/Finavex-Project?style=for-the-badge&logo=github&color=blue)](https://github.com/YerssonDavid/Finavex-Project/watchers)
 
 **¡Gracias por creer en Finavex! 🚀**
 
