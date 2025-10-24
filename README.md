@@ -5,8 +5,9 @@
 ### _Tu Aliado Inteligente en Finanzas Personales_ 🚀
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
-[![Finance](https://img.shields.io/badge/Category-Personal%20Finance-brightgreen.svg)]()
+[![Status](https://img.shields.io/badge/Status-Active-green.svg)](https://github.com/tu-usuario/finavex)
+![Development Status](https://img.shields.io/badge/Development-In%20Progress-yellow)
+[![Category](https://img.shields.io/badge/Category-Personal%20Finance-informational)](https://github.com/tu-usuario/finavex)
 [![Made with Love](https://img.shields.io/badge/Made%20with-%E2%9D%A4-red.svg)]()
 
 </div>
@@ -45,5 +46,31 @@ Con **Finavex**, no solo registras números, ¡transformas tu relación con el d
 ### 💡 _"El control de tus finanzas comienza con un solo paso"_ 💡
 
 **¡Comienza tu viaje hacia la libertad financiera con Finavex hoy!** 🌟
+
+</div>
+
+===========
+>[!NOTE]
+>**🚧 En desarrollo**
+
+### 💖 Apoya el Desarrollo
+
+Tu apoyo es fundamental para que Finavex siga creciendo:
+
+#### ⭐ Dale una Estrella
+Si te gusta la idea del proyecto, **dale una estrella**. Esto nos motiva y ayuda a otros a descubrirlo.
+
+#### 💡 Comparte Ideas
+¿Tienes sugerencias? [Abre un issue](../../issues/new) y comparte tus ideas.
+
+#### 🐛 Reporta Bugs
+Encuentra algo que no funciona? [Repórtalo aquí](../../issues/new?labels=bug)
+
+<div align="center">
+
+[![GitHub stars](https://img.shields.io/github/stars/tu-usuario/finavex?style=for-the-badge&logo=github&color=yellow)](https://github.com/tu-usuario/finavex/stargazers)
+[![GitHub watchers](https://img.shields.io/github/watchers/tu-usuario/finavex?style=for-the-badge&logo=github&color=blue)](https://github.com/tu-usuario/finavex/watchers)
+
+**¡Gracias por creer en Finavex! 🚀**
 
 </div>
