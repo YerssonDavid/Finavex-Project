@@ -49,7 +49,7 @@ Con **Finavex**, no solo registras números, ¡transformas tu relación con el d
 
 </div>
 
-===========
+-------
 >[!NOTE]
 >**🚧 En desarrollo**
 
