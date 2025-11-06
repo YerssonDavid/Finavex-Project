@@ -15,6 +15,8 @@ jobs:
     name: Frontend Linting
     runs-on: ubuntu-latest
     continue-on-error: true  # ESLint configuration issues with Next.js 15
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -38,6 +40,8 @@ jobs:
   frontend-build:
     name: Frontend Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -72,6 +76,8 @@ jobs:
   typescript-check:
     name: TypeScript Type Checking
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
