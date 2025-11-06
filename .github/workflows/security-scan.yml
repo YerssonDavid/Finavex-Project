@@ -60,14 +60,14 @@ jobs:
       - name: Run npm audit
         run: |
           cd frontend/frontend
-          # Allow moderate vulnerabilities to not fail the build
-          # Exit code 1-15 means vulnerabilities found but we'll log them
-          npm audit --audit-level=moderate || EXIT_CODE=$?; \
-          if [ "${EXIT_CODE:-0}" -gt 15 ]; then exit $EXIT_CODE; fi
+          # npm audit returns exit code 0 for no vulnerabilities, >0 for vulnerabilities found
+          # We allow the audit to report but continue on non-critical issues
+          npm audit --audit-level=moderate || true
       
-      - name: Run npm audit for production
+      - name: Run npm audit for production (strict)
         run: |
           cd frontend/frontend
+          # This will fail the build if high or critical vulnerabilities are found
           npm audit --production --audit-level=high
   
   code-security-scan:
@@ -108,34 +108,38 @@ jobs:
           echo "🔍 Scanning for sensitive files and data patterns..."
           
           # Check for common sensitive files that shouldn't be committed
-          SENSITIVE_FILES=(
-            ".env"
-            ".env.local"
-            ".env.production"
-            "*.pem"
-            "*.key"
-            "*.p12"
-            "*.pfx"
-            "*.jks"
-            "*.keystore"
-            "id_rsa"
-            "id_dsa"
-            "*.ppk"
-            "credentials.json"
-            "secrets.yaml"
-            "secrets.yml"
-          )
-          
+          # Using a single find command with multiple patterns for efficiency
+          echo "Checking for sensitive files..."
           FOUND_SENSITIVE=0
           
-          for pattern in "${SENSITIVE_FILES[@]}"; do
-            files=$(find . -type f -name "$pattern" ! -path "*/node_modules/*" ! -path "*/.git/*" ! -name "*.example" ! -name "*.sample" 2>/dev/null || true)
-            if [ ! -z "$files" ]; then
-              echo "❌ WARNING: Found sensitive file pattern '$pattern':"
-              echo "$files"
-              FOUND_SENSITIVE=1
-            fi
-          done
+          files=$(find . -type f \( \
+            -name ".env" -o \
+            -name ".env.local" -o \
+            -name ".env.production" -o \
+            -name "*.pem" -o \
+            -name "*.key" -o \
+            -name "*.p12" -o \
+            -name "*.pfx" -o \
+            -name "*.jks" -o \
+            -name "*.keystore" -o \
+            -name "id_rsa" -o \
+            -name "id_dsa" -o \
+            -name "*.ppk" -o \
+            -name "credentials.json" -o \
+            -name "secrets.yaml" -o \
+            -name "secrets.yml" \
+          \) \
+          ! -path "*/node_modules/*" \
+          ! -path "*/.git/*" \
+          ! -name "*.example" \
+          ! -name "*.sample" \
+          2>/dev/null || true)
+          
+          if [ ! -z "$files" ]; then
+            echo "❌ WARNING: Found sensitive files:"
+            echo "$files"
+            FOUND_SENSITIVE=1
+          fi
           
           # Check for hardcoded secrets in code files
           echo ""

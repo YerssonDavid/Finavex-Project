@@ -33,7 +33,7 @@ jobs:
       - name: Run ESLint
         run: |
           cd frontend/frontend
-          npm run lint || echo "⚠️ Linting encountered issues but continuing..."
+          npm run lint
   
   frontend-build:
     name: Frontend Build
