@@ -10,25 +10,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { UserPlus } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
+import { useFormUser } from "@/login/Logic/logicFormUser"
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    birthDate: "",
-  })
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("[v0] Registration attempt:", formData)
-    // Add registration logic here
-  }
-
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+  const { register, handleSubmit, onSubmit, errors, isSubmitting } = useFormUser()
 
   return (
     <div className="min-h-screen">
@@ -47,18 +32,115 @@ export default function RegisterPage() {
             <CardDescription className="text-base">Comienza tu transformación financiera hoy</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nombre Completo</Label>
+                <Label htmlFor="name">Nombre</Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Juan Pérez"
-                  value={formData.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  required
+                  placeholder="Juan"
+                  {...register("name")}
                   className="h-11"
                 />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="middleName">Segundo Nombre (Opcional)</Label>
+                <Input
+                  id="middleName"
+                  type="text"
+                  placeholder="Carlos"
+                  {...register("middleName")}
+                  className="h-11"
+                />
+                {errors.middleName && (
+                  <p className="text-sm text-red-500">{errors.middleName.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="surname">Apellido</Label>
+                <Input
+                  id="surname"
+                  type="text"
+                  placeholder="Pérez"
+                  {...register("surname")}
+                  className="h-11"
+                />
+                {errors.surname && (
+                  <p className="text-sm text-red-500">{errors.surname.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="secondSurname">Segundo Apellido (Opcional)</Label>
+                <Input
+                  id="secondSurname"
+                  type="text"
+                  placeholder="García"
+                  {...register("secondSurname")}
+                  className="h-11"
+                />
+                {errors.secondSurname && (
+                  <p className="text-sm text-red-500">{errors.secondSurname.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="documentNumber">Documento de Identidad</Label>
+                <Input
+                    id="documentNumber"
+                    type="number"
+                    placeholder="Identificación colombiana"
+                    {...register("documentNumber", {valueAsNumber: true})}
+                    className="h-11"
+                />
+                {errors.documentNumber && (
+                    <p className="text-sm text-red-500">{errors.documentNumber.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="age">Edad</Label>
+                <Input
+                  id="age"
+                  type="number"
+                  placeholder="18"
+                  {...register("age", { valueAsNumber: true })}
+                  className="h-11"
+                />
+                {errors.age && (
+                  <p className="text-sm text-red-500">{errors.age.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dateOfBirth">Fecha de Nacimiento</Label>
+                <Input
+                  id="dateOfBirth"
+                  type="date"
+                  {...register("dateOfBirth")}
+                  className="h-11"
+                />
+                {errors.dateOfBirth && (
+                  <p className="text-sm text-red-500">{errors.dateOfBirth.message}</p>
+                )}
+              </div>
+
+              <div>
+                  <Label htmlFor="phone">Telefono</Label>
+                  <Input
+                      id="phone"
+                      type="number"
+                      placeholder="3000000000"
+                      {...register("phone", {valueAsNumber: true})}
+                      className="h-11"
+                  />
+                  {errors.phone && (
+                      <p className="text-sm text-red-500">{errors.phone.message}</p>
+                  )}
               </div>
 
               <div className="space-y-2">
@@ -67,11 +149,12 @@ export default function RegisterPage() {
                   id="email"
                   type="email"
                   placeholder="tu@email.com"
-                  value={formData.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
-                  required
+                  {...register("email")}
                   className="h-11"
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -80,27 +163,34 @@ export default function RegisterPage() {
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  value={formData.password}
-                  onChange={(e) => handleChange("password", e.target.value)}
-                  required
+                  {...register("password")}
                   className="h-11"
                 />
+                {errors.password && (
+                  <p className="text-sm text-red-500">{errors.password.message}</p>
+                )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
+                <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
                 <Input
-                  id="birthDate"
-                  type="date"
-                  value={formData.birthDate}
-                  onChange={(e) => handleChange("birthDate", e.target.value)}
-                  required
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  {...register("confirmPassword")}
                   className="h-11"
                 />
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
+                )}
               </div>
 
-              <Button type="submit" className="w-full h-11 bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-                Crear Cuenta Gratis
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full h-11 bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+              >
+                {isSubmitting ? "Creando cuenta..." : "Crear Cuenta Gratis"}
               </Button>
 
               <div className="text-center text-sm text-muted-foreground">
