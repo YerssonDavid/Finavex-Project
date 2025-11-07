@@ -1,12 +1,6 @@
 # Application Configuration
 spring.application.name=${SPRING_APPLICATION_NAME:Finavex}
-server.port=${SERVER_PORT:8080}
-
-# Database Configuration (from Doppler)
-spring.datasource.url=${DATABASE_URL}
-spring.datasource.username=${DATABASE_USER}
-spring.datasource.password=${DATABASE_PASSWORD}
-spring.datasource.driver-class-name=org.postgresql.Driver
+server.port=8080
 
 # JPA Configuration
 spring.jpa.hibernate.ddl-auto=${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
