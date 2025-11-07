@@ -1,0 +1,220 @@
+name: Security Scan - Sensitive Data Detection
+
+on:
+  push:
+    branches:
+      - features
+  pull_request:
+    branches:
+      - features
+
+jobs:
+  secret-scanning:
+    name: Secret and Sensitive Data Scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better scanning
+      
+      - name: Run Gitleaks Secret Scanning
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITLEAKS_LICENSE is optional - only needed for Gitleaks Pro features
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+      
+      - name: Run TruffleHog Secret Scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+  
+  dependency-scanning:
+    name: Dependency Vulnerability Scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: |
+          cd frontend/frontend
+          npm install --legacy-peer-deps
+      
+      - name: Run npm audit
+        run: |
+          cd frontend/frontend
+          # npm audit returns exit code 0 for no vulnerabilities, >0 for vulnerabilities found
+          # We allow the audit to report but continue on non-critical issues
+          npm audit --audit-level=moderate || true
+      
+      - name: Run npm audit for production (strict)
+        run: |
+          cd frontend/frontend
+          # This will fail the build if high or critical vulnerabilities are found
+          npm audit --production --audit-level=high
+  
+  code-security-scan:
+    name: Code Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript, typescript
+          queries: security-and-quality
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript"
+  
+  sensitive-file-check:
+    name: Check for Sensitive Files
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check for sensitive files and patterns
+        run: |
+          echo "🔍 Scanning for sensitive files and data patterns..."
+          
+          # Check for common sensitive files that shouldn't be committed
+          # Using a single find command with multiple patterns for efficiency
+          echo "Checking for sensitive files..."
+          FOUND_SENSITIVE=0
+          
+          files=$(find . -type f \( \
+            -name ".env" -o \
+            -name ".env.local" -o \
+            -name ".env.production" -o \
+            -name "*.pem" -o \
+            -name "*.key" -o \
+            -name "*.p12" -o \
+            -name "*.pfx" -o \
+            -name "*.jks" -o \
+            -name "*.keystore" -o \
+            -name "id_rsa" -o \
+            -name "id_dsa" -o \
+            -name "*.ppk" -o \
+            -name "credentials.json" -o \
+            -name "secrets.yaml" -o \
+            -name "secrets.yml" \
+          \) \
+          ! -path "*/node_modules/*" \
+          ! -path "*/.git/*" \
+          ! -name "*.example" \
+          ! -name "*.sample" \
+          2>/dev/null || true)
+          
+          if [ ! -z "$files" ]; then
+            echo "❌ WARNING: Found sensitive files:"
+            echo "$files"
+            FOUND_SENSITIVE=1
+          fi
+          
+          # Check for hardcoded secrets in code files
+          echo ""
+          echo "🔍 Scanning code files for hardcoded secrets..."
+          
+          # Common patterns for secrets (adjusted for realistic lengths)
+          PATTERNS=(
+            "password\s*=\s*['\"][^'\"]{8,}['\"]"
+            "api[_-]?key\s*=\s*['\"][^'\"]{10,}['\"]"
+            "secret\s*=\s*['\"][^'\"]{10,}['\"]"
+            "token\s*=\s*['\"][^'\"]{10,}['\"]"
+            "AKIA[0-9A-Z]{16}"
+            "AIza[0-9A-Za-z-_]{35}"
+            "sk_live_[0-9a-zA-Z]{24,}"
+            "pk_live_[0-9a-zA-Z]{24,}"
+            "Bearer [A-Za-z0-9-._~+/]+=*"
+            "ghp_[A-Za-z0-9]{36}"
+            "github_pat_[A-Za-z0-9]{22}_[A-Za-z0-9]{59}"
+          )
+          
+          for pattern in "${PATTERNS[@]}"; do
+            results=$(grep -rniE "$pattern" . \
+              --include="*.ts" \
+              --include="*.tsx" \
+              --include="*.js" \
+              --include="*.jsx" \
+              --include="*.json" \
+              --include="*.yaml" \
+              --include="*.yml" \
+              --include="*.env*" \
+              --exclude-dir=node_modules \
+              --exclude-dir=.git \
+              --exclude-dir=.next \
+              --exclude-dir=dist \
+              --exclude-dir=build \
+              --exclude="*.example" \
+              --exclude="*.sample" \
+              2>/dev/null || true)
+            
+            if [ ! -z "$results" ]; then
+              echo "❌ WARNING: Potential secret pattern found: $pattern"
+              echo "$results"
+              FOUND_SENSITIVE=1
+            fi
+          done
+          
+          # Summary
+          echo ""
+          if [ $FOUND_SENSITIVE -eq 1 ]; then
+            echo "❌ SECURITY CHECK FAILED: Sensitive data or credentials detected!"
+            echo "⚠️  Please review and remove any sensitive information before pushing."
+            exit 1
+          else
+            echo "✅ SECURITY CHECK PASSED: No obvious sensitive data detected."
+          fi
+      
+      - name: Check for TODO/FIXME security comments
+        run: |
+          echo "🔍 Checking for security-related TODO/FIXME comments..."
+          
+          results=$(grep -rniE "(TODO|FIXME|XXX).*(security|password|secret|key|token|credential|auth)" . \
+            --include="*.ts" \
+            --include="*.tsx" \
+            --include="*.js" \
+            --include="*.jsx" \
+            --exclude-dir=node_modules \
+            --exclude-dir=.git \
+            --exclude-dir=.next \
+            2>/dev/null || true)
+          
+          if [ ! -z "$results" ]; then
+            echo "⚠️  Found security-related TODO/FIXME comments:"
+            echo "$results"
+            echo ""
+            echo "ℹ️  Please review these comments and ensure no security issues are left unresolved."
+          else
+            echo "✅ No security-related TODO/FIXME comments found."
+          fi
