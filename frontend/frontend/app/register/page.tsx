@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { UserPlus } from "lucide-react"
 import Link from "next/link"
-import { useFormUser } from "@/login/Logic/logicFormUser"
+import { useFormUser } from "@/register/Logic/logicFormUser"
 
 export default function RegisterPage() {
   const { register, handleSubmit, onSubmit, errors, isSubmitting } = useFormUser()

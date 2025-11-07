@@ -33,11 +33,11 @@ function TwinklingStars() {
 
   useEffect(() => {
     // Generate 50 random stars across the screen
-    const generatedStars = Array.from({ length: 50 }, (_, i) => ({
+    const generatedStars = Array.from({ length: 350 }, (_, i) => ({
       id: i,
       x: Math.random() * 100, // percentage
       y: Math.random() * 100, // percentage
-      delay: Math.random() * 5, // random delay between 0-5s
+      delay: Math.random() * 3, // random delay between 0-3s
       size: Math.random() * 2 + 1, // size between 1-3px
     }))
     setStars(generatedStars)
