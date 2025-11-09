@@ -1,4 +1,4 @@
 package com.semillero.Ibero.Finavex.Validated;
 
-public interface create {
+public interface Create {
 }

@@ -4,7 +4,9 @@ import com.semillero.Ibero.Finavex.Validated.Create;
 import com.semillero.Ibero.Finavex.Validated.Update;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -20,7 +22,6 @@ public class User {
     private String name;
 
     @Column(name="Segundo Nombre", nullable = true, length = 100)
-    // OPCIONAL - Sin @NotBlank porque nullable = true
     private String middleName;
 
     @Column(name="Apellido", nullable = false, length = 100)
@@ -28,14 +29,18 @@ public class User {
     private String surname;
 
     @Column(name="Segundo Apellido", nullable = true, length = 100)
-    // OPCIONAL - Sin validación porque nullable = true
     private String secondSurname;
 
-    @Column(name="age", nullable= false, length=3)
-    @NotBlank(groups = {Create.class, Update.class}, message = "La edad es obligatoria")
+    @Column(name="Numero_Documento", nullable = false, length = 11, unique = true)
+    @NotBlank(groups={Create.class, Update.class}, message = "El número de documento es obligatorio")
+    private String documentNumber;
+
+    @Column(name="age", nullable= false)
+    @NotNull(groups = {Create.class, Update.class}, message = "La edad es obligatoria")
+    @Min(value = 18, groups = {Create.class, Update.class}, message = "La edad debe ser mayor a 18")
     private Integer age;
 
-    @Column(name="fecha_nacimiento", nullable = false, length = 8)
+    @Column(name="fecha_nacimiento", nullable = false, length = 10)
     @NotBlank(groups = {Create.class, Update.class}, message = "La fecha de nacimiento es obligatoria")
     private String dateOfBirth;
 
@@ -43,7 +48,7 @@ public class User {
     @NotBlank(groups = {Create.class, Update.class}, message = "El teléfono es obligatorio")
     private String phone;
 
-    @Column(name="email", nullable = false, length = 100, unique = true)
+    @Column(name="email", nullable = false, length = 150, unique = true)
     @NotBlank(groups = {Create.class, Update.class}, message = "El email es obligatorio")
     @Email(groups = {Create.class, Update.class}, message = "Email inválido")
     private String email;

@@ -1,6 +1,13 @@
 package com.semillero.Ibero.Finavex.repository;
 
+import com.semillero.Ibero.Finavex.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface User extends JpaRepository<User, Long> {
+public interface UserR extends JpaRepository<User, Long> {
+
+    //Buscar por cedula
+    boolean existsByDocumentNumber(String documentNumber);
+
+    //Buscar por correo
+    boolean existsByEmail(String email);
 }

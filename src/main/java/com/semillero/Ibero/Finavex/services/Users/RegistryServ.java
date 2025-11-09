@@ -1,5 +1,6 @@
 package com.semillero.Ibero.Finavex.services.Users;
 
+import com.semillero.Ibero.Finavex.dto.ApiResponse;
 import com.semillero.Ibero.Finavex.model.User;
 import com.semillero.Ibero.Finavex.repository.UserR;
 import lombok.RequiredArgsConstructor;
@@ -8,14 +9,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class Registry {
+public class RegistryServ {
     private final UserR userRepository;
 
-    public ResponseEntity<String> registerUser(User user){
-        if(userRepository.existsById(user.getId())){
-            return ResponseEntity.badRequest().body("El usuario ya esta registrado");
+    public ResponseEntity<ApiResponse> registerUser(User user){
+        if(userRepository.existsByDocumentNumber(user.getDocumentNumber()) || userRepository.existsByEmail(user.getEmail())){
+            ResponseEntity.badRequest().body("El usuario ya esta registrado");
+            ApiResponse apiResponse = new ApiResponse("400", "El usuario ya esta registrado", false);
+            return ResponseEntity.badRequest().body(apiResponse);
         }
         userRepository.save(user);
-        return ResponseEntity.ok("Usuario registrado exitosamente");
+        ResponseEntity.ok("Usuario registrado con exiro");
+        ApiResponse apiResponse = new ApiResponse("200", "Usuario registrado exitosamente", true);
+        return ResponseEntity.ok().body(apiResponse);
     }
 }
