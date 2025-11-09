@@ -1,0 +1,17 @@
+# Application Configuration
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  application:
+    name: ${SPRING_APPLICATION_NAME:Finavex}
+
+  # Enable output of ANSI colors in the console
+  output:
+    ansi:
+      enabled: always
+
+server:
+  port: 8080
+
+
