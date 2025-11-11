@@ -1,9 +1,9 @@
-package com.semillero.Ibero.Finavex.controllers.Users;
+package com.semillero.Finavex.controllers.Users;
 
-import com.semillero.Ibero.Finavex.Validated.Create;
-import com.semillero.Ibero.Finavex.dto.ApiResponse;
-import com.semillero.Ibero.Finavex.model.User;
-import com.semillero.Ibero.Finavex.services.Users.RegistryServ;
+import com.semillero.Finavex.Validated.Create;
+import com.semillero.Finavex.dto.ApiResponse;
+import com.semillero.Finavex.model.User;
+import com.semillero.Finavex.services.Users.RegistryServ;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

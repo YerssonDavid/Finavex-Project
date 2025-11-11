@@ -1,8 +1,8 @@
-package com.semillero.Ibero.Finavex.services.Users;
+package com.semillero.Finavex.services.Users;
 
-import com.semillero.Ibero.Finavex.dto.ApiResponse;
-import com.semillero.Ibero.Finavex.model.User;
-import com.semillero.Ibero.Finavex.repository.UserR;
+import com.semillero.Finavex.dto.ApiResponse;
+import com.semillero.Finavex.model.User;
+import com.semillero.Finavex.repository.UserR;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
