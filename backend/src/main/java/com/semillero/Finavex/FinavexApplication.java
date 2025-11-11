@@ -1,4 +1,4 @@
-package com.semillero.Ibero.Finavex;
+package com.semillero.Finavex;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

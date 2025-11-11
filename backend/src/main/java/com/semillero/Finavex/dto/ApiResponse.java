@@ -1,4 +1,4 @@
-package com.semillero.Ibero.Finavex.dto;
+package com.semillero.Finavex.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
