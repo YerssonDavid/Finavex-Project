@@ -1,4 +1,4 @@
-package com.semillero.Ibero.Finavex.Validated;
+package com.semillero.Finavex.Validated;
 
 public interface Delete {
 }

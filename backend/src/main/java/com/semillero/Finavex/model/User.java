@@ -1,7 +1,7 @@
-package com.semillero.Ibero.Finavex.model;
+package com.semillero.Finavex.model;
 
-import com.semillero.Ibero.Finavex.Validated.Create;
-import com.semillero.Ibero.Finavex.Validated.Update;
+import com.semillero.Finavex.Validated.Create;
+import com.semillero.Finavex.Validated.Update;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
