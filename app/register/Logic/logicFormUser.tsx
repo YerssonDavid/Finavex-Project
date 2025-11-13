@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userRegistrySchema, userRegistryType } from "@/shemas/UserRegistry";
 import Swal from 'sweetalert2';
+import { Confetti } from '@neoconfetti/react';
+import {useState} from 'react';
 
 
 type errorResponse = {
@@ -30,9 +32,11 @@ const ERROR_MESSAGES: Record<string, { title: string; icon: 'warning' | 'error' 
 };
 
 export const useFormUser = () => {
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<userRegistryType>({
+    const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<userRegistryType>({
         resolver: zodResolver(userRegistrySchema)
     });
+
+    const [confettiActive, setConfettiActive] = useState(false);
 
     const onSubmit = async (data: userRegistryType) => {
         try {
@@ -52,7 +56,7 @@ export const useFormUser = () => {
                     code: 'UNKNOWN_ERROR'
                 }));
 
-                // ✅ AQUÍ DIFERENCIAMOS POR CÓDIGO
+                // AQUÍ DIFERENCIAMOS POR CÓDIGO
                 const errorConfig = ERROR_MESSAGES[errorData.code];
 
                 if (errorConfig) {
@@ -78,6 +82,9 @@ export const useFormUser = () => {
 
             const result = await response.json();
             console.log(`Usuario creado:`, result);
+            reset();
+
+            setConfettiActive(true);
 
             await Swal.fire({
                 title: 'Registro Exitoso',
@@ -86,6 +93,8 @@ export const useFormUser = () => {
                 timer: 3000,
                 confirmButtonText: 'Aceptar'
             });
+
+            setTimeout(()=> setConfettiActive(false), 3000);
 
         } catch (error) {
             console.error(error);
@@ -106,6 +115,8 @@ export const useFormUser = () => {
         handleSubmit,
         onSubmit,
         errors,
-        isSubmitting
+        isSubmitting,
+        confettiActive,
+        reset
     };
 };
