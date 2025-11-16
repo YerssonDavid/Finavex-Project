@@ -19,10 +19,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Setup Doppler (env variables loader)
-        uses: dopplerhq/cli-action@v2
-        with:
-          doppler-token: ${{ secrets.DOPPLER_TOKEN }}
+      - name: Install Doppler CLI manually
+        run: |
+          curl -Ls https://cli.doppler.com/install.sh | sh
+          doppler -v
+          doppler configure set token ${{ secrets.DOPPLER_TOKEN }}
 
       - name: Build backend app
         working-directory: backend
@@ -31,8 +32,8 @@ jobs:
       - name: Start Spring Boot with Doppler
         working-directory: backend
         run: |
-          doppler run -- java -jar target/*.jar &
-          sleep 12  # DALE TIEMPO A SPRING PARA ARRANCAR
+          nohup doppler run -- java -jar target/*.jar &
+          sleep 12
 
       - name: Download OpenAPI JSON
         run: curl http://localhost:8080/v3/api-docs -o openapi.json
@@ -47,4 +48,3 @@ jobs:
 
       - name: Cleanup
         run: rm openapi.json
-        
