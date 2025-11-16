@@ -1,0 +1,51 @@
+name: Update API Docs to Bump
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build backend
+        working-directory: backend
+        run: mvn -q -DskipTests package
+
+      - name: Start backend JAR
+        working-directory: backend
+        run: |
+          nohup java -jar target/*.jar &
+          sleep 12
+
+      - name: Download OpenAPI JSON
+        run: |
+          echo "Esperando a que la app esté lista..."
+          for i in {1..10}
+          do
+            curl -sf http://localhost:8080/v3/api-docs -o openapi.json && break
+            echo "Reintentando..."
+            sleep 2
+          done
+
+      - name: Push to Bump
+        run: |
+          curl -X PUT \
+            -H "x-token: ${{ secrets.BUMP_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data-binary @openapi.json \
+            "https://bump.sh/api/v1/versions/YOUR_VERSION_ID/specification"
+
+      - name: Cleanup
+        run: rm openapi.json
