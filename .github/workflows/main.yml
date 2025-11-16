@@ -26,12 +26,12 @@ jobs:
 
       - name: Build backend app
         working-directory: backend
-        run: mvn -DskipTests package
+        run: doppler run -- mvn -q -DskipTests package
 
       - name: Start Spring Boot with Doppler
         working-directory: backend
         run: |
-          nohup doppler run -- java -jar target/*.jar &
+          doppler run -- java -jar target/*.jar &
           sleep 12  # DALE TIEMPO A SPRING PARA ARRANCAR
 
       - name: Download OpenAPI JSON
@@ -47,3 +47,4 @@ jobs:
 
       - name: Cleanup
         run: rm openapi.json
+        
