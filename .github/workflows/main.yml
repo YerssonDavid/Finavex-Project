@@ -19,27 +19,25 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Build backend
-        working-directory: backend
-        run: mvn -q -DskipTests package
+      - name: Setup Doppler (env variables loader)
+        uses: dopplerhq/cli-action@v2
+        with:
+          doppler-token: ${{ secrets.DOPPLER_TOKEN }}
 
-      - name: Start backend JAR
+      - name: Build backend app
+        working-directory: backend
+        run: mvn -DskipTests package
+
+      - name: Start Spring Boot with Doppler
         working-directory: backend
         run: |
-          nohup java -jar target/*.jar &
-          sleep 12
+          nohup doppler run -- java -jar target/*.jar &
+          sleep 12  # DALE TIEMPO A SPRING PARA ARRANCAR
 
       - name: Download OpenAPI JSON
-        run: |
-          echo "Esperando a que la app esté lista..."
-          for i in {1..10}
-          do
-            curl -sf http://localhost:8080/v3/api-docs -o openapi.json && break
-            echo "Reintentando..."
-            sleep 2
-          done
+        run: curl http://localhost:8080/v3/api-docs -o openapi.json
 
-      - name: Push to Bump
+      - name: Push new OpenAPI spec to Bump
         run: |
           curl -X PUT \
             -H "x-token: ${{ secrets.BUMP_TOKEN }}" \
