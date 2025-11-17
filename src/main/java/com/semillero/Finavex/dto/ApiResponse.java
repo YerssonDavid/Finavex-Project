@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApiResponse {
-    public String code;
-    public String message;
-    public boolean success;
+    private String code;
+    private String message;
+    private boolean success;
 }
