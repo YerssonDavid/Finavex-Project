@@ -46,7 +46,7 @@ public class User {
 
     @Column(name="telefono", nullable = false, length = 10)
     @NotBlank(groups = {Create.class, Update.class}, message = "El teléfono es obligatorio")
-    private String phone;
+    private Long phone;
 
     @Column(name="email", nullable = false, length = 150, unique = true)
     @NotBlank(groups = {Create.class, Update.class}, message = "El email es obligatorio")
