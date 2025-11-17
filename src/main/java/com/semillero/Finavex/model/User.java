@@ -33,7 +33,7 @@ public class User {
 
     @Column(name="Numero_Documento", nullable = false, length = 11, unique = true)
     @NotBlank(groups={Create.class, Update.class}, message = "El número de documento es obligatorio")
-    private String documentNumber;
+    private Long documentNumber;
 
     @Column(name="age", nullable= false)
     @NotNull(groups = {Create.class, Update.class}, message = "La edad es obligatoria")
