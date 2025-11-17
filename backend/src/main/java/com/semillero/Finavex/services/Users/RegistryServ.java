@@ -26,7 +26,6 @@ public class RegistryServ {
         user.setPassword(hash);
 
         userRepository.save(user);
-        ResponseEntity.ok("Usuario registrado con exito");
         ApiResponse apiResponse = new ApiResponse("200", "Usuario registrado exitosamente", true);
         return ResponseEntity.ok().body(apiResponse);
     }
