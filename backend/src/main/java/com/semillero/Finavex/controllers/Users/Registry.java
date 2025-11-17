@@ -4,6 +4,9 @@ import com.semillero.Finavex.Validated.Create;
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.model.User;
 import com.semillero.Finavex.services.Users.RegistryServ;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,20 @@ public class Registry {
     private final RegistryServ registryServ;
 
     @PostMapping("/register")
+    @Operation(
+            summary="Register a new user",
+            description = "Endpoint to register a new user in the application",
+            method = "POST",
+            tags = {"Registry new users"},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "User object that needs to be registered",
+                    content = @Content (
+                            mediaType = "application/json",
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = User.class)
+                    ),
+                    required = true
+            )
+    )
     public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody User user){
         return registryServ.registerUser(user);
     }
