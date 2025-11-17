@@ -16,7 +16,6 @@ public class RegistryServ {
 
     public ResponseEntity<ApiResponse> registerUser(User user){
         if(userRepository.existsByDocumentNumber(user.getDocumentNumber()) || userRepository.existsByEmail(user.getEmail())){
-            ResponseEntity.badRequest().body("El usuario ya esta registrado");
             ApiResponse apiResponse = new ApiResponse("400", "El usuario ya esta registrado", false);
             return ResponseEntity.badRequest().body(apiResponse);
         }
