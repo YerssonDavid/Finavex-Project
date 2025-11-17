@@ -11,16 +11,19 @@ import { Label } from "@/components/ui/label"
 import { LogIn } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import {useForm} from "react-hook-form";
+import {useFormLoginUser} from "@/login/Logic/LogicLoginUser";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  /*const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")*/
 
-  const handleSubmit = (e: React.FormEvent) => {
+  /*const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Login attempt:", { email })
     // Add authentication logic here
-  }
+  }*/
+  const {register, onSubmit, handleSubmit, errors, isSubmitting, reset} = useFormLoginUser();
 
   return (
     <div className="min-h-screen">
@@ -39,15 +42,14 @@ export default function LoginPage() {
             <CardDescription className="text-base">Ingresa a tu cuenta de Finavex</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="tu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  {...register("email")}
                   required
                   className="h-11"
                 />
@@ -59,15 +61,19 @@ export default function LoginPage() {
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
                   required
                   className="h-11"
                 />
               </div>
 
-              <Button type="submit" className="w-full h-11 bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-                Iniciar Sesión
+              <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-11 bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+                  {isSubmitting ?
+                      "Iniciando  Sesión..."  : "Iniciar sesión"
+                  }
               </Button>
 
               <div className="text-center text-sm text-muted-foreground">
