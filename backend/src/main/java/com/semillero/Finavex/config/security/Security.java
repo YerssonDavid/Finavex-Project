@@ -31,6 +31,7 @@ public class Security {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Users/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Users/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/Users/login").permitAll()
                         //Permit access without authorization to Swagger UI and API docs from Route "http://localhost:8080/swagger-ui/index.html"
                         .requestMatchers(
                                 "/swagger-ui/index.html",
