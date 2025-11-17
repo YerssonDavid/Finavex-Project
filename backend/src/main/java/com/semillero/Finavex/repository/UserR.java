@@ -10,4 +10,6 @@ public interface UserR extends JpaRepository<User, Long> {
 
     //Buscar por correo
     boolean existsByEmail(String email);
+
+    User findByEmail(String email);
 }
