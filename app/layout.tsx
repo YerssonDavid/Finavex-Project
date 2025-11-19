@@ -11,7 +11,6 @@ export const metadata: Metadata = {
     title: "Finavex - Transforma tu Futuro Financiero",
     description:
         "Tu aliado inteligente para gestionar tus finanzas de manera profesional, completamente gratuita y con la seguridad que mereces.",
-    generator: "v0.app",
 }
 
 export default function RootLayout({children,}: Readonly<{
