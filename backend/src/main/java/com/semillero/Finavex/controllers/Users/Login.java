@@ -2,6 +2,7 @@ package com.semillero.Finavex.controllers.Users;
 
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.DtoLogin;
+import com.semillero.Finavex.dto.LoginResponse;
 import com.semillero.Finavex.services.Users.LoginServ;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class Login {
     private final LoginServ loginServ;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> loginUser(@Valid @RequestBody DtoLogin dtoLogin){
+    public ResponseEntity<ApiResponse<LoginResponse>> loginUser(@Valid @RequestBody DtoLogin dtoLogin){
         return loginServ.loginUser(dtoLogin);
     }
 }
