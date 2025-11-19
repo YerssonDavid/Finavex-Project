@@ -24,8 +24,31 @@ export const useFormLoginUser = () => {
                 throw new Error(errorData.message || 'Error desconocido del servidor');
             }
 
-            const responseData = await response.json();
-            console.log(responseData);
+            const resp = await response.json();
+
+            // El backend envía: { data: { userId, email, name } }
+            const nameUser = resp.data?.name ?? "";
+            const emailUser = resp.data?.email ?? "";
+            const userId = resp.data?.userId ?? null;
+
+            const userObj = {
+                nombre: nameUser,
+                apellido: "",
+                email: emailUser
+            };
+
+            setUserData(userObj);
+
+            // Persistir en la misma clave que hidrata el Provider
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('userData', JSON.stringify(userObj));
+                // También guardar el userId por si lo necesitas después
+                if (userId) {
+                    localStorage.setItem('userId', String(userId));
+                }
+            }
+
+            console.log("Inicio de sesión exitoso!");
             reset();
 
 
