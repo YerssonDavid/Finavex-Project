@@ -124,6 +124,17 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Ocultar las flechas de los inputs tipo número */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
 }
 
 /* Minimal custom animations - only keyframes that Tailwind can't handle inline */

@@ -5,7 +5,16 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { TrendingUp, Shield, Zap, BarChart3, Bell, Target } from "lucide-react"
 import Link from "next/link"
+import {Metadata} from "next";
 
+//Metadata
+export const metadata: Metadata = {
+    title: "Finavex - Transforma tu futuro financiero",
+    description: "Page of introduction to Finavex, a free professional financial management platform.",
+    icons: {
+        icon: "/favicon-home.png",
+    },
+}
 export default function HomePage() {
   return (
     <div className="min-h-screen">
