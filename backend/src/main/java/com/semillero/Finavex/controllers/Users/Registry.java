@@ -1,6 +1,5 @@
 package com.semillero.Finavex.controllers.Users;
 
-import com.semillero.Finavex.Validated.Create;
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.model.User;
 import com.semillero.Finavex.services.Users.RegistryServ;
