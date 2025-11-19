@@ -51,6 +51,7 @@ export const useFormLoginUser = () => {
             console.log("Inicio de sesión exitoso!");
             reset();
 
+            router.push('/homePersonal');
 
         } catch (error){
             console.error("El error -> ", {error});
