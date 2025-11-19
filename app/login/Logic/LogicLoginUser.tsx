@@ -2,11 +2,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {userLoginSchema, userLoginType} from "@/shemas/UserLogin";
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
+import { useUser } from "../../../context/ContextUserData";
 
 export const useFormLoginUser = () => {
+
+    const context = useUser();
+
     const {register, handleSubmit, formState: {errors, isSubmitting}, reset} = useForm<userLoginType> ({
         resolver: zodResolver(userLoginSchema),
     })
+
+    if (!context) {
+        throw new Error("useUser must be used within a UserProvider");
+    }
+
+    const { setUserData } = context;
+    const router = useRouter();
 
     const onSubmit = async (data : userLoginType) => {
         try {
@@ -26,7 +38,7 @@ export const useFormLoginUser = () => {
 
             const resp = await response.json();
 
-            // El backend envía: { data: { userId, email, name } }
+            // El backend envía: { data: { userId, email, name
             const nameUser = resp.data?.name ?? "";
             const emailUser = resp.data?.email ?? "";
             const userId = resp.data?.userId ?? null;
