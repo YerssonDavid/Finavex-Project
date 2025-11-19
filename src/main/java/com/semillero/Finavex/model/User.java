@@ -33,7 +33,7 @@ public class User {
 
     @Column(name="Numero_Documento", nullable = false, length = 11, unique = true)
     @NotBlank(groups={Create.class, Update.class}, message = "El número de documento es obligatorio")
-    private Long documentNumber;
+    private String documentNumber;
 
     @Column(name="age", nullable= false)
     @NotNull(groups = {Create.class, Update.class}, message = "La edad es obligatoria")
@@ -46,7 +46,7 @@ public class User {
 
     @Column(name="telefono", nullable = false, length = 10)
     @NotBlank(groups = {Create.class, Update.class}, message = "El teléfono es obligatorio")
-    private Long phone;
+    private String phone;
 
     @Column(name="email", nullable = false, length = 150, unique = true)
     @NotBlank(groups = {Create.class, Update.class}, message = "El email es obligatorio")
