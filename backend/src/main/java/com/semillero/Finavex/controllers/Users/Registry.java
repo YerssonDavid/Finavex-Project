@@ -38,7 +38,7 @@ public class Registry {
                     required = true
             )
     )
-    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody User user){
+    public ResponseEntity<ApiResponse<User>> registerUser(@Valid @RequestBody User user){
         return registryServ.registerUser(user);
     }
 
