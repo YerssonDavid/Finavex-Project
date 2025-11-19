@@ -14,9 +14,14 @@ public class RegistryServ {
     private final UserR userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<ApiResponse> registerUser(User user){
+    public ResponseEntity<ApiResponse<User>> registerUser(User user){
         if(userRepository.existsByDocumentNumber(user.getDocumentNumber()) || userRepository.existsByEmail(user.getEmail())){
-            ApiResponse apiResponse = new ApiResponse("400", "El usuario ya esta registrado", false);
+            ApiResponse<User> apiResponse = ApiResponse.<User>builder()
+                    .status(400)
+                    .message("El usuario ya esta registrado")
+                    .success(false)
+                    .timestamp(java.time.LocalDateTime.now())
+                    .build();
             return ResponseEntity.badRequest().body(apiResponse);
         }
         //Get password and apply hash
@@ -25,8 +30,15 @@ public class RegistryServ {
         //Set hashed password to user
         user.setPassword(hash);
 
+        //Save user in database
         userRepository.save(user);
-        ApiResponse apiResponse = new ApiResponse("200", "Usuario registrado exitosamente", true);
+
+        ApiResponse<User> apiResponse = ApiResponse.<User>builder()
+                .status(200)
+                .message("Usuario registrado exitosamente")
+                .success(true)
+                .timestamp(java.time.LocalDateTime.now())
+                .build();
         return ResponseEntity.ok().body(apiResponse);
     }
 }
