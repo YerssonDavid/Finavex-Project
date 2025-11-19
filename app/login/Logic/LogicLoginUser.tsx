@@ -20,6 +20,7 @@ export const useFormLoginUser = () => {
 
             if(!response.ok){
                 const errorData = await response.json();
+                console.error("Error en el inicio de sesión! -> ", {errorData});
                 throw new Error(errorData.message || 'Error desconocido del servidor');
             }
 
