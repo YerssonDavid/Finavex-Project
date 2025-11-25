@@ -3,33 +3,70 @@ package com.semillero.Finavex.services.Users;
 import com.semillero.Finavex.config.security.Security;
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.DtoLogin;
+import com.semillero.Finavex.dto.LoginResponse;
+import com.semillero.Finavex.exceptions.InvalidCredentialsException;
+import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.model.User;
 import com.semillero.Finavex.repository.UserR;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginServ {
     private final UserR userRepo;
     private final Security security;
 
-    public ResponseEntity<ApiResponse> loginUser(DtoLogin dtoLogin){
-        if(userRepo.existsByEmail(dtoLogin.getEmail())){
-            User userDB = userRepo.findByEmail(dtoLogin.getEmail());
-            boolean validationPassword = security.passwordEncoder().matches(dtoLogin.getPassword(), userDB.getPassword());
-            if(validationPassword){
-                ApiResponse apiResponse = new ApiResponse("200", "Inicio de sesion exitoso", true);
-                return ResponseEntity.ok().body(apiResponse);
-            }
-        } else{
-            ApiResponse apiResponse = new ApiResponse("400", "Ups, usuario no encontrado", false);
-            return ResponseEntity.badRequest().body(apiResponse);
+    /**
+     * Autentica un usuario con sus credenciales
+     * @param dtoLogin DTO con email y contraseña
+     * @return ResponseEntity con los datos del login
+     * @throws UserNotFoundException si el usuario no existe
+     * @throws InvalidCredentialsException si la contraseña es incorrecta
+     */
+    public ResponseEntity<ApiResponse<LoginResponse>> loginUser(DtoLogin dtoLogin){
+        log.info("Intento de inicio de sesión para email: {}", dtoLogin.getEmail());
+
+        // Verificar si el usuario existe
+        if(!userRepo.existsByEmail(dtoLogin.getEmail())) {
+            log.warn("Email no registrado: {}", dtoLogin.getEmail());
+            throw new UserNotFoundException("No existe un usuario registrado con el email: " + dtoLogin.getEmail());
         }
-        ApiResponse apiResponse = new ApiResponse("401", "ERROR, CREDENCIALES INVALIDAS", false);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(apiResponse);
+
+        // Obtener usuario de la base de datos
+        User userDB = userRepo.findByEmail(dtoLogin.getEmail());
+
+        // Verificar contraseña
+        boolean isPasswordValid = security.passwordEncoder().matches(dtoLogin.getPassword(), userDB.getPassword());
+
+        if(!isPasswordValid) {
+            log.warn("Contraseña incorrecta para usuario: {}", dtoLogin.getEmail());
+            throw new InvalidCredentialsException("La contraseña ingresada es incorrecta");
+        }
+
+        // Construir respuesta de login exitoso
+        LoginResponse loginResponse = LoginResponse.builder()
+                .userId(userDB.getId())
+                .email(userDB.getEmail())
+                .name(userDB.getName())
+                .build();
+
+        log.info("Inicio de sesión exitoso para usuario: {}", dtoLogin.getEmail());
+
+        ApiResponse<LoginResponse> apiResponse = ApiResponse.<LoginResponse>builder()
+                .status(HttpStatus.OK.value())
+                .message("Inicio de sesión exitoso")
+                .success(true)
+                .timestamp(LocalDateTime.now())
+                .data(loginResponse)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
     }
 }
