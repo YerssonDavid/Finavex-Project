@@ -1,12 +1,10 @@
 package com.semillero.Finavex.controllers.Users;
 
-import com.semillero.Finavex.Validated.Create;
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.model.User;
 import com.semillero.Finavex.services.Users.RegistryServ;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +36,7 @@ public class Registry {
                     required = true
             )
     )
-    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody User user){
+    public ResponseEntity<ApiResponse<User>> registerUser(@Valid @RequestBody User user){
         return registryServ.registerUser(user);
     }
-
 }
