@@ -2,7 +2,7 @@ package com.semillero.Finavex.services.Users;
 
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.exceptions.DuplicateUserException;
-import com.semillero.Finavex.model.User;
+import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
