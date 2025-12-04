@@ -1,7 +1,7 @@
 package com.semillero.Finavex.controllers.Users;
 
 import com.semillero.Finavex.dto.ApiResponse;
-import com.semillero.Finavex.model.User;
+import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.services.Users.RegistryServ;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
