@@ -57,7 +57,7 @@ public class User {
     @NotBlank(groups = {Create.class, Update.class}, message = "La contraseña es obligatoria")
     private String password;
 
-    @Column(name="number_attempt_password", nullable = false)
+    @Column(name="numero-intentos-contraseña", nullable = false)
     private Integer numberAttemptPassword = 0;
 
 }
