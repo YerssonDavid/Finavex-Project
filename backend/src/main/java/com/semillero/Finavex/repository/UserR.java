@@ -1,6 +1,6 @@
 package com.semillero.Finavex.repository;
 
-import com.semillero.Finavex.model.User;
+import com.semillero.Finavex.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserR extends JpaRepository<User, Long> {
