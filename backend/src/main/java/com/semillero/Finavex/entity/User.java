@@ -1,4 +1,4 @@
-package com.semillero.Finavex.model;
+package com.semillero.Finavex.entity;
 
 import com.semillero.Finavex.Validated.Create;
 import com.semillero.Finavex.Validated.Update;
@@ -56,5 +56,8 @@ public class User {
     @Column(name="password", nullable = false, length = 100)
     @NotBlank(groups = {Create.class, Update.class}, message = "La contraseña es obligatoria")
     private String password;
+
+    @Column(name="numero-intentos-contraseña", nullable = false)
+    private Integer numberAttemptPassword = 0;
 
 }
