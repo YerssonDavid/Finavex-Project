@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class Registry {
     private final RegistryServ registryServ;
 
+    /**
+     * Documentation for user registration - swagger
+    * */
     @PostMapping("/register")
     @Operation(
             summary="Register a new user",
