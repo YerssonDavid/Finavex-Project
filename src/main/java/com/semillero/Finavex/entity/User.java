@@ -1,4 +1,4 @@
-package com.semillero.Finavex.model;
+package com.semillero.Finavex.entity;
 
 import com.semillero.Finavex.Validated.Create;
 import com.semillero.Finavex.Validated.Update;
