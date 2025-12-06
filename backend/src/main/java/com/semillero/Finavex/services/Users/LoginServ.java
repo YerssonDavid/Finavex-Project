@@ -6,8 +6,9 @@ import com.semillero.Finavex.dto.DtoLogin;
 import com.semillero.Finavex.dto.LoginResponse;
 import com.semillero.Finavex.exceptions.InvalidCredentialsException;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
-import com.semillero.Finavex.model.User;
+import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
+import com.semillero.Finavex.services.bucked.RateLimitingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 public class LoginServ {
     private final UserR userRepo;
     private final Security security;
+    private final RateLimitingService rateLimitingService;
 
     /**
      * Autentica un usuario con sus credenciales
@@ -31,6 +33,13 @@ public class LoginServ {
      * @throws InvalidCredentialsException si la contraseña es incorrecta
      */
     public ResponseEntity<ApiResponse<LoginResponse>> loginUser(DtoLogin dtoLogin){
+
+        //Verificamos si el usuario ha superado el límite de intentos
+        if(!rateLimitingService.tryConsume(dtoLogin.getEmail())){
+            log.warn("Limite de intentos agotados para el usuario: {}", dtoLogin.getEmail());
+            throw new InvalidCredentialsException("Usuario bloqueado, intente más tarde.");
+        }
+
         log.info("Intento de inicio de sesión para email: {}", dtoLogin.getEmail());
 
         // Verificar si el usuario existe
@@ -47,6 +56,32 @@ public class LoginServ {
 
         if(!isPasswordValid) {
             log.warn("Contraseña incorrecta para usuario: {}", dtoLogin.getEmail());
+
+            //Actualizamos el número de intentos fallidos en la base de datos
+            int numberAttemptPassword = userDB.getNumberAttemptPassword() + 1;
+            userDB.setNumberAttemptPassword(numberAttemptPassword);
+            userRepo.save(userDB);
+
+            if(numberAttemptPassword >= 3){
+                log.error("Usuario {} bloqueado por múltiples intentos fallidos de inicio de sesión", dtoLogin.getEmail());
+                ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
+                        .status(HttpStatus.LOCKED.value())
+                        .message("Usuario bloqueado por múltiples intentos fallidos de inicio de sesión")
+                        .success(false)
+                        .timestamp(LocalDateTime.now())
+                        .data(null)
+                        .build();
+                throw new InvalidCredentialsException("Usuario bloquaeado por múltiples intentos faliidos de inisio de sesión");
+            } else if (numberAttemptPassword < 3) {
+                log.warn("Número de intentos restantes: {}", 3 - numberAttemptPassword);
+                ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
+                        .status(HttpStatus.LOCKED.value())
+                        .message("Número de intentos restantes: " + (3 - numberAttemptPassword))
+                        .success(false)
+                        .timestamp(LocalDateTime.now())
+                        .data(null)
+                        .build();
+            }
             throw new InvalidCredentialsException("La contraseña ingresada es incorrecta");
         }
 
@@ -56,6 +91,11 @@ public class LoginServ {
                 .email(userDB.getEmail())
                 .name(userDB.getName())
                 .build();
+
+        // Reset number of failed attempts
+        Integer numberAttemptPassword = 0;
+        userDB.setNumberAttemptPassword(numberAttemptPassword);
+        userRepo.save(userDB);
 
         log.info("Inicio de sesión exitoso para usuario: {}", dtoLogin.getEmail());
 
