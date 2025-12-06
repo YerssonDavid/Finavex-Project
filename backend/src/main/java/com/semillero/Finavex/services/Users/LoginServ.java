@@ -8,6 +8,7 @@ import com.semillero.Finavex.exceptions.InvalidCredentialsException;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
+import com.semillero.Finavex.services.bucked.RateLimitingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 public class LoginServ {
     private final UserR userRepo;
     private final Security security;
+    private final RateLimitingService rateLimitingService;
 
     /**
      * Autentica un usuario con sus credenciales
@@ -31,6 +33,13 @@ public class LoginServ {
      * @throws InvalidCredentialsException si la contraseña es incorrecta
      */
     public ResponseEntity<ApiResponse<LoginResponse>> loginUser(DtoLogin dtoLogin){
+
+        //Verificamos si el usuario ha superado el límite de intentos
+        if(!rateLimitingService.tryConsume(dtoLogin.getEmail())){
+            log.warn("Limite de intentos agotados para el usuario: {}", dtoLogin.getEmail());
+            throw new InvalidCredentialsException("Usuario bloqueado, intente más tarde.");
+        }
+
         log.info("Intento de inicio de sesión para email: {}", dtoLogin.getEmail());
 
         // Verificar si el usuario existe
