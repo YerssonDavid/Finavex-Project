@@ -71,7 +71,7 @@ public class LoginServ {
                         .timestamp(LocalDateTime.now())
                         .data(null)
                         .build();
-                throw new InvalidCredentialsException("Usuario bloquaeado por múltiples intentos faliidos de inisio de sesión");
+                throw new InvalidCredentialsException("Usuario bloqueado por múltiples intentos fallidos de inicio de sesión");
             } else if (numberAttemptPassword < 3) {
                 log.warn("Número de intentos restantes: {}", 3 - numberAttemptPassword);
                 ApiResponse<LoginResponse> response = ApiResponse.<LoginResponse>builder()
