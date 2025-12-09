@@ -59,5 +59,4 @@ public class User {
 
     @Column(name="numero-intentos-contraseña", nullable = false)
     private Integer numberAttemptPassword = 0;
-
 }
