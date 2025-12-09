@@ -9,6 +9,7 @@ import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.services.bucked.RateLimitingService;
+import com.semillero.Finavex.services.emails.EmailAlertLogin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class LoginServ {
     private final UserR userRepo;
     private final Security security;
     private final RateLimitingService rateLimitingService;
+    private final EmailAlertLogin emailAlertLogin;
 
     /**
      * Autentica un usuario con sus credenciales
@@ -37,6 +39,7 @@ public class LoginServ {
         //Verificamos si el usuario ha superado el límite de intentos
         if(!rateLimitingService.tryConsume(dtoLogin.getEmail())){
             log.warn("Limite de intentos agotados para el usuario: {}", dtoLogin.getEmail());
+            emailAlertLogin.sendEmail(dtoLogin.getEmail(), "Alerta de seguridad FINAVEX: Usuario bloqueado", "Se han superado el número máximo de intentos fallidos de inicio de sesión.\n Su cuenta ha sido bloqueada temporalmente por razones de seguridad. ");
             throw new InvalidCredentialsException("Usuario bloqueado, intente más tarde.");
         }
 
