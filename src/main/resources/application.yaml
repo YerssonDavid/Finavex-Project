@@ -20,3 +20,10 @@ springdoc:
     enabled: true # Disable Api Docs in production if needed
 
 
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION}
+      refresh-token:
+        expiration: ${JWT_REFRESH_TOKEN}
