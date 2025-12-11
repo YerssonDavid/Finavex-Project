@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.jwt;
 
+import com.semillero.Finavex.dto.DtoLogin;
 import com.semillero.Finavex.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -30,14 +31,14 @@ public class TokenProvider {
     @Value("${jwt.refreshExpiration}")
     private Long refreshExpiration;
 
-    //Convert the secret key to key object
+    //Convert the secret key to key object - firm of the token
     private SecretKey getSingningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     // Generate access token
-    public String generateToken(User user) {
+    public String generateToken(DtoLogin user) {
         //Metadata of user in the Token
         Map<String, Object> claims = new HashMap<>();
         claims.put("Id", user.getId());
@@ -73,7 +74,6 @@ public class TokenProvider {
                 .signWith(getSingningKey()) //Firma el token con la clave secreta
                 .compact();
     }
-
 
     // Extract all claims from token
     public Claims extractAllClaims(String token) {
