@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.Optional;
+
 @Data
 @Getter
 @ToString(exclude = "password")
@@ -18,4 +20,7 @@ public class DtoLogin {
     @NotBlank(message="La contraseña es obligatoria")
     @Size(min=8, message="Minimo puede tener 8 caracteres la contraseña")
     private String password;
+
+    // Get ID user
+    private Optional<Long> id;
 }

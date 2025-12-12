@@ -10,6 +10,7 @@ import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.services.bucked.RateLimitingService;
 import com.semillero.Finavex.services.emails.EmailAlertLogin;
+import com.semillero.Finavex.services.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -26,6 +28,7 @@ public class LoginServ {
     private final Security security;
     private final RateLimitingService rateLimitingService;
     private final EmailAlertLogin emailAlertLogin;
+    private final TokenProvider tokenProvider;
 
     /**
      * Autentica un usuario con sus credenciales
@@ -52,7 +55,7 @@ public class LoginServ {
         }
 
         // Obtener usuario de la base de datos
-        User userDB = userRepo.findByEmail(dtoLogin.getEmail());
+        User userDB = userRepo.findByEmail(dtoLogin.getEmail()).orElseThrow(() -> new UserNotFoundException("Usuerio no encontrado"));
 
         // Verificar contraseña
         boolean isPasswordValid = security.passwordEncoder().matches(dtoLogin.getPassword(), userDB.getPassword());
@@ -88,11 +91,22 @@ public class LoginServ {
             throw new InvalidCredentialsException("La contraseña ingresada es incorrecta");
         }
 
+        // Maps to DtoLogin
+        DtoLogin dtoUserDBJwt = new DtoLogin();
+        Long userId = (userDB.getId());
+        dtoUserDBJwt.setId(Optional.of(userId));
+        dtoUserDBJwt.setEmail(userDB.getEmail());
+        dtoUserDBJwt.setPassword(userDB.getPassword());
+
+        // Generate token
+        String token = tokenProvider.generateToken(dtoUserDBJwt);
+
         // Construir respuesta de login exitoso
         LoginResponse loginResponse = LoginResponse.builder()
                 .userId(userDB.getId())
                 .email(userDB.getEmail())
                 .name(userDB.getName())
+                .token(token)
                 .build();
 
         // Reset number of failed attempts

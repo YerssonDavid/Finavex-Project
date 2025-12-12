@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.jwt;
 
+import com.semillero.Finavex.dto.DtoLogin;
 import com.semillero.Finavex.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -18,29 +19,29 @@ import java.util.Map;
 @Slf4j
 public class TokenProvider {
 
-    // JWT secret key
-    @Value("${jwt.secret}")
+    // JWT secret key, same rute as application.properties
+    @Value("${application.security.jwt.secret-key}")
     private String jwtSecret;
 
-    // JWT expiration time in milliseconds
-    @Value("${jwt.expiration}")
+    // JWT expiration time in milliseconds, same rute as application.properties
+    @Value("${application.security.jwt.expiration}")
     private Long jwtExpiration;
 
-    // Time expiration for refresh tokens in milliseconds
-    @Value("${jwt.refreshExpiration}")
+    // Time expiration for refresh tokens in milliseconds, same rute as application.properties
+    @Value("${application.security.jwt.refresh-token.expiration}")
     private Long refreshExpiration;
 
-    //Convert the secret key to key object
+    //Convert the secret key to key object - firm of the token
     private SecretKey getSingningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     // Generate access token
-    public String generateToken(User user) {
+    public String generateToken(DtoLogin user) {
         //Metadata of user in the Token
         Map<String, Object> claims = new HashMap<>();
-        claims.put("Id", user.getId());
+        claims.put("Id", user.getId().orElse(null));
         claims.put("Email", user.getEmail());
         claims.put("Type", "Access");
 
@@ -73,7 +74,6 @@ public class TokenProvider {
                 .signWith(getSingningKey()) //Firma el token con la clave secreta
                 .compact();
     }
-
 
     // Extract all claims from token
     public Claims extractAllClaims(String token) {

@@ -7,12 +7,20 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude="password")
 @Table(name= "Usuarios")
-public class User {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -59,4 +67,14 @@ public class User {
 
     @Column(name="numero-intentos-contraseña", nullable = false)
     private Integer numberAttemptPassword = 0;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
+    }
 }
