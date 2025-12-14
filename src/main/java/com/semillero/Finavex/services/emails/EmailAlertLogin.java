@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class EmailAlertLogin {
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.from}")
     private String fromEmail;
 
     public void sendEmail(String to, String subject, String text) {
