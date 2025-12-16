@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.emails;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,7 @@ public class EmailAlertLogin {
     @Value("${spring.mail.from}")
     private String fromEmail;
 
-    public void sendEmail(String to, String subject, String text) {
+    public boolean sendEmail(String to, String subject, String text) {
         try {
             log.info("Intentando enviar email a: {} con asunto: {}", to, subject);
 
@@ -30,9 +31,11 @@ public class EmailAlertLogin {
             mailSender.send(message);
 
             log.info("Email enviado exitosamente a: {}", to);
+            return true;
 
         } catch (MailException e) {
             log.error("Error al enviar email a {}: {}", to, e.getMessage(), e);
+            return false;
             // No lanzamos la excepción para que no rompa el flujo de login
             // En un sistema de producción podrías querer almacenar esto en una cola de reintentos
         }
