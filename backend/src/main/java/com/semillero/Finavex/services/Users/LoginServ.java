@@ -1,7 +1,6 @@
 package com.semillero.Finavex.services.Users;
 
 import com.semillero.Finavex.config.security.Security;
-import com.semillero.Finavex.controllers.Users.Login;
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.DtoLogin;
 import com.semillero.Finavex.dto.LoginResponse;
@@ -10,7 +9,7 @@ import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.services.bucked.RateLimitingService;
-import com.semillero.Finavex.services.emails.EmailAlertLogin;
+import com.semillero.Finavex.services.emails.alert.EmailAlertLogin;
 import com.semillero.Finavex.services.jwt.TokenProvider;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Optional;
 
 @Slf4j
