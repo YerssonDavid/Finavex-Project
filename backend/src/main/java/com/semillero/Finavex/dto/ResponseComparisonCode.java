@@ -1,4 +1,15 @@
 package com.semillero.Finavex.dto;
 
-public class ResponseComparationCode {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+
+@Data
+@Getter
+@AllArgsConstructor
+@Builder
+public class ResponseComparisonCode {
+    private String message;
+    private boolean success;
 }
