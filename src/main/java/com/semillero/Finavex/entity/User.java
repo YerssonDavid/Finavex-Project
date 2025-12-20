@@ -61,6 +61,14 @@ public class User implements UserDetails {
     @Email(groups = {Create.class, Update.class}, message = "Email inválido")
     private String email;
 
+    @PrePersist
+    @PreUpdate
+    public void normalizeEmail(){
+        if(this.email != null){
+            this.email = this.email.trim().toLowerCase();
+        }
+    }
+
     @Column(name="password", nullable = false, length = 100)
     @NotBlank(groups = {Create.class, Update.class}, message = "La contraseña es obligatoria")
     private String password;
