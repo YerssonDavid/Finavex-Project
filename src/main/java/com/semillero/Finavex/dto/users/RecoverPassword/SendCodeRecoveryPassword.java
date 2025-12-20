@@ -1,4 +1,4 @@
-package com.semillero.Finavex.dto.users;
+package com.semillero.Finavex.dto.users.RecoverPassword;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
