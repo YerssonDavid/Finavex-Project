@@ -1,14 +1,12 @@
 package com.semillero.Finavex.controllers.password;
 
-import com.semillero.Finavex.dto.ResponseCodePassword;
-import com.semillero.Finavex.dto.ResponseComparisonCode;
+import com.semillero.Finavex.dto.users.RecoverPassword.SendCodeRecoveryPassword;
 import com.semillero.Finavex.services.emails.codeRecoverPassword.EmailSendCode;
 import com.semillero.Finavex.services.recoveryPassword.ConfirmationCode;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("code-recovery")
@@ -18,10 +16,19 @@ public class sendCodeRecovery {
     private final ConfirmationCode confirmationCode;
 
     // Send code recovery password to email user
-    @PostMapping("send")
-    public ResponseEntity<?> sendCodeRecoveryForEmail (String email){
+    @PostMapping("verify-email")
+    public ResponseEntity<?> verifyEmailForSendCode (@RequestBody SendCodeRecoveryPassword sendCodeRecoveryPassword){
         return emailSendCode.sendEmailCodeRecoverPassword(
-                email,
+                sendCodeRecoveryPassword.getEmail(),
+                "Codigo de recuperación de contraseña FINAVEX",
+                "El código expirara en 10 minutos.\nEl código de recuperación es: "
+        );
+    }
+
+    @PostMapping("send")
+    public void sendCodeRecoveryEmail(@RequestBody SendCodeRecoveryPassword sendCodeRecoveryPassword){
+        emailSendCode.sendEmailToUser(
+                sendCodeRecoveryPassword.getEmail(),
                 "Codigo de recuperación de contraseña FINAVEX",
                 "El código expirara en 10 minutos.\nEl código de recuperación es: "
         );

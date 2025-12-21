@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ResponseCodePassword<T> {
-    private Long code;
+    //private Long code;
     private String message;
 }

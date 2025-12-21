@@ -1,6 +1,7 @@
 package com.semillero.Finavex.controllers.password;
 
 import com.semillero.Finavex.dto.ApiResponse;
+import com.semillero.Finavex.dto.users.RecoverPassword.ComparisionCodeUser;
 import com.semillero.Finavex.services.Users.ChangePassword;
 import com.semillero.Finavex.services.recoveryPassword.ConfirmationCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,8 +20,8 @@ public class RecoverPassword {
 
     // Documentation Swagger (Pending)
     @PostMapping("code")
-    public ResponseEntity<?> validationCodeRecoveryPassword (@RequestParam String email, Long code){
-        return confirmationCode.comparisonCode(email, code);
+    public ResponseEntity<?> validationCodeRecoveryPassword (@RequestBody ComparisionCodeUser comparisionCodeUser){
+        return confirmationCode.comparisonCode(comparisionCodeUser.getEmail(), comparisionCodeUser.getCode());
     }
 
     @PostMapping
