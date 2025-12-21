@@ -9,8 +9,9 @@ import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.services.bucked.RateLimitingService;
-import com.semillero.Finavex.services.emails.EmailAlertLogin;
+import com.semillero.Finavex.services.emails.alert.EmailAlertLogin;
 import com.semillero.Finavex.services.jwt.TokenProvider;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class LoginServ {
     private final RateLimitingService rateLimitingService;
     private final EmailAlertLogin emailAlertLogin;
     private final TokenProvider tokenProvider;
+    @Getter
+    private final java.util.concurrent.ConcurrentHashMap<String, LocalDateTime> emailAlertCache = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
      * Autentica un usuario con sus credenciales
@@ -42,8 +45,31 @@ public class LoginServ {
         //Verificamos si el usuario ha superado el límite de intentos
         if(!rateLimitingService.tryConsume(dtoLogin.getEmail())){
             log.warn("Limite de intentos agotados para el usuario: {}", dtoLogin.getEmail());
-            emailAlertLogin.sendEmail(dtoLogin.getEmail(), "Alerta de seguridad FINAVEX: Usuario bloqueado", "Se han superado el número máximo de intentos fallidos de inicio de sesión.\n Su cuenta ha sido bloqueada temporalmente por razones de seguridad. ");
-            throw new InvalidCredentialsException("Usuario bloqueado, intente más tarde.");
+
+            LocalDateTime lastSend = emailAlertCache.get(dtoLogin.getEmail());
+            boolean shouldSendEmail = lastSend == null || lastSend.isBefore(LocalDateTime.now().minusMinutes(15));
+
+            if(shouldSendEmail){
+                boolean sent = emailAlertLogin.sendEmail(
+                        dtoLogin.getEmail(),
+                        "Alerta de seguridad FINAVEX: Usuario bloqueado",
+                        "Se han superado el número máximo de intentos fallidos de inicio de sesión.\n Su cuenta ha sido bloqueada temporalmente por razones de seguridad.");
+
+                if(sent){
+                    emailAlertCache.put(dtoLogin.getEmail(), LocalDateTime.now());
+                }
+            }
+
+
+            ApiResponse<LoginResponse> responseError = ApiResponse.<LoginResponse>builder()
+                    .status(HttpStatus.LOCKED.value())
+                    .message("Usuario bloqueado, intente más tarde.")
+                    .success(false)
+                    .timestamp(LocalDateTime.now())
+                    .data(null)
+                    .build();
+            return ResponseEntity.status(HttpStatus.LOCKED).body(responseError);
+            //throw new InvalidCredentialsException("Usuario bloqueado, intente más tarde.");
         }
 
         log.info("Intento de inicio de sesión para email: {}", dtoLogin.getEmail());
