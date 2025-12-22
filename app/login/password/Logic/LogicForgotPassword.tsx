@@ -15,7 +15,7 @@ export const useFormForgotPassword = () => {
     const onSubmit = async (data : forgotPasswordType) => {
         try {
             // Enviar email al backend para recuperación de contraseña
-            const response = await fetch("http://localhost:8080/code-recovery/verify-email", {
+            const response = await fetch("http://localhost:8080/code-recovery/send-code", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
