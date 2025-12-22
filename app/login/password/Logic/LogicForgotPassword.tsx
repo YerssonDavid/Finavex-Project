@@ -15,7 +15,7 @@ export const useFormForgotPassword = () => {
     const onSubmit = async (data : forgotPasswordType) => {
         try {
             // Enviar email al backend para recuperación de contraseña
-            const response = await fetch("http://localhost:8080/Users/forgot-password", {
+            const response = await fetch("http://localhost:8080/code-recovery/verify-email", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -36,23 +36,69 @@ export const useFormForgotPassword = () => {
                 return;
             }
 
-            const resp = await response.json();
+            if(response.status === 200){
+                try{
+                    const sendEmailCode = await fetch("http://localhost:8080/code-recovery/send", {
+                        method: "POST",
+                        headers: {
+                            "Content-type":"application/json"
+                        },
+                        body: JSON.stringify({
+                          email:data.email,
+                        })
+                    });
 
-            console.log("Email de recuperación enviado!");
-            reset();
+                    if(!sendEmailCode.ok){
+                        console.log("Error al enviar el email de recuperación");
+                        await Swal.fire({
+                            title: "Error",
+                            text: 'No se pudo enviar el código de recuperación.',
+                            icon: "error",
+                            confirmButtonText: "Aceptar"
+                        });
+                        return;
+                    }
 
-            // Mostrar alerta de éxito
-            await Swal.fire({
-                title: "¡Éxito!",
-                text: resp.message || 'Se ha enviado un email con las instrucciones para recuperar tu contraseña.',
-                icon: "success",
-                confirmButtonText: "Aceptar"
-            });
+                    // Verificar si la respuesta tiene contenido antes de parsear JSON
+                    let sendEmailCodeResponse;
+                    const contentType = sendEmailCode.headers.get("content-type");
 
-            // Redirigir al login después de 2 segundos
-            setTimeout(() => {
-                router.push('/login');
-            }, 2000);
+                    if (contentType && contentType.includes("application/json")) {
+                        const responseText = await sendEmailCode.text();
+                        if (responseText && responseText.trim().length > 0) {
+                            sendEmailCodeResponse = JSON.parse(responseText);
+                        } else {
+                            sendEmailCodeResponse = { message: 'Código enviado exitosamente' };
+                        }
+                    } else {
+                        sendEmailCodeResponse = { message: 'Código enviado exitosamente' };
+                    }
+
+                    console.log("Enviado exitoso!", sendEmailCodeResponse);
+
+                    // Si la respuesta es OK, mostrar éxito y redirigir a changePassword
+                    reset();
+                    await Swal.fire({
+                        title: "¡Éxito!",
+                        text: sendEmailCodeResponse.message || 'Se ha enviado un código de recuperación a tu email.',
+                        icon: "success",
+                        confirmButtonText: "Aceptar"
+                    });
+
+                    // Redirigir a la página de cambio de contraseña
+                    router.push('/login/password/changePassword');
+                    return;
+
+                } catch(sendEmailError){
+                    console.error("Error al enviar el email de recuperación -> ", {sendEmailError} );
+                    await Swal.fire({
+                        title: "Error",
+                        text: 'Ocurrió un error al enviar el código de recuperación.',
+                        icon: "error",
+                        confirmButtonText: "Aceptar"
+                    });
+                }
+            }
 
         } catch (error){
             console.error("El error -> ", {error});
