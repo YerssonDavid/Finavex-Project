@@ -19,7 +19,6 @@ public class RecoverPassword {
     private final ConfirmationCode confirmationCode;
 
 
-    // Documentation Swagger (Pending)
     @PostMapping("code-verification")
     @Operation(
             summary = "Send code for password recovery",
