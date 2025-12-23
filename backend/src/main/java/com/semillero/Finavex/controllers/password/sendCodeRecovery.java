@@ -16,18 +16,9 @@ public class sendCodeRecovery {
     private final ConfirmationCode confirmationCode;
 
     // Send code recovery password to email user
-    @PostMapping("verify-email")
-    public ResponseEntity<?> verifyEmailForSendCode (@RequestBody SendCodeRecoveryPassword sendCodeRecoveryPassword){
+    @PostMapping("send-code")
+    public ResponseEntity<?> sendCodeForEmailVerify (@RequestBody SendCodeRecoveryPassword sendCodeRecoveryPassword){
         return emailSendCode.sendEmailCodeRecoverPassword(
-                sendCodeRecoveryPassword.getEmail(),
-                "Codigo de recuperación de contraseña FINAVEX",
-                "El código expirara en 10 minutos.\nEl código de recuperación es: "
-        );
-    }
-
-    @PostMapping("send")
-    public void sendCodeRecoveryEmail(@RequestBody SendCodeRecoveryPassword sendCodeRecoveryPassword){
-        emailSendCode.sendEmailToUser(
                 sendCodeRecoveryPassword.getEmail(),
                 "Codigo de recuperación de contraseña FINAVEX",
                 "El código expirara en 10 minutos.\nEl código de recuperación es: "

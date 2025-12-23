@@ -1,6 +1,7 @@
 package com.semillero.Finavex.services.Users;
 
 import com.semillero.Finavex.dto.ApiResponse;
+import com.semillero.Finavex.dto.users.RecoverPassword.ChangePasswordDto;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 
@@ -21,21 +23,25 @@ public class ChangePassword {
     private final PasswordEncoder passwordEncoder;
     private final UserR userR;
 
-    public ResponseEntity<ApiResponse> changePassword(String oldPassword, String newPassword) {
+    public ResponseEntity<ApiResponse> changePassword(ChangePasswordDto changePasswordDto) {
 
-        // Check if the old password matches
-        if (!user.getPassword().matches(oldPassword)) {
-            ApiResponse<Object> responseError = ApiResponse.builder()
-                    .status(HttpStatus.UNAUTHORIZED.value())
-                    .success(false)
-                    .timestamp(LocalDateTime.now())
-                    .message("La contraseña ingresada es incorrecta!")
-                    .build();
-            return new ResponseEntity<>(responseError, HttpStatus.UNAUTHORIZED);
+        if(!userR.existsByEmail(changePasswordDto.getEmail())){
+           ResponseEntity<ApiResponse> response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    ApiResponse.builder()
+                            .status(HttpStatus.NOT_FOUND.value())
+                            .success(false)
+                            .timestamp(LocalDateTime.now())
+                            .message("Usuario no encontrado con el email proporcionado.")
+                            .build()
+           );
+
+           return response;
         }
 
+        user = userR.findByEmail(changePasswordDto.getEmail()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
         // update the password
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
 
         // Save the updated User
         userR.save(user);

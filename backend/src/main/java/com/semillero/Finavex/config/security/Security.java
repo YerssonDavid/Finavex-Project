@@ -35,10 +35,12 @@ public class Security {
                 // Disable session management - make it stateless
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Users/login").permitAll()
+                        //.requestMatchers(HttpMethod.POST, "/recover-password/recover-password").permitAll()
+                        .requestMatchers(HttpMethod.POST, "recover-password/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/code-recovery/**").permitAll() // ⭐ AGREGAR ESTO
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         //Permit access without authorization to Swagger UI and API docs from Route "http://localhost:8080/swagger-ui/index.html"
                         .requestMatchers(
                                 "/swagger-ui/index.html",
