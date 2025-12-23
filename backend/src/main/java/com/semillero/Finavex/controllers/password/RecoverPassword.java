@@ -1,6 +1,7 @@
 package com.semillero.Finavex.controllers.password;
 
 import com.semillero.Finavex.dto.ApiResponse;
+import com.semillero.Finavex.dto.users.RecoverPassword.ChangePasswordDto;
 import com.semillero.Finavex.dto.users.RecoverPassword.ComparisionCodeUser;
 import com.semillero.Finavex.services.Users.ChangePassword;
 import com.semillero.Finavex.services.recoveryPassword.ConfirmationCode;
@@ -19,12 +20,26 @@ public class RecoverPassword {
 
 
     // Documentation Swagger (Pending)
-    @PostMapping("code")
+    @PostMapping("code-verification")
+    @Operation(
+            summary = "Send code for password recovery",
+            description = "Endpoint for validation of the recovery code sent to the user email",
+            method = "POST",
+            tags = {"Password Recovery"},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Old and new passwords",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = String.class)
+                    ),
+                    required = true
+            )
+    )
     public ResponseEntity<?> validationCodeRecoveryPassword (@RequestBody ComparisionCodeUser comparisionCodeUser){
         return confirmationCode.comparisonCode(comparisionCodeUser.getEmail(), comparisionCodeUser.getCode());
     }
 
-    @PostMapping
+    @PostMapping("reset/password")
     @Operation(
             summary = "Recover password",
             description = "Endpoint to recover user password by providing the old and new passwords",
@@ -40,7 +55,7 @@ public class RecoverPassword {
 
             )
     )
-    public ResponseEntity<ApiResponse> recoverPassword(@RequestBody String oldPassword, String newPassword) {
-        return changePassword.changePassword(oldPassword, newPassword);
+    public ResponseEntity<ApiResponse> recoverPassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        return changePassword.changePassword(changePasswordDto);
     }
 }
