@@ -10,20 +10,18 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { LogIn } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
-import {useForm} from "react-hook-form";
 import {useFormLoginUser} from "@/login/Logic/LogicLoginUser";
 
-export default function LoginPage() {
-  /*const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")*/
+// Función auxiliar para convertir segundos a formato MM:SS
+const formatTimeRemaining = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+};
 
-  /*const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Login attempt:", { email })
-    // Add authentication logic here
-  }*/
-  const {register, onSubmit, handleSubmit, errors, isSubmitting, reset} = useFormLoginUser();
+export default function LoginPage() {
+
+  const {register, onSubmit, handleSubmit, errors, isSubmitting, reset, isAccountLocked, remainingTime} = useFormLoginUser();
 
   return (
     <div className="min-h-screen">
@@ -43,6 +41,18 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Mostrar alerta de bloqueo si la cuenta está bloqueada */}
+              {isAccountLocked && (
+                <div className="p-4 mb-4 rounded-lg bg-destructive/20 border border-destructive/50">
+                  <p className="text-sm font-semibold text-destructive">
+                    ⏸️ Cuenta bloqueada por seguridad
+                  </p>
+                  <p className="text-xs text-destructive/80 mt-1">
+                    Intenta nuevamente en <span className="font-bold">{formatTimeRemaining(remainingTime)}</span>
+                  </p>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -50,18 +60,25 @@ export default function LoginPage() {
                   type="email"
                   placeholder="tu@email.com"
                   {...register("email")}
+                  disabled={isAccountLocked}
                   required
                   className="h-11"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="password">Contraseña</Label>
+                  <Link href="/login/password" className="text-xs text-primary hover:underline font-medium">
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
                 <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   {...register("password")}
+                  disabled={isAccountLocked}
                   required
                   className="h-11"
                 />
@@ -69,10 +86,13 @@ export default function LoginPage() {
 
               <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isAccountLocked}
                   className="w-full h-11 bg-gradient-to-r from-primary to-secondary hover:opacity-90">
-                  {isSubmitting ?
-                      "Iniciando  Sesión..."  : "Iniciar sesión"
+                  {isAccountLocked
+                    ? `Bloqueado - Intenta en ${formatTimeRemaining(remainingTime)}`
+                    : isSubmitting
+                    ? "Iniciando Sesión..."
+                    : "Iniciar sesión"
                   }
               </Button>
 
