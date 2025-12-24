@@ -36,7 +36,22 @@ export const useFormForgotPassword = () => {
                 return;
             }
 
-            if(response.status === 200){
+            // Guardar el email en localStorage para usarlo en la verificación del código
+            localStorage.setItem('recovery_email', data.email);
+
+            reset();
+
+            await Swal.fire({
+                title: "¡Éxito!",
+                text: 'Se ha enviado un código de recuperación a tu email.',
+                icon: "success",
+                confirmButtonText: "Aceptar"
+            });
+
+            router.push('/login/password/verify');
+            return;
+
+            /*if(response.status === 200){
                 try{
                     const sendEmailCode = await fetch("http://localhost:8080/code-recovery/send", {
                         method: "POST",
@@ -77,13 +92,7 @@ export const useFormForgotPassword = () => {
                     console.log("Enviado exitoso!", sendEmailCodeResponse);
 
                     // Si la respuesta es OK, mostrar éxito y redirigir a changePassword
-                    reset();
-                    await Swal.fire({
-                        title: "¡Éxito!",
-                        text: sendEmailCodeResponse.message || 'Se ha enviado un código de recuperación a tu email.',
-                        icon: "success",
-                        confirmButtonText: "Aceptar"
-                    });
+
 
                     // Redirigir a la página de cambio de contraseña
                     router.push('/login/password/changePassword');
@@ -98,7 +107,7 @@ export const useFormForgotPassword = () => {
                         confirmButtonText: "Aceptar"
                     });
                 }
-            }
+            }*/
 
         } catch (error){
             console.error("El error -> ", {error});
@@ -121,4 +130,3 @@ export const useFormForgotPassword = () => {
         reset
     };
 };
-
