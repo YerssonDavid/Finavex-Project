@@ -12,6 +12,7 @@ import { z } from 'zod';
  *   - Al menos un carácter especial
  *
  * - confirmNewPassword: Debe coincidir con newPassword
+ * - email: Email recuperado del localStorage (no visible para el usuario)
  */
 export const changePasswordSchema = z.object({
     newPassword: z.string()
@@ -21,6 +22,7 @@ export const changePasswordSchema = z.object({
         .regex(/[0-9]/, 'La contraseña debe contener al menos un número')
         .regex(/[^A-Za-z0-9]/, 'La contraseña debe contener al menos un carácter especial'),
     confirmNewPassword: z.string(),
+    email: z.string().email('Email inválido').optional(), // Email recuperado del localStorage
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
     message: 'Las contraseñas no coinciden',
     path: ["confirmNewPassword"]
