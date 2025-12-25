@@ -1,3 +1,5 @@
+'use client'
+
 import type React from "react"
 import { Navigation } from "@/components/landing/navigation"
 import { AnimatedBackground } from "@/components/landing/animated-background"
@@ -5,19 +7,44 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { TrendingUp, Shield, Zap, BarChart3, Bell, Target } from "lucide-react"
 import Link from "next/link"
-import {Metadata} from "next";
+import { useEffect, useRef } from "react"
 
-//Metadata
-export const metadata: Metadata = {
-    title: "Finavex - Transforma tu futuro financiero",
-    description: "Page of introduction to Finavex, a free professional financial management platform.",
-    icons: {
-        icon: "/favicon-home.png",
-    },
+function CursorTrail() {
+  const cursorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (cursorRef.current) {
+        cursorRef.current.style.left = `${e.clientX}px`
+        cursorRef.current.style.top = `${e.clientY}px`
+      }
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
+  }, [])
+
+  return (
+    <div
+      ref={cursorRef}
+      className="pointer-events-none fixed z-40"
+      style={{
+        width: "32px",
+        height: "32px",
+        backgroundImage: "url(/DollarCursor.png)",
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        transform: "translate(-50%, -50%)",
+        transition: "all 0.08s ease-out",
+      }}
+    />
+  )
 }
+
 export default function HomePage() {
   return (
     <div className="min-h-screen">
+      <CursorTrail />
       <AnimatedBackground />
       <Navigation />
 
