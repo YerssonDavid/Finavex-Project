@@ -219,6 +219,7 @@ export const useFormLoginUser = () => {
             console.log("Inicio de sesión exitoso!");
             reset();
 
+            document.cookie = 'isAuthenticated=true; path=/; max-age=86400'; // 24 horas
             router.push('/homePersonal');
 
         } catch (error){
