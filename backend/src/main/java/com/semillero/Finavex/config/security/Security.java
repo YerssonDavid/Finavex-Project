@@ -39,7 +39,8 @@ public class Security {
                         .requestMatchers(HttpMethod.POST, "/Users/login").permitAll()
                         //.requestMatchers(HttpMethod.POST, "/recover-password/recover-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "recover-password/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/code-recovery/**").permitAll() // ⭐ AGREGAR ESTO
+                        .requestMatchers(HttpMethod.POST, "/code-recovery/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/save-money/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         //Permit access without authorization to Swagger UI and API docs from Route "http://localhost:8080/swagger-ui/index.html"
                         .requestMatchers(
