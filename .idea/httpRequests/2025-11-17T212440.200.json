@@ -1,0 +1,11 @@
+{
+  "status": 200,
+  "message": "Inicio de sesion exitoso",
+  "success": true,
+  "timestamp": "2025-11-17T21:24:40.8163546",
+  "data": {
+    "userId": 5,
+    "email": "test@gmail.com",
+    "name": "David"
+  }
+}

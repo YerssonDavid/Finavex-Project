@@ -1,0 +1,6 @@
+{
+  "status": 500,
+  "message": "Error interno del servidor: The given id must not be null",
+  "success": false,
+  "timestamp": "2025-11-17T21:22:58.9485722"
+}

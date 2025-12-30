@@ -1,0 +1,6 @@
+{
+  "status": 401,
+  "message": "Usuario bloquaeado por múltiples intentos faliidos de inisio de sesión",
+  "success": false,
+  "timestamp": "2025-12-03T20:12:06.4786087"
+}

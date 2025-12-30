@@ -1,0 +1,19 @@
+{
+  "status": 200,
+  "message": "Inicio de sesion exitoso",
+  "success": true,
+  "timestamp": "2025-11-17T21:22:13.7775544",
+  "data": {
+    "id": 5,
+    "name": "David",
+    "middleName": "Test",
+    "surname": "Test",
+    "secondSurname": "Test",
+    "documentNumber": "12345678901",
+    "age": 28,
+    "dateOfBirth": "19961215",
+    "phone": "3001234567",
+    "email": "test@gmail.com",
+    "password": "$argon2id$v=19$m=16384,t=2,p=1$5GDK0oHp1s7wsD9CLaid/A$QivD+qOIDt7OjIxJFVBgQLhqbwULQ5XzrIKNKd6c8DM"
+  }
+}

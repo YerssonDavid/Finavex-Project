@@ -1,0 +1,6 @@
+{
+  "status": 400,
+  "message": "El usuario ya esta registrado",
+  "success": false,
+  "timestamp": "2025-11-17T21:18:23.6956056"
+}

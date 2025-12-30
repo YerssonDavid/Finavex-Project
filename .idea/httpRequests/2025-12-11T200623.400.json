@@ -1,0 +1,6 @@
+{
+  "status": 400,
+  "message": "Unable to serialize claims object to json: Unable to serialize object: Java 8 optional type `java.util.Optional` not supported by default: add Module \"com.fasterxml.jackson.datatype:jackson-datatype-jdk8\" to enable handling (or disable `MapperFeature.REQUIRE_HANDLERS_FOR_JAVA8_OPTIONALS`) (through reference chain: io.jsonwebtoken.impl.DefaultClaims[\"Id\"])",
+  "success": false,
+  "timestamp": "2025-12-11T20:06:23.9799464"
+}

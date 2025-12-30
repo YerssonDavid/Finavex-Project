@@ -1,0 +1,12 @@
+{
+  "status": 200,
+  "message": "Inicio de sesión exitoso",
+  "success": true,
+  "timestamp": "2025-12-03T20:12:19.0372264",
+  "data": {
+    "userId": 1,
+    "email": "test@gmail.com",
+    "name": "David",
+    "numberAttemptPassword": null
+  }
+}

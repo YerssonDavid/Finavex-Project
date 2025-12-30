@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/Dockerfile.dev">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/Dockerfile.dev" />
+              <option name="updatedContent" value="# ============================================&#10;# Dockerfile para DESARROLLO&#10;# Con hot-reload y debugging habilitado&#10;# ============================================&#10;&#10;FROM maven:3.9.6-eclipse-temurin-17-alpine&#10;&#10;# Metadata&#10;LABEL maintainer=&quot;Finavex Team&quot;&#10;LABEL environment=&quot;development&quot;&#10;&#10;# Instalar herramientas útiles para desarrollo&#10;RUN apk add --no-cache curl bash dumb-init&#10;&#10;# Crear directorio de trabajo&#10;WORKDIR /app&#10;&#10;# Copiar archivos de configuración Maven&#10;COPY pom.xml .&#10;COPY .mvn/ .mvn/&#10;&#10;# Descargar dependencias&#10;RUN mvn dependency:go-offline -B || true&#10;&#10;# Copiar código fuente&#10;COPY src/ ./src/&#10;&#10;# Exponer puertos&#10;EXPOSE 8080 5005&#10;&#10;# Variables de entorno para desarrollo&#10;ENV SPRING_PROFILES_ACTIVE=dev \&#10;    JAVA_TOOL_OPTIONS=&quot;-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005&quot; \&#10;    MAVEN_OPTS=&quot;-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0&quot;&#10;&#10;# Ejecutar con Spring Boot DevTools (hot reload)&#10;ENTRYPOINT [&quot;dumb-init&quot;, &quot;--&quot;]&#10;CMD [&quot;mvn&quot;, &quot;spring-boot:run&quot;, &quot;-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005&quot;]&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
