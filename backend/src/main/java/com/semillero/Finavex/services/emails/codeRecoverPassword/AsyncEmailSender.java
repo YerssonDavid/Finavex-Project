@@ -18,7 +18,7 @@ public class AsyncEmailSender {
     @Value("${spring.mail.from}")
     private String fromEmail;
 
-    @Async("taskExecutor")
+    @Async("executor")
     public void sendEmailToUser(String to, String subject, String text, Long code) {
         try {
             log.info("Thread: {}", Thread.currentThread().getName());

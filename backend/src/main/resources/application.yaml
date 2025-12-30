@@ -11,6 +11,10 @@ spring:
     ansi:
       enabled: always
 
+  threads:
+    virtual:
+      enabled: true
+
 server:
   port: 8080
 
@@ -27,3 +31,9 @@ application:
       expiration: ${JWT_EXPIRATION}
       refresh-token:
         expiration: ${JWT_REFRESH_TOKEN}
+
+ai:
+  provider: github
+  base-url: ${API_URL_BASE_AI}
+  model: gpt-5-mini
+  timeout: 10000

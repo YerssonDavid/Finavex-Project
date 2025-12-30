@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -17,6 +18,7 @@ public class EmailAlertLogin {
     @Value("${spring.mail.from}")
     private String fromEmail;
 
+    @Async("executor")
     public boolean sendEmail(String to, String subject, String text) {
         try {
             log.info("Intentando enviar email a: {} con asunto: {}", to, subject);
