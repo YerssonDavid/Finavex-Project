@@ -1,6 +1,0 @@
-{
-  "status": 409,
-  "message": "Ya existe un usuario registrado con ese documento",
-  "success": false,
-  "timestamp": "2025-12-03T20:11:28.3170896"
-}
