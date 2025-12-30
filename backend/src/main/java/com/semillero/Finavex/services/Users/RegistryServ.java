@@ -41,6 +41,15 @@ public class RegistryServ {
             throw new DuplicateUserException("Ya existe un usuario registrado con el email: " + user.getEmail());
         }
 
+        if(userRepository.existsByPhone(user.getPhone())){
+            log.error("Usuario ya existe con el teléfono: {}", user.getPhone());
+            throw new DuplicateUserException("Ya existe un usuario registrado con el número telefonico ingresado");
+        }
+
+        //Transform email to lowercase and trim spaces
+        String email = user.getEmail().toLowerCase().trim();
+        user.setEmail(email);
+
         // Hashear la contraseña
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
