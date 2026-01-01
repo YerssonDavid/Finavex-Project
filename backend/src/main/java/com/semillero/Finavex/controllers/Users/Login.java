@@ -3,7 +3,7 @@ package com.semillero.Finavex.controllers.Users;
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.DtoLogin;
 import com.semillero.Finavex.dto.LoginResponse;
-import com.semillero.Finavex.services.Users.LoginServ;
+import com.semillero.Finavex.services.login.LoginServ;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;

@@ -30,4 +30,9 @@ public class RateLimitingService {
     public boolean tryConsume (String key){
         return resolveBucket(key).tryConsume(1);
     }
+
+    //Reset the bucket
+    public void resetBucket (String key){
+        buckets.remove(key);
+    }
 }
