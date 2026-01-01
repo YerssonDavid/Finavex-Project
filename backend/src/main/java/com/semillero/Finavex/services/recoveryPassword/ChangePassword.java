@@ -1,15 +1,15 @@
-package com.semillero.Finavex.services.Users;
+package com.semillero.Finavex.services.recoveryPassword;
 
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.users.RecoverPassword.ChangePasswordDto;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
+import com.semillero.Finavex.services.bucked.RateLimitingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +22,7 @@ public class ChangePassword {
     // Injection of dependencies beans
     private final PasswordEncoder passwordEncoder;
     private final UserR userR;
+    private final RateLimitingService rateLimitingService;
 
     public ResponseEntity<ApiResponse> changePassword(ChangePasswordDto changePasswordDto) {
 
@@ -45,6 +46,10 @@ public class ChangePassword {
 
         // Save the updated User
         userR.save(user);
+
+        // Reset counter in rate limiting service and NumberAttempt of entity user
+        user.setNumberAttemptPassword(0);
+        rateLimitingService.resetBucket(user.getEmail());
 
         // Build success response
         ApiResponse<Object> responseOk = ApiResponse.builder()
