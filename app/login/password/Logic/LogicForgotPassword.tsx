@@ -51,67 +51,17 @@ export const useFormForgotPassword = () => {
             router.push('/login/password/verify');
             return;
 
-            /*if(response.status === 200){
-                try{
-                    const sendEmailCode = await fetch("http://localhost:8080/code-recovery/send", {
-                        method: "POST",
-                        headers: {
-                            "Content-type":"application/json"
-                        },
-                        body: JSON.stringify({
-                          email:data.email,
-                        })
-                    });
-
-                    if(!sendEmailCode.ok){
-                        console.log("Error al enviar el email de recuperación");
-                        await Swal.fire({
-                            title: "Error",
-                            text: 'No se pudo enviar el código de recuperación.',
-                            icon: "error",
-                            confirmButtonText: "Aceptar"
-                        });
-                        return;
-                    }
-
-                    // Verificar si la respuesta tiene contenido antes de parsear JSON
-                    let sendEmailCodeResponse;
-                    const contentType = sendEmailCode.headers.get("content-type");
-
-                    if (contentType && contentType.includes("application/json")) {
-                        const responseText = await sendEmailCode.text();
-                        if (responseText && responseText.trim().length > 0) {
-                            sendEmailCodeResponse = JSON.parse(responseText);
-                        } else {
-                            sendEmailCodeResponse = { message: 'Código enviado exitosamente' };
-                        }
-                    } else {
-                        sendEmailCodeResponse = { message: 'Código enviado exitosamente' };
-                    }
-
-                    console.log("Enviado exitoso!", sendEmailCodeResponse);
-
-                    // Si la respuesta es OK, mostrar éxito y redirigir a changePassword
-
-
-                    // Redirigir a la página de cambio de contraseña
-                    router.push('/login/password/changePassword');
-                    return;
-
-                } catch(sendEmailError){
-                    console.error("Error al enviar el email de recuperación -> ", {sendEmailError} );
-                    await Swal.fire({
-                        title: "Error",
-                        text: 'Ocurrió un error al enviar el código de recuperación.',
-                        icon: "error",
-                        confirmButtonText: "Aceptar"
-                    });
-                }
-            }*/
-
         } catch (error){
+            if(String(error) === "TypeError: Failed to fetch"){
+                await Swal.fire({
+                    title: "Error",
+                    text: 'Ups, tenemos problemas galacticos. Intenta en un rato!',
+                    icon: "error",
+                    timer: 3000
+                });
+                return;
+            }
             console.error("El error -> ", {error});
-
             await Swal.fire({
                 title: "Error",
                 text: (error as Error).message || String(error),
