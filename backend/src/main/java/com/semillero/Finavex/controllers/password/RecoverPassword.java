@@ -3,7 +3,7 @@ package com.semillero.Finavex.controllers.password;
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.users.RecoverPassword.ChangePasswordDto;
 import com.semillero.Finavex.dto.users.RecoverPassword.ComparisionCodeUser;
-import com.semillero.Finavex.services.Users.ChangePassword;
+import com.semillero.Finavex.services.recoveryPassword.ChangePassword;
 import com.semillero.Finavex.services.recoveryPassword.ConfirmationCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
