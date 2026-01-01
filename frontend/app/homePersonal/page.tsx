@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { FloatingSidebar } from "@/components/homePersonal/floating-sidebar"
 import { BalanceCard } from "@/components/homePersonal/balance-card"
 import { NewsSection } from "@/components/homePersonal/news-section"
@@ -9,15 +9,24 @@ import { NewsModal } from "@/components/homePersonal/news-modal"
 import { SettingsButton } from "@/components/homePersonal/settings-button"
 import { SettingsModal } from "@/components/homePersonal/settings-modal"
 import { ThemeProvider } from "@/components/homePersonal/theme-provider"
-import {useUser} from "../../context/ContextUserData";
+import { ChatBotButton } from "@/components/homePersonal/chat-bot-button"
+import { ChatBotWindow } from "@/components/homePersonal/chat-bot-window"
+import { useUser } from "../../context/ContextUserData"
 
 export default function HomePage() {
   const [selectedNews, setSelectedNews] = useState<any>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
+  const [displayName, setDisplayName] = useState<string>("")
 
-  const context = useUser();
-  const userData = context?.userData;
+  const context = useUser()
+  const userData = context?.userData
+
+  // Evitar error de hidratación: solo actualizar el nombre en el cliente
+  useEffect(() => {
+    setDisplayName(userData?.nombre || "Usuario")
+  }, [userData?.nombre])
 
   return (
     <ThemeProvider>
@@ -51,9 +60,9 @@ export default function HomePage() {
                     <div className="absolute top-1/2 left-1/2 w-32 sm:w-48 h-32 sm:h-48 bg-gradient-to-r from-primary via-secondary to-accent rounded-full blur-3xl opacity-50 animate-[orbit_15s_linear_infinite]" />
                   </div>
 
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-balance mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent relative">
-                        Hola {userData?.nombre || 'User'}
-                    </h1>
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-balance mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent relative">
+                    Hola {displayName || "Usuario"}
+                  </h1>
                 </div>
                 <p className="text-muted-foreground text-base sm:text-lg">Bienvenido a tu centro financiero personal</p>
               </header>
@@ -84,6 +93,9 @@ export default function HomePage() {
         {selectedNews && <NewsModal news={selectedNews} onClose={() => setSelectedNews(null)} />}
 
         {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
+
+        <ChatBotButton onClick={() => setIsChatOpen(!isChatOpen)} isOpen={isChatOpen} />
+        <ChatBotWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
       </div>
     </ThemeProvider>
   )

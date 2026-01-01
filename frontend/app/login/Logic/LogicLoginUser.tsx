@@ -225,6 +225,16 @@ export const useFormLoginUser = () => {
         } catch (error){
             console.error("El error -> ", {error});
 
+            if(String(error) === "TypeError: Failed to fetch"){
+                await Swal.fire({
+                    title: "Error",
+                    text: 'Ups, tenemos problemas galacticos. Intenta en un rato!',
+                    icon: "error",
+                    timer: 3000
+                });
+                return;
+            }
+
             // Registrar intento fallido por error inesperado
             const attemptResult = recordFailedAttempt();
 
