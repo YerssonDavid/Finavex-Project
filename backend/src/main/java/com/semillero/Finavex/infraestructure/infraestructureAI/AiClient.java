@@ -32,6 +32,11 @@ public class AiClient {
 
     public String chat(String systemPrompt, String userPrompt) {
 
+        if (systemPrompt == null || userPrompt == null) {
+            log.error("systemPrompt o userPrompt es null. systemPrompt: {}, userPrompt: {}", systemPrompt, userPrompt);
+            throw new IllegalArgumentException("systemPrompt y userPrompt no pueden ser null");
+        }
+
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-4o-mini",
                 "messages", List.of(
