@@ -40,30 +40,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        //Extract token
-        String token = authHeader.substring(7); // "Bearer " has 7 characters
+        try {
+            //Extract token
+            String token = authHeader.substring(7); // "Bearer " has 7 characters
 
-        // Validate token
-        String email= tokenProvider.extractEmail(token);
+            // Validate token
+            String email = tokenProvider.extractEmail(token);
 
-        if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            // Load user from database
-            UserDetails user = userDetailsService.loadUserByUsername(email);
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Load user from database
+                UserDetails user = userDetailsService.loadUserByUsername(email);
 
-            //Validate token with user details
-            if(tokenProvider.validateToken(token)){
+                //Validate token with user details
+                if (tokenProvider.validateToken(token)) {
+                    //Build authentication
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                //Build authentication
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // Save the user in the security context
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    // Save the user in the security context
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
-
-            // Continue with the filter chain
-            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            System.err.println("Error processing JWT token: " + e.getMessage());
         }
+
+        // Always continue with the filter chain
+        filterChain.doFilter(request, response);
 
     }
 }
