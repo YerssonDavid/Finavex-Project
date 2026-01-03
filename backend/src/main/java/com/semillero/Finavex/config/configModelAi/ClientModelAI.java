@@ -13,23 +13,17 @@ public class ClientModelAI {
 
     @Bean
     public ChatCompletionsClient chatCompletionsClient(){
-        String token = System.getenv("API_AI_GPT");
+        String key = System.getenv("API_AI_GPT");
 
-        if(token == null || token.isEmpty()){
-            log.error("❌ CRÍTICO: El token 'API_AI_GPT' no se está cargando desde Doppler");
-            log.error("   Verifica que Doppler está configurado correctamente");
-            log.error("   Comando: doppler run -- mvn spring-boot:run");
-            throw new IllegalStateException("El token de la API AI GPT no puede estar vacio");
+        if(key == null || key.isEmpty()){
+            log.error("Error en el token!");
+            throw new IllegalStateException("El token esta vacio o nulo!");
         }
-
-        log.info("✅ Token de API AI GPT cargado desde Doppler");
-        log.info("   Longitud: {} caracteres", token.length());
-        log.debug("   Primeros 20 caracteres: {}", token.substring(0, Math.min(20, token.length())));
 
         try {
             ChatCompletionsClient client = new ChatCompletionsClientBuilder()
-                    .credential(new AzureKeyCredential(token))
-                    .endpoint("https://models.github.ai/inference")
+                    .credential(new AzureKeyCredential(key))
+                    .endpoint("https://models.inference.ai.azure.com")
                     .buildClient();
 
             log.info("✅ ChatCompletionsClient creado exitosamente");
