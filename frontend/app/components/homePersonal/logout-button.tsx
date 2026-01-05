@@ -19,7 +19,7 @@ export function LogoutButton({ className }: LogoutButtonProps) {
       // Mostrar confirmación antes de cerrar sesión
       const result = await Swal.fire({
         title: "¿Cerrar sesión?",
-        text: "¿Estás seguro de que deseas cerrar sesión?",
+        text: "¿Estás seguro de que deseas cerrar sesión? 🚀",
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Sí, cerrar sesión",
