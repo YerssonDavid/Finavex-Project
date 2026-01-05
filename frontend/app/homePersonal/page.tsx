@@ -11,6 +11,7 @@ import { SettingsModal } from "@/components/homePersonal/settings-modal"
 import { ThemeProvider } from "@/components/homePersonal/theme-provider"
 import { ChatBotButton } from "@/components/homePersonal/chat-bot-button"
 import { ChatBotWindow } from "@/components/homePersonal/chat-bot-window"
+import { LogoutButton } from "@/components/homePersonal/logout-button"
 import { useUser } from "../../context/ContextUserData"
 
 export default function HomePage() {
@@ -44,6 +45,7 @@ export default function HomePage() {
         </div>
 
         <SettingsButton onClick={() => setShowSettings(true)} />
+        <LogoutButton />
 
         <div className="relative z-10 flex min-h-screen">
           <FloatingSidebar onCollapseChange={setIsSidebarCollapsed} />
