@@ -27,3 +27,8 @@ spring:
           starttls:
             enable: true
             required: true
+
+azure:
+  speech:
+    key: ${API_KEY_AI_VOICE}
+    region: ${AZURE_SPEECH_REGION}
