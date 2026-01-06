@@ -23,6 +23,6 @@ jobs:
       - name: merge
         run: |
           git checkout main
-          git merge front -X theirs --no-edit
+          git merge backend -X theirs --no-edit
           git push origin main
         
