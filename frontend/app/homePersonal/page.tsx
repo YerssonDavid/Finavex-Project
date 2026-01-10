@@ -12,6 +12,7 @@ import { ThemeProvider } from "@/components/homePersonal/theme-provider"
 import { ChatBotButton } from "@/components/homePersonal/chat-bot-button"
 import { ChatBotWindow } from "@/components/homePersonal/chat-bot-window"
 import { LogoutButton } from "@/components/homePersonal/logout-button"
+import { TransactionSection } from "@/components/homePersonal/transaction-section"
 import { useUser } from "../../context/ContextUserData"
 
 export default function HomePage() {
@@ -70,8 +71,14 @@ export default function HomePage() {
               </header>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <div className="animate-in fade-in slide-in-from-left duration-700" style={{ animationDelay: "100ms" }}>
-                  <BalanceCard />
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="animate-in fade-in slide-in-from-left duration-700" style={{ animationDelay: "100ms" }}>
+                    <BalanceCard />
+                  </div>
+
+                  <div className="animate-in fade-in slide-in-from-left duration-700" style={{ animationDelay: "400ms" }}>
+                    <TransactionSection />
+                  </div>
                 </div>
 
                 <div

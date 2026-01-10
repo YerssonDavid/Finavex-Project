@@ -12,7 +12,7 @@ export function BalanceCard() {
     <Card className="bg-card/70 backdrop-blur-[20px] border-white/20 p-6 h-full shadow-xl hover:shadow-2xl transition-all duration-500 group">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-muted-foreground">Disponible</h2>
+          <h2 className="text-lg font-semibold text-muted-foreground">Saldo Actual</h2>
           <Button
             variant="ghost"
             size="icon"
@@ -35,11 +35,11 @@ export function BalanceCard() {
 
         <div className="pt-4 border-t border-border/50 space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Ingresos</span>
+            <span className="text-sm text-muted-foreground">Ingresos del mes</span>
             <span className="text-sm font-semibold text-success">+$8,450.00</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Gastos</span>
+            <span className="text-sm text-muted-foreground">Gastos del mes</span>
             <span className="text-sm font-semibold text-destructive">-$3,170.00</span>
           </div>
         </div>
