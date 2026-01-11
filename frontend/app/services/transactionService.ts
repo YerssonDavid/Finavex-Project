@@ -1,14 +1,18 @@
 import type { Transaction, TransactionResponse } from "@/types/transaction"
 
-// Configuración de la API - MODIFICA ESTO CON TU URL REAL
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+// Configuración de la API - Solo endpoint de ingresos por ahora
+const API_ENDPOINTS = {
+  // Endpoint para registrar ingresos
+  income: "http://localhost:8080/save-money",
+}
 
 /**
  * Servicio para manejar transacciones financieras
  */
 export class TransactionService {
   /**
-   * Registra una nueva transacción (ingreso o gasto)
+   * Registra una nueva transacción de ingreso
+   * Incluye el correo del usuario desde localStorage
    * @param transaction - Datos de la transacción
    * @param token - Token de autenticación (opcional)
    * @returns Respuesta del servidor con la transacción creada
@@ -18,6 +22,30 @@ export class TransactionService {
     token?: string
   ): Promise<TransactionResponse> {
     try {
+      // Obtener el correo del usuario del localStorage
+      let userEmail = ""
+      if (typeof window !== "undefined") {
+        const userDataStr = localStorage.getItem("userData")
+        if (userDataStr) {
+          try {
+            const userData = JSON.parse(userDataStr)
+            userEmail = userData.email || ""
+          } catch (parseError) {
+            console.warn("⚠️ No se pudo parsear userData del localStorage:", parseError)
+          }
+        }
+      }
+
+      if (!userEmail) {
+        throw new Error("No se encontró el correo del usuario. Por favor, inicia sesión nuevamente.")
+      }
+
+      // Construir los datos a enviar incluyendo el email
+      const transactionData = {
+        ...transaction,
+        email: userEmail,
+      }
+
       const headers: HeadersInit = {
         "Content-Type": "application/json",
       }
@@ -27,25 +55,54 @@ export class TransactionService {
         headers["Authorization"] = `Bearer ${token}`
       }
 
-      const response = await fetch(`${API_BASE_URL}/transactions`, {
+      // Usar solo el endpoint de ingresos
+      const endpoint = API_ENDPOINTS.income
+
+      console.log(`📤 Enviando INGRESO a: ${endpoint}`)
+      console.log("📋 Datos enviados:", transactionData)
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers,
-        body: JSON.stringify(transaction),
+        body: JSON.stringify(transactionData),
       })
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`)
+      // Obtener la respuesta del servidor
+      let responseData: any
+      try {
+        responseData = await response.json()
+      } catch {
+        responseData = {}
       }
 
-      const data: TransactionResponse = await response.json()
-      return data
+      // Verificar si la respuesta fue exitosa
+      if (response.ok) {
+        console.log("✅ Ingreso registrado exitosamente:", responseData)
+        return {
+          success: true,
+          message: "✅ Ingreso registrado correctamente",
+          data: responseData.data || transactionData,
+        }
+      } else {
+        console.error("❌ Error en la respuesta del servidor:", responseData)
+        const errorMessage =
+          responseData.message || `Error ${response.status}: ${response.statusText}`
+        return {
+          success: false,
+          message: `❌ No fue posible registrar el ingreso. ${errorMessage}`,
+          data: undefined,
+        }
+      }
     } catch (error) {
-      console.error("❌ Error al crear transacción:", error)
-      throw error
+      console.error("❌ Error al registrar ingreso:", error)
+      const errorMessage = error instanceof Error ? error.message : "Error desconocido"
+      return {
+        success: false,
+        message: `❌ No fue posible registrar el ingreso. ${errorMessage}`,
+        data: undefined,
+      }
     }
   }
-
   /**
    * Obtiene todas las transacciones del usuario
    * @param token - Token de autenticación
@@ -61,7 +118,8 @@ export class TransactionService {
         headers["Authorization"] = `Bearer ${token}`
       }
 
-      const response = await fetch(`${API_BASE_URL}/transactions`, {
+      // Actualiza esta URL con tu endpoint real para obtener transacciones
+      const response = await fetch("http://localhost:8080/transactions", {
         method: "GET",
         headers,
       })
@@ -93,7 +151,8 @@ export class TransactionService {
         headers["Authorization"] = `Bearer ${token}`
       }
 
-      const response = await fetch(`${API_BASE_URL}/transactions/${id}`, {
+      // Actualiza esta URL con tu endpoint real para eliminar transacciones
+      const response = await fetch(`http://localhost:8080/transactions/${id}`, {
         method: "DELETE",
         headers,
       })
