@@ -160,7 +160,7 @@ export const useFormLoginUser = () => {
 
                     await Swal.fire({
                         title: "Cuenta Bloqueada por el Servidor",
-                        text: `${errorData.message || 'Tu cuenta ha sido bloqueada. Intenta nuevamente en 30 minutos.'}`,
+                        text: `${errorData.message || 'Tu cuenta ha sido bloqueada. Intenta nuevamente en 3 minutos.'}`,
                         icon: "error",
                         confirmButtonText: "Aceptar"
                     });
