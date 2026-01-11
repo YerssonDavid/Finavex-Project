@@ -8,7 +8,8 @@ import { useState, useEffect } from 'react';
 
 // Constantes para el bloqueo
 const MAX_ATTEMPTS = 3;
-const BLOCK_DURATION_MS = 30 * 60 * 1000; // 30 minutos en milisegundos
+//const BLOCK_DURATION_MS = 30 * 60 * 1000; // 30 minutos en milisegundos
+const BLOCK_DURATION_MS = 3 * 60 * 1000; // 3 minutos en milisegundos
 const LOGIN_ATTEMPTS_KEY = 'loginAttempts';
 const LOGIN_BLOCK_TIME_KEY = 'loginBlockTime';
 
@@ -160,7 +161,7 @@ export const useFormLoginUser = () => {
 
                     await Swal.fire({
                         title: "Cuenta Bloqueada por el Servidor",
-                        text: `${errorData.message || 'Tu cuenta ha sido bloqueada. Intenta nuevamente en 30 minutos.'}`,
+                        text: `${errorData.message || 'Tu cuenta ha sido bloqueada. Intenta nuevamente en 3 minutos.'}`,
                         icon: "error",
                         confirmButtonText: "Aceptar"
                     });

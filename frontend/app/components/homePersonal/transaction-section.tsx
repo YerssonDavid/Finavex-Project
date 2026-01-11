@@ -8,7 +8,7 @@ import type { Transaction } from "@/types/transaction"
 import { TransactionService } from "@/services/transactionService"
 
 // MODO DE DESARROLLO: Cambia a 'false' para usar la API real
-const SIMULATION_MODE = true
+const SIMULATION_MODE = false
 
 export function TransactionSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -48,17 +48,17 @@ export function TransactionSection() {
 
         const response = await TransactionService.createTransaction(transactionData, token)
 
+        // Verificar si la respuesta fue exitosa
         if (response.success) {
           console.log("✅ Transacción registrada exitosamente:", response.data)
 
-          // Aquí puedes actualizar el estado global o recargar datos
-          // Por ejemplo, si tienes un contexto de transacciones:
-          // await refreshTransactions()
-          // o dispatch(addTransaction(response.data))
-
-          alert(`✅ ${transactionType === 'income' ? 'Ingreso' : 'Gasto'} registrado exitosamente`)
+          // Mostrar mensaje de éxito
+          alert(response.message || `✅ ${transactionType === 'income' ? 'Ingreso' : 'Gasto'} registrado correctamente`)
         } else {
-          throw new Error(response.message || "Error al registrar transacción")
+          console.error("❌ Error en la respuesta:", response.message)
+
+          // Mostrar mensaje de error
+          throw new Error(response.message || "No fue posible registrar el movimiento")
         }
       }
     } catch (error) {
@@ -66,7 +66,7 @@ export function TransactionSection() {
 
       // Mostrar error al usuario
       const errorMessage = error instanceof Error ? error.message : "Error desconocido"
-      alert(`❌ Error: ${errorMessage}`)
+      alert(`❌ ${errorMessage}`)
 
       // Re-lanzar el error para que el modal lo maneje
       throw error
