@@ -242,8 +242,8 @@ export function TransactionModal({ isOpen, onClose, type, onSubmit }: Transactio
               </label>
               <textarea
                 value={note}
-                onChange={(e) => setNote(e.target.value)}
-                maxLength={200}
+                onChange={(e) => setNote(e.target.value.slice(0, 100))}
+                maxLength={100}
                 className={`
                   w-full px-4 py-3
                   bg-gray-50 dark:bg-gray-800

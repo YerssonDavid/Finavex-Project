@@ -93,7 +93,7 @@ export function TransactionSection() {
               <TrendingUp size={80} strokeWidth={1} />
             </div>
             <div className="relative z-10 flex flex-col items-center gap-3">
-              <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 group-hover:bg-white/30 transition-colors">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 group-hover:bg-white/30 transition-colors cursor-pointer">
                 <Plus size={28} strokeWidth={2.5} />
               </div>
               <span className="font-bold text-lg">Ingreso</span>
@@ -109,7 +109,7 @@ export function TransactionSection() {
               <TrendingDown size={80} strokeWidth={1} />
             </div>
             <div className="relative z-10 flex flex-col items-center gap-3">
-              <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 group-hover:bg-white/30 transition-colors">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 group-hover:bg-white/30 transition-colors cursor-pointer">
                 <Minus size={28} strokeWidth={2.5} />
               </div>
               <span className="font-bold text-lg">Gasto</span>
