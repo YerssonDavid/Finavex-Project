@@ -1,4 +1,5 @@
 import type { Transaction, TransactionResponse } from "@/types/transaction"
+import Swal from "sweetalert2";
 
 // Configuración de la API - Solo endpoint de ingresos por ahora
 const API_ENDPOINTS = {
@@ -40,10 +41,22 @@ export class TransactionService {
         throw new Error("No se encontró el correo del usuario. Por favor, inicia sesión nuevamente.")
       }
 
-      // Construir los datos a enviar incluyendo el email
-      const transactionData = {
-        ...transaction,
-        email: userEmail,
+      // Formatear la fecha en YYYY-MM-DD
+      const transactionDate = new Date(transaction.date)
+      const formattedDate = transactionDate.toISOString().split('T')[0]
+
+      // Construir los datos en el formato exacto que requiere la API
+      const transactionData: any = {
+        date: formattedDate,
+        savedAmount: transaction.amount,
+        user: {
+          email: userEmail,
+        },
+      }
+
+      // Agregar nota solo si está presente
+      if (transaction.note) {
+        transactionData.note = transaction.note
       }
 
       const headers: HeadersInit = {
@@ -59,7 +72,7 @@ export class TransactionService {
       const endpoint = API_ENDPOINTS.income
 
       console.log(`📤 Enviando INGRESO a: ${endpoint}`)
-      console.log("📋 Datos enviados:", transactionData)
+      console.log("📋 Datos enviados:", JSON.stringify(transactionData, null, 2))
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -78,6 +91,15 @@ export class TransactionService {
       // Verificar si la respuesta fue exitosa
       if (response.ok) {
         console.log("✅ Ingreso registrado exitosamente:", responseData)
+
+        // Mostrar alerta de éxito
+        await Swal.fire({
+          title: "Ingreso registrado",
+          text: `✅ Ingreso registrado correctamente`,
+          icon: "success",
+          confirmButtonText: "ok"
+        })
+
         return {
           success: true,
           message: "✅ Ingreso registrado correctamente",
@@ -87,6 +109,15 @@ export class TransactionService {
         console.error("❌ Error en la respuesta del servidor:", responseData)
         const errorMessage =
           responseData.message || `Error ${response.status}: ${response.statusText}`
+
+        // Mostrar alerta de error
+        await Swal.fire({
+          title: "Error al registrar",
+          text: errorMessage,
+          icon: "error",
+          confirmButtonText: "ok"
+        })
+
         return {
           success: false,
           message: `❌ No fue posible registrar el ingreso. ${errorMessage}`,

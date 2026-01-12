@@ -83,7 +83,7 @@ export function LogoutButton({ className }: LogoutButtonProps) {
       onClick={handleLogout}
       variant="destructive"
       size="icon"
-      className={`fixed top-6 left-6 z-50 h-12 w-12 rounded-xl glass-strong border border-red-500/20 shadow-2xl hover:scale-110 transition-all duration-300 animate-in fade-in slide-in-from-top ${className || ''}`}
+      className={`fixed top-6 left-6 z-50 h-12 w-12 rounded-xl glass-strong border border-red-500/20 shadow-2xl hover:scale-110 transition-all duration-300 animate-in fade-in slide-in-from-top cursor-pointer ${className || ''}`}
     >
       <LogOut className="h-5 w-5 text-white" />
     </Button>

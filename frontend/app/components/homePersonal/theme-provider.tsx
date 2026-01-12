@@ -21,6 +21,28 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [themeStyle, setThemeStyle] = useState<ThemeStyle>("masculine")
   const [mounted, setMounted] = useState(false)
 
+  // Detectar el tema del sistema operativo y aplicarlo por defecto
+  useEffect(() => {
+    // Verificar si el navegador soporta la consulta de preferencia de color
+    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setTheme("dark")
+    } else {
+      setTheme("light")
+    }
+
+    // Escuchar cambios en la preferencia del sistema operativo
+    const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)")
+    const handleChange = (e: MediaQueryListEvent) => {
+      setTheme(e.matches ? "dark" : "light")
+    }
+
+    darkModeQuery.addEventListener("change", handleChange)
+
+    return () => {
+      darkModeQuery.removeEventListener("change", handleChange)
+    }
+  }, [])
+
   // Evitar problemas de hidratación
   useEffect(() => {
     setMounted(true)
