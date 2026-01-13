@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="49bd39b9-576a-472c-97c3-524e749cbe6f" name="Changes" comment="Added method for format value to user in response request">
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/semillero/Finavex/controllers/movementsMoney/saveMoneyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/semillero/Finavex/controllers/movementsMoney/saveMoneyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2025-11-17T190223.406.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/2025-11-17T190542.400.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/httpRequests/http-requests-log.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,8 +40,11 @@
     &quot;accountId&quot;: &quot;ac885a8e-3fa5-405d-a735-5cd26463d0e8&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/com/semillero/Finavex/services/saveMoney/RegisterSaveMoney.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="HttpClientEndpointsTabState">
-    <option name="cachedRequestData" value="&lt;CachedHttpClientTabRequests&gt;&#10;  &lt;entry key=&quot;5b70ff42e3c2bb48442d236453f5170c7229babf&quot; value=&quot;###&amp;#10;POST http://localhost:8080/Users/login&amp;#10;Content-Type: application/json&amp;#10;&amp;#10;{&amp;#10;  &amp;quot;email&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;password&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;id&amp;quot;: 0&amp;#10;}&quot; /&gt;&#10;  &lt;entry key=&quot;f0b66c4c9b09e9f6d038b2a6b3d590e40611b3fe&quot; value=&quot;###&amp;#10;POST http://localhost:8080/Users/register&amp;#10;Content-Type: application/json&amp;#10;&amp;#10;{&amp;#10;  &amp;quot;id&amp;quot;: 0,&amp;#10;  &amp;quot;name&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;middleName&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;surname&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;secondSurname&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;documentNumber&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;age&amp;quot;: 0,&amp;#10;  &amp;quot;dateOfBirth&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;phone&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;email&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;password&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;numberAttemptPassword&amp;quot;: 0&amp;#10;}&quot; /&gt;&#10;&lt;/CachedHttpClientTabRequests&gt;" />
+    <option name="cachedRequestData" value="&lt;CachedHttpClientTabRequests&gt;&#10;  &lt;entry key=&quot;3d4989d96774b0b519b99384767898231c8017a8&quot; value=&quot;###&amp;#10;POST http://localhost:8080/save-money&amp;#10;Content-Type: application/json&amp;#10;&amp;#10;  &amp;quot;savedAmount&amp;quot;: 0,&amp;#10;  &amp;quot;note&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;date&amp;quot;: &amp;quot;&amp;quot;,&amp;#10;  &amp;quot;user&amp;quot;: {}&amp;#10;}&quot; /&gt;&#10;&lt;/CachedHttpClientTabRequests&gt;" />
   </component>
   <component name="HttpClientOnboardingState">{
   &quot;isOnboardingCommentShown&quot;: true
@@ -76,6 +82,8 @@
     &quot;HTTP Request.RequestRegistry | #2.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.RequestRegistry | Get Data User.executor&quot;: &quot;Run&quot;,
     &quot;HTTP Request.generated-requests | #2.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP Request.generated-requests | #3.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.sendCodeRecoveryTest.sendCode_success.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
     &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
@@ -84,6 +92,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;Shell Script.Doppler Run Spring Boot.executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.FinavexApplication.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;backend&quot;,
@@ -97,7 +106,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.19770116&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.github.copilot.settings.chat.ChatConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.mcpserver.settings&quot;,
     &quot;ts.external.directory.path&quot;: &quot;D:\\Finavex\\Finavex\\frontend\\frontend\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -120,27 +129,17 @@
         <entry key="HttpClient.HttpRequestRunConfigurationType">
           <value>
             <map>
-              <entry key="All in RequestRegistry" value="STOPPED" />
               <entry key="RequestRegistry | #1" value="STOPPED" />
               <entry key="RequestRegistry | #2" value="STOPPED" />
-              <entry key="RequestRegistry | Get Data User" value="STOPPED" />
               <entry key="generated-requests | #2" value="STOPPED" />
+              <entry key="generated-requests | #3" value="STOPPED" />
             </map>
           </value>
         </entry>
       </map>
     </option>
   </component>
-  <component name="RunManager" selected="Shell Script.Doppler Run Spring Boot">
-    <configuration name="All in Request" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/Request.http">
-      <method v="2" />
-    </configuration>
-    <configuration name="All in RequestRegistry" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" path="$PROJECT_DIR$/RequestRegistry.http">
-      <method v="2" />
-    </configuration>
-    <configuration name="RequestRegistry | Get Data User" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/backend/RequestRegistry.http" executionIdentifier="Get Data User" index="3" runType="Run single request">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="HTTP Request.generated-requests | #3">
     <configuration name="RequestRegistry | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/backend/RequestRegistry.http" executionIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -149,6 +148,25 @@
     </configuration>
     <configuration name="generated-requests | #2" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#2" index="2" runType="Run single request">
       <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#3" index="3" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="sendCodeRecoveryTest.sendCode_success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Finavex" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.semillero.Finavex.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.semillero.Finavex" />
+      <option name="MAIN_CLASS_NAME" value="com.semillero.Finavex.sendCodeRecoveryTest" />
+      <option name="METHOD_NAME" value="sendCode_success" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="Doppler Run Spring Boot" type="ShConfigurationType">
       <option name="SCRIPT_TEXT" value="doppler run mvn spring-boot:run" />
@@ -203,31 +221,30 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="HTTP Request.All in Request" />
+      <item itemvalue="HTTP Request.generated-requests | #3" />
       <item itemvalue="HTTP Request.generated-requests | #2" />
-      <item itemvalue="HTTP Request.All in RequestRegistry" />
-      <item itemvalue="HTTP Request.RequestRegistry | Get Data User" />
       <item itemvalue="HTTP Request.RequestRegistry | #1" />
       <item itemvalue="HTTP Request.RequestRegistry | #2" />
+      <item itemvalue="JUnit.sendCodeRecoveryTest.sendCode_success" />
       <item itemvalue="Shell Script.Doppler Run Spring Boot" />
       <item itemvalue="Spring Boot.FinavexApplication (1)" />
       <item itemvalue="Spring Boot.FinavexApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.generated-requests | #3" />
         <item itemvalue="HTTP Request.generated-requests | #2" />
+        <item itemvalue="JUnit.sendCodeRecoveryTest.sendCode_success" />
         <item itemvalue="HTTP Request.RequestRegistry | #2" />
         <item itemvalue="HTTP Request.RequestRegistry | #1" />
-        <item itemvalue="HTTP Request.RequestRegistry | Get Data User" />
-        <item itemvalue="HTTP Request.All in RequestRegistry" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.26830.84" />
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.138" />
       </set>
     </attachedChunks>
   </component>
@@ -302,7 +319,21 @@
       <workItem from="1766620442736" duration="2309000" />
       <workItem from="1766690802816" duration="9526000" />
       <workItem from="1766784248468" duration="6079000" />
-      <workItem from="1766872083782" duration="1185000" />
+      <workItem from="1766872083782" duration="7397000" />
+      <workItem from="1767041333526" duration="14567000" />
+      <workItem from="1767143881969" duration="2437000" />
+      <workItem from="1767223030961" duration="3130000" />
+      <workItem from="1767297589222" duration="5052000" />
+      <workItem from="1767303838877" duration="9946000" />
+      <workItem from="1767397871927" duration="6780000" />
+      <workItem from="1767490645094" duration="374000" />
+      <workItem from="1767575216415" duration="1112000" />
+      <workItem from="1767653160529" duration="8291000" />
+      <workItem from="1767722833063" duration="886000" />
+      <workItem from="1767987680175" duration="3818000" />
+      <workItem from="1768085886444" duration="4329000" />
+      <workItem from="1768178373338" duration="4886000" />
+      <workItem from="1768259299668" duration="5357000" />
     </task>
     <task id="LOCAL-00001" summary="I add library of hash">
       <option name="closed" value="true" />
@@ -565,6 +596,20 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-core" />
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.validation:jakarta.validation-api" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.persistence:jakarta.persistence-api" />
+    <option featureType="dependencySupport" implementationName="java:io.projectreactor:reactor-core" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-commons" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate.validator:hibernate-validator" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+    <option featureType="dependencySupport" implementationName="java:org.projectlombok:lombok" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

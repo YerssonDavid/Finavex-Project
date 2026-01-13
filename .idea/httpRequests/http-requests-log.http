@@ -1,3 +1,119 @@
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+<> 2026-01-05T202803.200.json
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+<> 2026-01-05T194345.200.json
+
+###
+
+POST http://localhost:8080/save-money
+Content-Type: application/json
+Content-Length: 148
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+{
+  "date": "2025-12-25",
+  "note":"Pago de servicio AI",
+  "amountSaved": 5000000,
+  "user":{
+    "id":1,
+    "email": "yersson222@gmail.com"
+  }
+}
+
+<> 2026-01-05T194340.409.json
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+<> 2026-01-05T194333.200.json
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+###
+
+GET http://localhost:8080/api/ai-voice
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.3.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+Cookie: JSESSIONID=EBB012DFA81C8ADF07E2C5F917AB9DCA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
+
+###
+
 POST http://localhost:8080/save-money
 Content-Type: application/json
 Content-Length: 148
@@ -736,278 +852,6 @@ Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy0
 }
 
 <> 2025-11-17T190600.200.json
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-<> 2025-11-17T190542.400.json
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-<> 2025-11-17T190223.406.json
-
-###
-
-POST http://localhost:8080/Users/login
-Content-Type: application/json
-Content-Length: 63
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=752897FE9FE7EE94FF10FA9D1DBC80EA; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=7995CC82C4FEDCC5390061A13724E41B; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=7995CC82C4FEDCC5390061A13724E41B; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
-
-###
-
-POST http://localhost:8080/Users/register
-Content-Type: application/json
-Content-Length: 256
-User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2025.2.3
-Accept-Encoding: br, deflate, gzip, x-gzip
-Accept: */*
-Cookie: JSESSIONID=7995CC82C4FEDCC5390061A13724E41B; SESSION=ODhmMTJlMDctNDgwMy00YzZhLTk0ZDctNTAxNjQxNWMwYmNm
-
-{
-  "name": "David",
-  "middleName": "Test",
-  "surname": "Test",
-  "secondSurname": "Test",
-  "documentNumber": "12345678901",
-  "age": 28,
-  "dateOfBirth": "19961215",
-  "phone": "3001234567",
-  "email": "test@gmail.com",
-  "password": "SecurePass123!"
-}
 
 ###
 
