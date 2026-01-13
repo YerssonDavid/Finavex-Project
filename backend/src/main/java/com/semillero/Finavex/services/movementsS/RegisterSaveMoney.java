@@ -1,10 +1,10 @@
 package com.semillero.Finavex.services.saveMoney;
 
 import com.semillero.Finavex.dto.responseMovementsMoney.saveMoneyDto;
-import com.semillero.Finavex.entity.SaveMoney;
+import com.semillero.Finavex.entity.movements.SaveMoney;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
-import com.semillero.Finavex.repository.moneyR;
+import com.semillero.Finavex.repository.movementsR.moneyR;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
