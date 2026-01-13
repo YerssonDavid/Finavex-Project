@@ -21,7 +21,7 @@ public class RateLimitingService {
 
     private Bucket createNewBucket (String key) {
         //Permite 3 intentos cada 30 minutos
-        Bandwidth limit = Bandwidth.classic(3, Refill.intervally(3, Duration.ofMinutes(30)));
+        Bandwidth limit = Bandwidth.classic(3, Refill.intervally(3, Duration.ofMinutes(2))); //Change the time in prod to 30 min
         return Bucket.builder()
                 .addLimit(limit)
                 .build();

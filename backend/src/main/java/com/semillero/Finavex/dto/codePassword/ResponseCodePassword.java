@@ -1,4 +1,4 @@
-package com.semillero.Finavex.dto;
+package com.semillero.Finavex.dto.codePassword;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

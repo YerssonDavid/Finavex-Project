@@ -1,6 +1,6 @@
 package com.semillero.Finavex.services.recoveryPassword;
 
-import com.semillero.Finavex.dto.ResponseComparisonCode;
+import com.semillero.Finavex.dto.codePassword.ResponseComparisonCode;
 import com.semillero.Finavex.services.emails.codeRecoverPassword.CodeExpirationEntry;
 import com.semillero.Finavex.services.emails.codeRecoverPassword.EmailSendCode;
 import lombok.RequiredArgsConstructor;

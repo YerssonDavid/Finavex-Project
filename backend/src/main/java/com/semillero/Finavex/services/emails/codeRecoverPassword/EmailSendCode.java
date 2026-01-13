@@ -2,7 +2,7 @@ package com.semillero.Finavex.services.emails.codeRecoverPassword;
 
 
 import com.semillero.Finavex.dto.ApiResponse;
-import com.semillero.Finavex.dto.ResponseCodePassword;
+import com.semillero.Finavex.dto.codePassword.ResponseCodePassword;
 import com.semillero.Finavex.repository.UserR;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
