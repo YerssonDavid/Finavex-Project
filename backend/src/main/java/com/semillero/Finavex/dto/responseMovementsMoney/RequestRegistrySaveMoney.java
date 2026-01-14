@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestSaveMoney {
+public class RequestRegistrySaveMoney {
     private Double savedAmount;
     private String note;
     private LocalDate date;
