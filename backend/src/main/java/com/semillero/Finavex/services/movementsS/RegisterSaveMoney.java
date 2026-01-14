@@ -4,7 +4,7 @@ import com.semillero.Finavex.dto.responseMovementsMoney.saveMoneyDto;
 import com.semillero.Finavex.entity.movements.SaveMoney;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
-import com.semillero.Finavex.repository.movementsR.moneyR;
+import com.semillero.Finavex.repository.movementsR.SaveR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public class RegisterSaveMoney {
     // Inject dependencies here
-    private final moneyR moneyR;
+    private final SaveR SaveR;
     private final UserR userR;
     private final CurrencyFormatter currencyFormatter;
 
@@ -44,7 +44,7 @@ public class RegisterSaveMoney {
         saveMoney.setDate(now);
         saveMoney.setNoteMovement(noteMovement);
 
-        moneyR.save(saveMoney);
+        SaveR.save(saveMoney);
 
         return ResponseEntity.ok(
                 saveMoneyDto.builder()
