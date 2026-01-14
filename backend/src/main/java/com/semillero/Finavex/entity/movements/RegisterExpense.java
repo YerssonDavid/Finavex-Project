@@ -2,9 +2,12 @@ package com.semillero.Finavex.entity.movements;
 
 import com.semillero.Finavex.entity.User;
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 @Table(name="Gastos")
 public class RegisterExpense {
     @Id
