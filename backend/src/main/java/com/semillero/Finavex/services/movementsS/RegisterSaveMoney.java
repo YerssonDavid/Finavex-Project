@@ -23,11 +23,11 @@ public class RegisterSaveMoney {
 
     public ResponseEntity<saveMoneyDto> registerSaveMoney(String email, String noteMovement, Double mountSaved){
         if(!userR.existsByEmail(email.toLowerCase().trim())){
-            return ResponseEntity.badRequest().body(
-                    saveMoneyDto.builder()
-                            .message("El usuario no existe")
-                            .success(false)
-                            .build()
+            return ResponseEntity.badRequest().body(new saveMoneyDto(
+                            "El usuario no existe",
+                            false,
+                      null
+                    )
             );
         }
 
