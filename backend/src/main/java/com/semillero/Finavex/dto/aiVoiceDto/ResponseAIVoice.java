@@ -1,4 +1,4 @@
-package com.semillero.Finavex.dto;
+package com.semillero.Finavex.dto.aiVoiceDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseCodePassword<T> {
-    //private Long code;
-    private String message;
+public class ResponseAIVoice {
+    private String token;
+    private String region;
 }
