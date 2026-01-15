@@ -46,12 +46,11 @@ public class RegisterSaveMoney {
 
         SaveR.save(saveMoney);
 
-        return ResponseEntity.ok(
-                saveMoneyDto.builder()
-                        .message("Movimiento registrado con éxito")
-                        .success(true)
-                        .formattedAmount("$" + currencyFormatter.formatCurrencyWithoutSymbol(mountSaved))
-                        .build()
+        return ResponseEntity.ok(new saveMoneyDto(
+                "Movimiento registrado con éxito",
+                true,
+                "$" + currencyFormatter.formatCurrencyWithoutSymbol(mountSaved)
+                )
         );
     }
 }
