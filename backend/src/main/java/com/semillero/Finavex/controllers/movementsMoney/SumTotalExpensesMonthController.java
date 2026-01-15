@@ -1,0 +1,20 @@
+package com.semillero.Finavex.controllers.movementsMoney;
+
+import com.semillero.Finavex.dto.responseMovementsMoney.RequestSumTotalExpensesMonth;
+import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSumTotalExpensesMonth;
+import com.semillero.Finavex.services.movementsS.SumTotalExpenseMonth;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/expenses/month/sum")
+@RequiredArgsConstructor
+public class SumTotalExpensesMonthController {
+    private final SumTotalExpenseMonth sumTotalExpenseMonth;
+
+    @PostMapping()
+    public ResponseEntity<ResponseSumTotalExpensesMonth> sumTotalExpensesMonth (@RequestBody RequestSumTotalExpensesMonth requestSumTotalExpensesMonth){
+        return sumTotalExpenseMonth.sumTotalExpenseMonth(requestSumTotalExpensesMonth);
+    }
+}
