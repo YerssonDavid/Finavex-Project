@@ -1,20 +1,23 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.responseMovementsMoney.RequestSumTotalExpensesMonth;
+import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSumTotalExpensesMonth;
 import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class SumTotalSaveMonth {
+public class SumTotalExpenseMonth {
     private final ExpenseR expenseR;
 
-    public ResponseEntity<Double> sumTotalExpenseMonth(String email) {
-        if(email == null || email.isEmpty() || expenseR.idByEmail(email) == null){
+    public ResponseEntity<ResponseSumTotalExpensesMonth> sumTotalExpenseMonth(RequestSumTotalExpensesMonth requestSumTotalExpensesMonth) {
+        if(requestSumTotalExpensesMonth.getEmail() == null || requestSumTotalExpensesMonth.getEmail().isEmpty() || expenseR.idByEmail(requestSumTotalExpensesMonth.getEmail()) == null){
             return ResponseEntity.badRequest().build();
         }
 
@@ -26,7 +29,11 @@ public class SumTotalSaveMonth {
 
         LocalDateTime end = start.plusMonths(1);
 
-        Double sum = expenseR.sumByPeriod(start, end, email);
-        return ResponseEntity.ok(sum);
+        Double sum = expenseR.sumByPeriod(start, end, requestSumTotalExpensesMonth.getEmail());
+
+        NumberFormat format = NumberFormat.getNumberInstance();
+        String sumFormat = format.format(sum);
+
+        return ResponseEntity.ok(new ResponseSumTotalExpensesMonth(sumFormat));
     }
 }
