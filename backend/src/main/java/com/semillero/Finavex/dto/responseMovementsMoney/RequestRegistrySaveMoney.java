@@ -14,7 +14,6 @@ import java.time.LocalDate;
 public class RequestRegistrySaveMoney {
     private Double savedAmount;
     private String note;
-    private LocalDate date;
 
     @NotBlank(message="El email no puede estar vacio")
     @Email(message="El email debe tener un formato valido")

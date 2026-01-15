@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestRegistryExpense {
-    private Double ExpenseAmount;
+    private Double expenseAmount;
     private String note;
     private LocalDate date;
 
