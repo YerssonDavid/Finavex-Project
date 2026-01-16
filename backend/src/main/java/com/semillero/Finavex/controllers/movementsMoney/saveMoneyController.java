@@ -35,9 +35,9 @@ public class saveMoneyController {
     )
     public ResponseEntity<saveMoneyDto> saveMoney(@RequestBody RequestRegistrySaveMoney requestSaveMoney) {
        return registerSaveMoney.registerSaveMoney(
-               requestSaveMoney.getEmail(),
-               requestSaveMoney.getNote(),
-               requestSaveMoney.getSavedAmount()
+               requestSaveMoney.email(),
+               requestSaveMoney.note(),
+               requestSaveMoney.savedAmount()
        );
     }
 }

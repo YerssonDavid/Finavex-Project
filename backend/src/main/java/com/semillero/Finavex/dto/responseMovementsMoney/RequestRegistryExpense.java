@@ -2,21 +2,17 @@ package com.semillero.Finavex.dto.responseMovementsMoney;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class RequestRegistryExpense {
-    private Double expenseAmount;
-    private String note;
-    private LocalDate date;
+public record RequestRegistryExpense(
+        @NotNull(message="Debe ingresar un monto")
+        Double expenseAmount,
+        String note,
+        LocalDate date,
 
-    @NotBlank(message="El email no puede estar vacio")
-    @Email(message="El email debe tener un formato valido")
-    private String email;
-}
+        @NotBlank(message = "El email no puede estar vacio")
+        @Email(message = "El email debe tener un formato valido")
+        String email
+){ }

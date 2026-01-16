@@ -1,16 +1,9 @@
 package com.semillero.Finavex.dto.aiDto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class RequestAI {
-    @NotBlank(message="Mensaje invalido!")
-    private String question;
+public record RequestAI (
+        @NotBlank(message="Mensaje invalido!")
+         String question
+){
 }

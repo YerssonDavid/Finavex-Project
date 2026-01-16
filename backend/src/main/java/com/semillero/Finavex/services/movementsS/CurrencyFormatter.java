@@ -16,9 +16,6 @@ public class CurrencyFormatter {
             return "0,00";
         }
 
-        /*DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("es", "CO"));
-        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00", symbols);*/
-
         NumberFormat decimalFormat = NumberFormat.getNumberInstance(new Locale("es", "CO"));
         return decimalFormat.format(amount);
     }

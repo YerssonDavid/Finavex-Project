@@ -23,7 +23,7 @@ public class AIClientOpenAI {
     //Method to question the AI model
     public ResponseEntity<ResponseAI> ask(RequestAI question) {
 
-        if (question == null || question.getQuestion().isEmpty()){
+        if (question == null || question.question().isEmpty()){
             ResponseAI responseErrorRequest = ResponseAI.builder()
                     .response("No estas preguntando nada!")
                     .build();
