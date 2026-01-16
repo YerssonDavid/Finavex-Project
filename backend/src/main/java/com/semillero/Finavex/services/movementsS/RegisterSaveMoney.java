@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.responseMovementsMoney.RequestRegistrySaveMoney;
 import com.semillero.Finavex.dto.responseMovementsMoney.saveMoneyDto;
 import com.semillero.Finavex.entity.movements.SaveMoney;
 import com.semillero.Finavex.entity.User;
@@ -21,8 +22,8 @@ public class RegisterSaveMoney {
     private final UserR userR;
     private final CurrencyFormatter currencyFormatter;
 
-    public ResponseEntity<saveMoneyDto> registerSaveMoney(String email, String noteMovement, Double mountSaved){
-        if(!userR.existsByEmail(email.toLowerCase().trim())){
+    public ResponseEntity<saveMoneyDto> registerSaveMoney(RequestRegistrySaveMoney requestRegistrySaveMoney){
+        if(!userR.existsByEmail(requestRegistrySaveMoney.email().toLowerCase().trim())){
             return ResponseEntity.badRequest().body(new saveMoneyDto(
                             "El usuario no existe",
                             false,
@@ -31,7 +32,7 @@ public class RegisterSaveMoney {
             );
         }
 
-        String emailFormat = email.toLowerCase().trim();
+        String emailFormat = requestRegistrySaveMoney.email().toLowerCase().trim();
         log.warn(emailFormat);
 
         User persistedUser = userR.findByEmail(emailFormat).orElseThrow();
@@ -40,16 +41,16 @@ public class RegisterSaveMoney {
 
         SaveMoney saveMoney = new SaveMoney();
         saveMoney.setUser(persistedUser);
-        saveMoney.setSavedAmount(mountSaved);
+        saveMoney.setSavedAmount(requestRegistrySaveMoney.savedAmount());
         saveMoney.setDate(now);
-        saveMoney.setNoteMovement(noteMovement);
+        saveMoney.setNoteMovement(requestRegistrySaveMoney.note());
 
         SaveR.save(saveMoney);
 
         return ResponseEntity.ok(new saveMoneyDto(
                 "Movimiento registrado con éxito",
                 true,
-                "$" + currencyFormatter.formatCurrencyWithoutSymbol(mountSaved)
+                "$" + currencyFormatter.formatCurrencyWithoutSymbol(requestRegistrySaveMoney.savedAmount())
                 )
         );
     }
