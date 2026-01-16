@@ -31,7 +31,7 @@ public class RegistryExpense {
 
         String emailFormat = requestRegistryExpense.email().toLowerCase().trim();
 
-        User persistedUser = userR.findByEmail(requestRegistryExpense.email()).orElseThrow();
+        User persistedUser = userR.findByEmail(emailFormat).orElseThrow();
 
         LocalDateTime now = LocalDateTime.now();
 
