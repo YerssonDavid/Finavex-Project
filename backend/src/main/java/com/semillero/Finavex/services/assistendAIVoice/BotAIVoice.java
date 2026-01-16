@@ -27,10 +27,10 @@ public class BotAIVoice {
             }
 
             log.info("Token obtenido exitosamente, region: {}", region);
-            ResponseAIVoice response = ResponseAIVoice.builder()
-                    .token(token)
-                    .region(region)
-                    .build();
+            ResponseAIVoice response = new ResponseAIVoice(
+                    token,
+                    region
+            );
             return ResponseEntity.ok(response);
         } catch (IllegalStateException e) {
             log.error("Error de configuracion: {}", e.getMessage());
