@@ -20,35 +20,35 @@ public class RegistryExpense {
     private final CurrencyFormatter currencyFormatter;
 
     public ResponseEntity<ResponseRegistryExpense> registryExpense (RequestRegistryExpense requestRegistryExpense){
-        if(!userR.existsByEmail(requestRegistryExpense.getEmail())){
-            ResponseRegistryExpense responseFail = ResponseRegistryExpense.builder()
-                    .success(false)
-                    .message("El usuario no existe")
-                    .build();
-
+        if(!userR.existsByEmail(requestRegistryExpense.email())){
+            ResponseRegistryExpense responseFail = new ResponseRegistryExpense(
+                    "El usuario no existe!",
+                    false,
+                    null
+            );
             return ResponseEntity.badRequest().body(responseFail);
         }
 
-        String emailFormat = requestRegistryExpense.getEmail().toLowerCase().trim();
+        String emailFormat = requestRegistryExpense.email().toLowerCase().trim();
 
-        User persistedUser = userR.findByEmail(requestRegistryExpense.getEmail()).orElseThrow();
+        User persistedUser = userR.findByEmail(requestRegistryExpense.email()).orElseThrow();
 
         LocalDateTime now = LocalDateTime.now();
 
         RegisterExpense registerExpense = new RegisterExpense();
         registerExpense.setUser(persistedUser);
-        registerExpense.setExpenseAmount(requestRegistryExpense.getExpenseAmount());
+        registerExpense.setExpenseAmount(requestRegistryExpense.expenseAmount());
         registerExpense.setDate(now);
-        registerExpense.setNoteMovement(requestRegistryExpense.getNote());
+        registerExpense.setNoteMovement(requestRegistryExpense.note());
 
         expenseR.save(registerExpense);
 
-        return ResponseEntity.ok(
-                ResponseRegistryExpense.builder()
-                        .success(true)
-                        .message("Gasto Registrado con exito!")
-                        .formattedAmount("$" + currencyFormatter.formatCurrencyWithoutSymbol(requestRegistryExpense.getExpenseAmount()))
-                        .build()
+        return ResponseEntity.ok( new
+                ResponseRegistryExpense(
+                "Gasto Registrado con exito!",
+                true,
+                "$" + currencyFormatter.formatCurrencyWithoutSymbol(requestRegistryExpense.expenseAmount())
+                )
         );
     }
 }
