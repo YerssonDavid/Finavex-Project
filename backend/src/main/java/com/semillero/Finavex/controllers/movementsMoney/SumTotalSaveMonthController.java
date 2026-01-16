@@ -15,6 +15,6 @@ public class SumTotalSaveMonthController {
 
     @PostMapping()
     public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(@RequestBody RequestSumTotalSaveMonth emailRequest){
-        return sumTotalSaveMonth.sumTotalSaveMonth(emailRequest.getEmail());
+        return sumTotalSaveMonth.sumTotalSaveMonth(emailRequest.email());
     }
 }
