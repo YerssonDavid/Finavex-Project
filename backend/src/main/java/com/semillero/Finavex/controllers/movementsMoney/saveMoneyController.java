@@ -33,11 +33,7 @@ public class saveMoneyController {
                     required = true
             )
     )
-    public ResponseEntity<saveMoneyDto> saveMoney(@RequestBody RequestRegistrySaveMoney requestSaveMoney) {
-       return registerSaveMoney.registerSaveMoney(
-               requestSaveMoney.email(),
-               requestSaveMoney.note(),
-               requestSaveMoney.savedAmount()
-       );
+    public ResponseEntity<saveMoneyDto> saveMoney(@RequestBody RequestRegistrySaveMoney requestRegistrySaveMoney) {
+       return registerSaveMoney.registerSaveMoney(requestRegistrySaveMoney);
     }
 }
