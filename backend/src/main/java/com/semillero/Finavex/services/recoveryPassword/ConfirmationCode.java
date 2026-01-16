@@ -27,23 +27,23 @@ public class ConfirmationCode {
 
     public ResponseEntity<ResponseComparisonCode> comparisonCode (String email, Long codeInput) {
         if(getCode(email) == null || getCode(email).isExpired(LocalDateTime.now())){
-            ResponseComparisonCode responseError = ResponseComparisonCode.builder()
-                    .message("No se encontró ningún código para el email proporcionado.")
-                    .success(false)
-                    .build();
+            ResponseComparisonCode responseError = new ResponseComparisonCode(
+                    "No se encontró ningún código para el email proporcionado.",
+                    false
+            );
             return ResponseEntity.badRequest().body(responseError);
         }
         else if(codeInput.equals(getCode(email).getCodeVerification()) && !getCode(email).isExpired(LocalDateTime.now())) {
-            ResponseComparisonCode response = ResponseComparisonCode.builder()
-                    .message("Código de recuperación verificado exitosamente.")
-                    .success(true)
-                    .build();
+            ResponseComparisonCode response = new ResponseComparisonCode(
+                    "Código de recuperación verificado exitosamente.",
+                    true
+            );
             return ResponseEntity.ok(response);
         } else {
-            ResponseComparisonCode responseError = ResponseComparisonCode.builder()
-                    .message("Codigo de recuperación invalido!")
-                    .success(false)
-                    .build();
+            ResponseComparisonCode responseError = new ResponseComparisonCode(
+                    "Codigo de recuperación invalido!",
+                    false
+            );
             return ResponseEntity.badRequest().body(responseError);
         }
     }
