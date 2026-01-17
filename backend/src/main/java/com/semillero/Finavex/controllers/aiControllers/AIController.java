@@ -3,6 +3,7 @@ package com.semillero.Finavex.controllers.aiControllers;
 import com.semillero.Finavex.dto.aiDto.RequestAI;
 import com.semillero.Finavex.dto.aiDto.ResponseAI;
 import com.semillero.Finavex.services.assistendAI.AIClientOpenAI;
+import com.semillero.Finavex.services.assistendAI.ResponseModelOpenAI;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/AI/chat")
 @RequiredArgsConstructor
 public class AIController {
-    private final AIClientOpenAI aiClientOpenAI;
+    private final ResponseModelOpenAI responseModelOpenAI;
 
     @PostMapping("/question")
     //Documentation Swagger - API AI Assistant
@@ -33,6 +34,6 @@ public class AIController {
             )
     )
     public ResponseEntity<ResponseAI> askQuestion(@Valid @RequestBody RequestAI question){
-       return aiClientOpenAI.ask(question);
+       return ResponseEntity.ok(responseModelOpenAI.getResponse(question));
     }
 }
