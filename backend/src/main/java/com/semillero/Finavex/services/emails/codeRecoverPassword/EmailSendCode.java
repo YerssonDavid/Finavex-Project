@@ -54,9 +54,9 @@ public class EmailSendCode {
 
                 log.info("Email de recuperación de contraseña enviado exitosamente a: {}", to);
 
-                ResponseCodePassword response = ResponseCodePassword.builder()
-                                .message("Código de recuperación enviado exitosamente!")
-                                .build();
+                ResponseCodePassword response = new ResponseCodePassword(
+                        "Código de recuperación enviado exitosamente!"
+                );
 
                 return ResponseEntity.ok(response);
             } else {

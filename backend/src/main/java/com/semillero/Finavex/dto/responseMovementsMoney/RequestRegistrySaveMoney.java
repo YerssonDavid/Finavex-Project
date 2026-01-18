@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class RequestRegistrySaveMoney {
-    private Double savedAmount;
-    private String note;
+public record RequestRegistrySaveMoney(
+        Double savedAmount,
+        String note,
 
-    @NotBlank(message="El email no puede estar vacio")
-    @Email(message="El email debe tener un formato valido")
-    private String email;
+        @NotBlank(message = "El email no puede estar vacio")
+        @Email(message = "El email debe tener un formato valido")
+        String email
+
+) {
 }
+

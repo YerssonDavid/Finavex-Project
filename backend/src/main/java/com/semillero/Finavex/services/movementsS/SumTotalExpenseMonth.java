@@ -17,7 +17,7 @@ public class SumTotalExpenseMonth {
     private final ExpenseR expenseR;
 
     public ResponseEntity<ResponseSumTotalExpensesMonth> sumTotalExpenseMonth(RequestSumTotalExpensesMonth requestSumTotalExpensesMonth) {
-        if(requestSumTotalExpensesMonth.getEmail() == null || requestSumTotalExpensesMonth.getEmail().isEmpty() || expenseR.idByEmail(requestSumTotalExpensesMonth.getEmail()) == null){
+        if(requestSumTotalExpensesMonth.email() == null || requestSumTotalExpensesMonth.email().isEmpty() || expenseR.idByEmail(requestSumTotalExpensesMonth.email()) == null){
             return ResponseEntity.badRequest().build();
         }
 
@@ -29,7 +29,7 @@ public class SumTotalExpenseMonth {
 
         LocalDateTime end = start.plusMonths(1);
 
-        Double sum = expenseR.sumByPeriod(start, end, requestSumTotalExpensesMonth.getEmail());
+        Double sum = expenseR.sumByPeriod(start, end, requestSumTotalExpensesMonth.email());
 
         NumberFormat format = NumberFormat.getNumberInstance();
         String sumFormat = format.format(sum);
