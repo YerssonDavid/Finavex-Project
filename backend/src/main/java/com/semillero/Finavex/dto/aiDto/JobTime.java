@@ -1,4 +1,7 @@
-package com.semillero.Finavex.services.assistendAI;
+package com.semillero.Finavex.dto.aiDto;
 
-public class JobTime {
+public record JobTime (
+        Object value,
+        Long createdAt
+) {
 }
