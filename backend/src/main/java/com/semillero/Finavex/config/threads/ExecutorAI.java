@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 
 @Configuration
 public class ExecutorAI {
-    @Bean
+    @Bean(name = "executorService")
     public ExecutorService executorAITask () {
         return Executors.newFixedThreadPool(5);
     }
