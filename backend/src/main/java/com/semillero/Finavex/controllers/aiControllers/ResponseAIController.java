@@ -32,7 +32,7 @@ public class ResponseAIController {
         } else if(value instanceof ResponseAI responseAI){
             return ResponseEntity.ok().body(responseAI);
         } else if(value instanceof String error){
-            return ResponseEntity.ok(new ResponseAI(
+            return ResponseEntity.badRequest().body(new ResponseAI(
                     error,
                     LocalDateTime.now()
             ));
