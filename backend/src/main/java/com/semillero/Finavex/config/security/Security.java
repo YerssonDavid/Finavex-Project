@@ -46,6 +46,7 @@ public class Security {
                         .requestMatchers(HttpMethod.POST, "/expenses/month/sum").permitAll()
                         .requestMatchers(HttpMethod.POST, "/expenses/registry").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/ai-voice").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/response/*").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         //Permit access without authorization to Swagger UI and API docs from Route "http://localhost:8080/swagger-ui/index.html"
                         .requestMatchers(
