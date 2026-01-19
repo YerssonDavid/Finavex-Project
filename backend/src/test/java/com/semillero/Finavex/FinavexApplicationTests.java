@@ -1,4 +1,4 @@
-package com.semillero.Ibero.Finavex;
+package com.semillero.Finavex;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

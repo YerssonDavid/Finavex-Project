@@ -1,8 +1,10 @@
 package com.semillero.Finavex.controllers.aiControllers;
 
+import com.semillero.Finavex.dto.aiDto.JobResponseID;
 import com.semillero.Finavex.dto.aiDto.RequestAI;
 import com.semillero.Finavex.dto.aiDto.ResponseAI;
 import com.semillero.Finavex.services.assistendAI.AIClientOpenAI;
+import com.semillero.Finavex.services.assistendAI.AiOpenAI;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
@@ -10,11 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequestMapping("/AI/chat")
 @RequiredArgsConstructor
 public class AIController {
-    private final AIClientOpenAI aiClientOpenAI;
+    private final AiOpenAI aiOpenAI;
 
     @PostMapping("/question")
     //Documentation Swagger - API AI Assistant
@@ -32,7 +37,13 @@ public class AIController {
                     required = true
             )
     )
-    public ResponseEntity<ResponseAI> askQuestion(@Valid @RequestBody RequestAI question){
-       return aiClientOpenAI.ask(question);
+    public ResponseEntity<JobResponseID> askQuestion(@Valid @RequestBody RequestAI question){
+        //Code of processing the question
+        String jobId = UUID.randomUUID().toString();
+
+        aiOpenAI.processAsync(jobId, question);
+
+       return ResponseEntity.accepted()
+               .body(new JobResponseID(jobId));
     }
 }

@@ -32,3 +32,8 @@ azure:
   speech:
     key: ${API_KEY_AI_VOICE}
     region: ${AZURE_SPEECH_REGION}
+
+
+ai:
+  timeout:
+    execution: 40s

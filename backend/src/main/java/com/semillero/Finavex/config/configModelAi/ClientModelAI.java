@@ -1,6 +1,6 @@
 package com.semillero.Finavex.config.configModelAi;
 
-import com.azure.ai.inference.ChatCompletionsClient;
+import com.azure.ai.inference.ChatCompletionsAsyncClient;
 import com.azure.ai.inference.ChatCompletionsClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class ClientModelAI {
 
     @Bean
-    public ChatCompletionsClient chatCompletionsClient(){
+    public ChatCompletionsAsyncClient chatCompletionsAsyncClient(){
         String key = System.getenv("API_AI_GPT");
 
         if(key == null || key.isEmpty()){
@@ -21,15 +21,18 @@ public class ClientModelAI {
         }
 
         try {
-            ChatCompletionsClient client = new ChatCompletionsClientBuilder()
+            log.info("🔧 Configurando cliente Azure AI con endpoint: https://models.inference.ai.azure.com");
+            log.info("🔑 Token configurado: {}...", key.substring(0, Math.min(10, key.length())));
+
+            ChatCompletionsAsyncClient client = new ChatCompletionsClientBuilder()
                     .credential(new AzureKeyCredential(key))
                     .endpoint("https://models.inference.ai.azure.com")
-                    .buildClient();
+                    .buildAsyncClient();
 
-            log.info("✅ ChatCompletionsClient creado exitosamente");
+            log.info("✅ Cliente asíncrono de Azure AI configurado correctamente");
             return client;
         } catch (Exception e) {
-            log.error("❌ Error al crear ChatCompletionsClient: {}", e.getMessage(), e);
+            log.error("❌ Error al crear ChatCompletionsAsyncClient: {}", e.getMessage(), e);
             throw new IllegalStateException("Error al configurar el cliente de Azure AI: " + e.getMessage(), e);
         }
     }
