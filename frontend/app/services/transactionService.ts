@@ -1,5 +1,4 @@
 import type { Transaction, TransactionResponse } from "@/types/transaction"
-import Swal from "sweetalert2";
 
 // Configuración de la API - Solo endpoint de ingresos por ahora
 const API_ENDPOINTS = {
@@ -49,9 +48,7 @@ export class TransactionService {
       const transactionData: any = {
         date: formattedDate,
         savedAmount: transaction.amount,
-        user: {
-          email: userEmail,
-        },
+        email: userEmail,
       }
 
       // Agregar nota solo si está presente
@@ -71,7 +68,6 @@ export class TransactionService {
       // Usar solo el endpoint de ingresos
       const endpoint = API_ENDPOINTS.income
 
-      console.log(`📤 Enviando INGRESO a: ${endpoint}`)
       console.log("📋 Datos enviados:", JSON.stringify(transactionData, null, 2))
 
       const response = await fetch(endpoint, {
@@ -92,14 +88,6 @@ export class TransactionService {
       if (response.ok) {
         console.log("✅ Ingreso registrado exitosamente:", responseData)
 
-        // Mostrar alerta de éxito
-        await Swal.fire({
-          title: "Ingreso registrado",
-          text: `✅ Ingreso registrado correctamente`,
-          icon: "success",
-          confirmButtonText: "ok"
-        })
-
         return {
           success: true,
           message: "✅ Ingreso registrado correctamente",
@@ -110,13 +98,6 @@ export class TransactionService {
         const errorMessage =
           responseData.message || `Error ${response.status}: ${response.statusText}`
 
-        // Mostrar alerta de error
-        await Swal.fire({
-          title: "Error al registrar",
-          text: errorMessage,
-          icon: "error",
-          confirmButtonText: "ok"
-        })
 
         return {
           success: false,
