@@ -1,9 +1,10 @@
 "use client"
 
 import { Card } from "@/components/ui/card"
-import { TrendingUp, Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { BalanceDisplay } from "./balance-display"
 
 export function BalanceCard() {
   const [showBalance, setShowBalance] = useState(true)
@@ -23,15 +24,8 @@ export function BalanceCard() {
           </Button>
         </div>
 
-        <div className="space-y-2">
-          <div className="text-4xl font-bold text-balance bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
-            {showBalance ? "$45,280.50" : "••••••"}
-          </div>
-          <div className="flex items-center gap-2 text-success">
-            <TrendingUp className="h-4 w-4" />
-            <span className="text-sm font-medium">+12.5% este mes</span>
-          </div>
-        </div>
+        {/* Componente que consulta la API para obtener el saldo */}
+        <BalanceDisplay showBalance={showBalance} />
 
         <div className="pt-4 border-t border-border/50 space-y-3">
           <div className="flex justify-between items-center">

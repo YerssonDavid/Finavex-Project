@@ -12,7 +12,8 @@ interface TransactionModalProps {
 }
 
 export function TransactionModal({ isOpen, onClose, type, onSubmit }: TransactionModalProps) {
-  const [amount, setAmount] = useState("")
+  const [amount, setAmount] = useState("") // Valor real sin formato
+  const [displayAmount, setDisplayAmount] = useState("") // Valor mostrado con formato
   const [note, setNote] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -69,6 +70,7 @@ export function TransactionModal({ isOpen, onClose, type, onSubmit }: Transactio
 
     try {
       await onSubmit(numAmount, note.trim() || undefined)
+      setIsLoading(false)
       setIsSuccess(true)
 
       // Cerrar automáticamente después de mostrar éxito
@@ -79,7 +81,6 @@ export function TransactionModal({ isOpen, onClose, type, onSubmit }: Transactio
       const errorMessage = err instanceof Error ? err.message : "Error al registrar el movimiento"
       setError(errorMessage)
       setIsSuccess(false)
-    } finally {
       setIsLoading(false)
     }
   }
@@ -87,20 +88,50 @@ export function TransactionModal({ isOpen, onClose, type, onSubmit }: Transactio
   const handleClose = () => {
     if (isLoading) return // No cerrar si está cargando
     setAmount("")
+    setDisplayAmount("")
     setNote("")
     setError("")
     setIsSuccess(false)
     onClose()
   }
 
-  // Formatear el monto mientras se escribe
-  const formatAmount = (value: string) => {
-    // Permitir solo números y un punto decimal
-    const cleaned = value.replace(/[^0-9.]/g, "")
+  // Formatear número con separadores de miles (puntos)
+  const formatWithThousands = (value: string): string => {
+    if (!value) return ""
+
+    // Separar parte entera y decimal
+    const parts = value.split(".")
+    const integerPart = parts[0]
+    const decimalPart = parts[1]
+
+    // Agregar puntos como separadores de miles
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+
+    // Reconstruir el número
+    if (decimalPart !== undefined) {
+      return `${formattedInteger},${decimalPart}`
+    }
+    return formattedInteger
+  }
+
+  // Manejar cambio en el input de monto
+  const handleAmountChange = (value: string) => {
+    // Remover todo excepto números y coma (para decimales)
+    let cleaned = value.replace(/[^\d,]/g, "")
+
+    // Reemplazar coma por punto para procesar internamente
+    cleaned = cleaned.replace(",", ".")
+
+    // Validar formato: solo un punto decimal y máximo 2 decimales
     const parts = cleaned.split(".")
-    if (parts.length > 2) return amount // No permitir más de un punto
-    if (parts[1] && parts[1].length > 2) return amount // Máximo 2 decimales
-    return cleaned
+    if (parts.length > 2) return // No permitir más de un punto
+    if (parts[1] && parts[1].length > 2) return // Máximo 2 decimales
+
+    // Guardar el valor real (sin formato)
+    setAmount(cleaned)
+
+    // Mostrar el valor formateado
+    setDisplayAmount(formatWithThousands(cleaned))
   }
 
   if (!isOpen || !mounted) return null
@@ -198,9 +229,9 @@ export function TransactionModal({ isOpen, onClose, type, onSubmit }: Transactio
                   ref={inputRef}
                   type="text"
                   inputMode="decimal"
-                  value={amount}
+                  value={displayAmount}
                   onChange={(e) => {
-                    setAmount(formatAmount(e.target.value))
+                    handleAmountChange(e.target.value)
                     setError("")
                   }}
                   className={`

@@ -6,6 +6,8 @@ import { TransactionModal } from "./transaction-modal"
 import { Card } from "@/components/ui/card"
 import type { Transaction } from "@/types/transaction"
 import { TransactionService } from "@/services/transactionService"
+import Swal from "sweetalert2"
+import { balanceEvents } from "@/lib/balanceEvents"
 
 // MODO DE DESARROLLO: Cambia a 'false' para usar la API real
 const SIMULATION_MODE = false
@@ -30,46 +32,64 @@ export function TransactionSection() {
 
     console.log("📤 Enviando transacción al servidor:", transactionData)
 
-    try {
-      if (SIMULATION_MODE) {
-        // ✅ MODO SIMULACIÓN (Para desarrollo)
-        console.log("⚠️ MODO SIMULACIÓN ACTIVADO")
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-        console.log("✅ Transacción simulada exitosamente:", transactionData)
+    if (SIMULATION_MODE) {
+      // ✅ MODO SIMULACIÓN (Para desarrollo)
+      console.log("⚠️ MODO SIMULACIÓN ACTIVADO")
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      console.log("✅ Transacción simulada exitosamente:", transactionData)
 
-        // Mostrar notificación de éxito (puedes usar toast aquí)
-        alert(`✅ ${transactionType === 'income' ? 'Ingreso' : 'Gasto'} registrado: $${amount}${note ? `\nNota: ${note}` : ''}`)
-      } else {
-        // 🚀 MODO PRODUCCIÓN (API Real)
-        console.log("🚀 Enviando a API real...")
+      // Emitir evento para actualizar el saldo
+      balanceEvents.emit()
 
-        // Obtener el token del usuario del localStorage o del contexto
-        const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') || undefined : undefined
+      // Cerrar modal primero, luego mostrar Swal (sin await)
+      setTimeout(() => {
+        Swal.fire({
+          title: transactionType === 'income' ? "Ingreso registrado" : "Gasto registrado",
+          text: `✅ ${transactionType === 'income' ? 'Ingreso' : 'Gasto'} registrado exitosamente`,
+          icon: "success",
+          confirmButtonText: "OK"
+        })
+      }, 100)
+      return
+    }
 
-        const response = await TransactionService.createTransaction(transactionData, token)
+    // 🚀 MODO PRODUCCIÓN (API Real)
+    console.log("🚀 Enviando a API real...")
 
-        // Verificar si la respuesta fue exitosa
-        if (response.success) {
-          console.log("✅ Transacción registrada exitosamente:", response.data)
+    // Obtener el token del usuario del localStorage o del contexto
+    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') || undefined : undefined
 
-          // Mostrar mensaje de éxito
-          alert(response.message || `✅ ${transactionType === 'income' ? 'Ingreso' : 'Gasto'} registrado correctamente`)
-        } else {
-          console.error("❌ Error en la respuesta:", response.message)
+    const response = await TransactionService.createTransaction(transactionData, token)
 
-          // Mostrar mensaje de error
-          throw new Error(response.message || "No fue posible registrar el movimiento")
-        }
-      }
-    } catch (error) {
-      console.error("❌ Error al registrar transacción:", error)
+    // Verificar si la respuesta fue exitosa
+    if (response.success) {
+      console.log("✅ Transacción registrada exitosamente:", response.data)
 
-      // Mostrar error al usuario
-      const errorMessage = error instanceof Error ? error.message : "Error desconocido"
-      alert(`❌ ${errorMessage}`)
+      // Emitir evento para actualizar el saldo
+      balanceEvents.emit()
 
-      // Re-lanzar el error para que el modal lo maneje
-      throw error
+      // Mostrar Swal después de cerrar el modal (sin await para no bloquear)
+      setTimeout(() => {
+        Swal.fire({
+          title: transactionType === 'income' ? "Ingreso registrado" : "Gasto registrado",
+          text: "✅ Movimiento registrado correctamente",
+          icon: "success",
+          confirmButtonText: "OK"
+        })
+      }, 100)
+      return
+    } else {
+      console.error("❌ Error en la respuesta:", response.message)
+
+      // Mostrar error con Swal
+      Swal.fire({
+        title: "Error al registrar",
+        text: response.message || "No fue posible registrar el movimiento",
+        icon: "error",
+        confirmButtonText: "OK"
+      })
+
+      throw new Error(response.message || "Error al registrar")
     }
   }
 
