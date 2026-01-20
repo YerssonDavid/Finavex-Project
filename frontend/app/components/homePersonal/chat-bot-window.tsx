@@ -125,11 +125,51 @@ export function ChatBotWindow({ isOpen, onClose }: ChatBotWindowProps) {
         return
       }
 
-      const data = await response.json()
+      // Obtener el jobId del response
+      const jobData = await response.json()
+      const jobId = jobData.jobId
+
+      if (!jobId) {
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "bot",
+          content: "Lo siento, no se pudo obtener el ID de la solicitud. Intenta de nuevo.",
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, errorMessage])
+        return
+      }
+
+      // Polling cada segundo hasta que la respuesta sea diferente a "Procesando..."
+      let aiResponse: string = ""
+
+      while (true) {
+        const responseAIText = await fetch(`http://localhost:8080/response/${jobId}`, {
+          method: "GET"
+        })
+
+        if (!responseAIText.ok) {
+          aiResponse = "Lo siento, hubo un error al procesar tu mensaje. Intenta más tarde."
+          break
+        }
+
+        const dataAI = await responseAIText.json()
+        const currentResponse = dataAI.response ?? dataAI.answer ?? dataAI.content ?? dataAI.message ?? dataAI.result
+
+        if (currentResponse === "Procesando...") {
+          // Esperar 1 segundo antes de volver a consultar
+          await new Promise((resolve) => setTimeout(resolve, 1000))
+          continue
+        }
+
+        aiResponse = currentResponse || (typeof dataAI === "string" ? dataAI : JSON.stringify(dataAI))
+        break
+      }
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "bot",
-        content: data.response || data.answer || data.content || data.message || data.result || (typeof data === "string" ? data : JSON.stringify(data)),
+        content: aiResponse,
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, botMessage])
