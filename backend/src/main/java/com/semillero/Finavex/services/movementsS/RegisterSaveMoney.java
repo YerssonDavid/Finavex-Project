@@ -1,9 +1,12 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.responseMovementsMoney.RequestRegistrySaveMoney;
+import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSaveMoney;
 import com.semillero.Finavex.dto.responseMovementsMoney.saveMoneyDto;
 import com.semillero.Finavex.entity.movements.SaveMoney;
 import com.semillero.Finavex.entity.User;
+import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.SaveR;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +25,9 @@ public class RegisterSaveMoney {
     private final UserR userR;
     private final CurrencyFormatter currencyFormatter;
 
-    public ResponseEntity<saveMoneyDto> registerSaveMoney(RequestRegistrySaveMoney requestRegistrySaveMoney){
+    public ResponseSaveMoney registerSaveMoney(RequestRegistrySaveMoney requestRegistrySaveMoney){
         if(!userR.existsByEmail(requestRegistrySaveMoney.email().toLowerCase().trim())){
-            return ResponseEntity.badRequest().body(new saveMoneyDto(
-                            "El usuario no existe",
-                            false,
-                      null
-                    )
-            );
+            throw new UserNotFoundException("El usuario no existe");
         }
 
         String emailFormat = requestRegistrySaveMoney.email().toLowerCase().trim();
@@ -47,11 +45,11 @@ public class RegisterSaveMoney {
 
         SaveR.save(saveMoney);
 
-        return ResponseEntity.ok(new saveMoneyDto(
-                "Movimiento registrado con éxito",
-                true,
-                "$" + currencyFormatter.formatCurrencyWithoutSymbol(requestRegistrySaveMoney.savedAmount())
-                )
+        ResponseSaveMoney responseSaveMoney = new ResponseSaveMoney(
+                "Movimiento registrado con exito",
+                "$" + currencyFormatter.formatCurrencyWithoutSymbol(requestRegistrySaveMoney.savedAmount()),
+                true
         );
+        return responseSaveMoney;
     }
 }
