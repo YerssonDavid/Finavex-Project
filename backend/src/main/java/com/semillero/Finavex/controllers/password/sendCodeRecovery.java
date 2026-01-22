@@ -34,10 +34,11 @@ public class sendCodeRecovery {
             )
     )
     public ResponseEntity<?> sendCodeForEmailVerify (@RequestBody SendCodeRecoveryPassword sendCodeRecoveryPassword){
-        return emailSendCode.sendEmailCodeRecoverPassword(
+        emailSendCode.sendEmailCodeRecoverPassword(
                 sendCodeRecoveryPassword.getEmail(),
                 "Codigo de recuperación de contraseña FINAVEX",
                 "El código expirara en 10 minutos.\nEl código de recuperación es: "
         );
+        return ResponseEntity.ok().body("Código de recuperación enviado exitosamente!");
     }
 }
