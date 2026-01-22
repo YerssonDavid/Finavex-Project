@@ -17,11 +17,10 @@ import java.time.LocalDateTime;
 public class SumTotalSaveMonth {
     private final SaveR saveR;
 
-    public ResponseEntity<ResponseSumTotalSaveMonth> sumTotalSaveMonth (String email){
+    public ResponseSumTotalSaveMonth sumTotalSaveMonth (String email){
         if(email == null || email.isEmpty() || !saveR.existsByEmail(email)){
             log.error("El email no existe o no es llega!");
-            //log.warn(email);
-            return ResponseEntity.badRequest().build();
+            throw new IllegalArgumentException("El email ingresado no es valido!");
         }
 
         LocalDate now = LocalDate.now();
@@ -37,6 +36,6 @@ public class SumTotalSaveMonth {
         NumberFormat format = NumberFormat.getCurrencyInstance();
         String sumFormat = format.format(sum);
 
-        return ResponseEntity.ok(new ResponseSumTotalSaveMonth(sumFormat));
+        return new ResponseSumTotalSaveMonth(sumFormat);
     }
 }

@@ -15,6 +15,7 @@ public class SumTotalExpensesMonthController {
 
     @PostMapping()
     public ResponseEntity<ResponseSumTotalExpensesMonth> sumTotalExpensesMonth (@RequestBody RequestSumTotalExpensesMonth requestSumTotalExpensesMonth){
-        return sumTotalExpenseMonth.sumTotalExpenseMonth(requestSumTotalExpensesMonth);
+        ResponseSumTotalExpensesMonth response = sumTotalExpenseMonth.sumTotalExpenseMonth(requestSumTotalExpensesMonth);
+        return ResponseEntity.ok(response);
     }
 }

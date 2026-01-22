@@ -4,6 +4,7 @@ import com.semillero.Finavex.dto.responseMovementsMoney.RequestRegistryExpense;
 import com.semillero.Finavex.dto.responseMovementsMoney.ResponseRegistryExpense;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.entity.movements.RegisterExpense;
+import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,10 @@ public class RegistryExpense {
     private final UserR userR;
     private final CurrencyFormatter currencyFormatter;
 
-    public ResponseEntity<ResponseRegistryExpense> registryExpense (RequestRegistryExpense requestRegistryExpense){
-        if(!userR.existsByEmail(requestRegistryExpense.email())){
-            ResponseRegistryExpense responseFail = new ResponseRegistryExpense(
-                    "El usuario no existe!",
-                    false,
-                    null
-            );
-            return ResponseEntity.badRequest().body(responseFail);
+    public ResponseRegistryExpense registryExpense (RequestRegistryExpense requestRegistryExpense){
+        String email = requestRegistryExpense.email().trim().toLowerCase();
+        if(!userR.existsByEmail(email)){
+            throw new UserNotFoundException("El usuario no existe!");
         }
 
         String emailFormat = requestRegistryExpense.email().toLowerCase().trim();
@@ -43,12 +40,11 @@ public class RegistryExpense {
 
         expenseR.save(registerExpense);
 
-        return ResponseEntity.ok( new
+        return new
                 ResponseRegistryExpense(
                 "Gasto Registrado con exito!",
                 true,
                 "$" + currencyFormatter.formatCurrencyWithoutSymbol(requestRegistryExpense.expenseAmount())
-                )
         );
     }
 }

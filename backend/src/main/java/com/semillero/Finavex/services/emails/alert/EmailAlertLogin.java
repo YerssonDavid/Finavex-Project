@@ -24,7 +24,7 @@ public class EmailAlertLogin {
             log.info("Intentando enviar email a: {} con asunto: {}", to, subject);
 
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(fromEmail); // Usar el email autenticado
+            message.setFrom(fromEmail);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);
@@ -37,8 +37,6 @@ public class EmailAlertLogin {
         } catch (MailException e) {
             log.error("Error al enviar email a {}: {}", to, e.getMessage(), e);
             return false;
-            // No lanzamos la excepción para que no rompa el flujo de login
-            // En un sistema de producción podrías querer almacenar esto en una cola de reintentos
         }
     }
 }

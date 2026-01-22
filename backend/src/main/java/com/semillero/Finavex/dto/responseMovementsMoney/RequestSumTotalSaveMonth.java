@@ -1,6 +1,11 @@
 package com.semillero.Finavex.dto.responseMovementsMoney;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public record RequestSumTotalSaveMonth (
+        @NotBlank(message = "El email no puede estar vacio")
+        @Email(message = "El email no es valido")
         String email
 ){
 }
