@@ -4,7 +4,6 @@ import com.semillero.Finavex.dto.responseMovementsMoney.RequestSumTotalSaveMonth
 import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSumTotalSaveMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalSaveMonth;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Validate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
