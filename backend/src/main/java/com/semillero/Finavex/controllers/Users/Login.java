@@ -38,7 +38,9 @@ public class Login {
                     required = true
             )
     )
-    public ResponseEntity<ApiResponse<LoginResponse>> loginUser(@Valid @RequestBody DtoLogin dtoLogin){
-        return loginServ.loginUser(dtoLogin);
+    public ResponseEntity<ApiResponse> loginUser(@Valid @RequestBody DtoLogin dtoLogin){
+        ApiResponse response = loginServ.loginUser(dtoLogin);
+
+        return ResponseEntity.ok().body(response);
     }
 }
