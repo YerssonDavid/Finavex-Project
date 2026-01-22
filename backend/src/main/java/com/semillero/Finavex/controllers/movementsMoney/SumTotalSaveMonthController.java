@@ -4,7 +4,9 @@ import com.semillero.Finavex.dto.responseMovementsMoney.RequestSumTotalSaveMonth
 import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSumTotalSaveMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalSaveMonth;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Validate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +16,8 @@ public class SumTotalSaveMonthController {
     private final SumTotalSaveMonth sumTotalSaveMonth;
 
     @PostMapping()
-    public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(@RequestBody RequestSumTotalSaveMonth emailRequest){
-        return sumTotalSaveMonth.sumTotalSaveMonth(emailRequest.email());
+    public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(@RequestBody @Validated RequestSumTotalSaveMonth emailRequest){
+        ResponseSumTotalSaveMonth response = sumTotalSaveMonth.sumTotalSaveMonth(emailRequest.email().toLowerCase().trim());
+        return ResponseEntity.ok(response);
     }
 }
