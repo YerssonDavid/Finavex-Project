@@ -1,4 +1,4 @@
-package com.semillero.Finavex.dto.responseMovementsMoney;
+package com.semillero.Finavex.dto.movementsMoney;
 
 import lombok.Builder;
 

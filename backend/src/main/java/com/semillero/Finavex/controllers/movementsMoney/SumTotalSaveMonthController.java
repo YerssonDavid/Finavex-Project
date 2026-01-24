@@ -1,7 +1,7 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.responseMovementsMoney.RequestSumTotalSaveMonth;
-import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSumTotalSaveMonth;
+import com.semillero.Finavex.dto.movementsMoney.RequestSumTotalSaveMonth;
+import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalSaveMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalSaveMonth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

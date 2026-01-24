@@ -1,8 +1,7 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.responseMovementsMoney.RequestRegistrySaveMoney;
-import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSaveMoney;
-import com.semillero.Finavex.dto.responseMovementsMoney.saveMoneyDto;
+import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySaveMoney;
+import com.semillero.Finavex.dto.movementsMoney.ResponseSaveMoney;
 import com.semillero.Finavex.services.movementsS.RegisterSaveMoney;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

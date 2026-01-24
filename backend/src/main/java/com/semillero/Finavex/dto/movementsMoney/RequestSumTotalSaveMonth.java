@@ -1,4 +1,4 @@
-package com.semillero.Finavex.dto.responseMovementsMoney;
+package com.semillero.Finavex.dto.movementsMoney;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

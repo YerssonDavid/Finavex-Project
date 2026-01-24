@@ -2,6 +2,7 @@ package com.semillero.Finavex.entity;
 
 import com.semillero.Finavex.Validated.Create;
 import com.semillero.Finavex.Validated.Update;
+import com.semillero.Finavex.entity.movements.MoneyNow;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -85,4 +86,8 @@ public class User implements UserDetails {
     public String getUsername() {
         return "";
     }
+
+    //Guarda el registro en la tabla MoneyNow con una relación uno a uno
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private MoneyNow moneyNow;
 }
