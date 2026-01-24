@@ -12,5 +12,5 @@ import java.time.Duration;
 @Getter
 @Setter
 public class AiTimeout {
-    private Duration duration;
+    private Duration execution;
 }

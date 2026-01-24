@@ -36,5 +36,4 @@ azure:
 
 ai:
   timeout:
-    execution: 8s
-    http: 5s
+    execution: 40s

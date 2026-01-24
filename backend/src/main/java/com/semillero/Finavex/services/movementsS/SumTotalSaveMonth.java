@@ -1,10 +1,9 @@
 package com.semillero.Finavex.services.movementsS;
 
-import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSumTotalSaveMonth;
+import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalSaveMonth;
 import com.semillero.Finavex.repository.movementsR.SaveR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.NumberFormat;
@@ -17,11 +16,10 @@ import java.time.LocalDateTime;
 public class SumTotalSaveMonth {
     private final SaveR saveR;
 
-    public ResponseEntity<ResponseSumTotalSaveMonth> sumTotalSaveMonth (String email){
+    public ResponseSumTotalSaveMonth sumTotalSaveMonth (String email){
         if(email == null || email.isEmpty() || !saveR.existsByEmail(email)){
             log.error("El email no existe o no es llega!");
-            //log.warn(email);
-            return ResponseEntity.badRequest().build();
+            throw new IllegalArgumentException("El email ingresado no es valido!");
         }
 
         LocalDate now = LocalDate.now();
@@ -37,6 +35,6 @@ public class SumTotalSaveMonth {
         NumberFormat format = NumberFormat.getCurrencyInstance();
         String sumFormat = format.format(sum);
 
-        return ResponseEntity.ok(new ResponseSumTotalSaveMonth(sumFormat));
+        return new ResponseSumTotalSaveMonth(sumFormat);
     }
 }

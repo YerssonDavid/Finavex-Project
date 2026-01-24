@@ -1,7 +1,7 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.responseMovementsMoney.RequestSumTotalExpensesMonth;
-import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSumTotalExpensesMonth;
+import com.semillero.Finavex.dto.movementsMoney.RequestSumTotalExpensesMonth;
+import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalExpensesMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalExpenseMonth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,7 @@ public class SumTotalExpensesMonthController {
 
     @PostMapping()
     public ResponseEntity<ResponseSumTotalExpensesMonth> sumTotalExpensesMonth (@RequestBody RequestSumTotalExpensesMonth requestSumTotalExpensesMonth){
-        return sumTotalExpenseMonth.sumTotalExpenseMonth(requestSumTotalExpensesMonth);
+        ResponseSumTotalExpensesMonth response = sumTotalExpenseMonth.sumTotalExpenseMonth(requestSumTotalExpensesMonth);
+        return ResponseEntity.ok(response);
     }
 }

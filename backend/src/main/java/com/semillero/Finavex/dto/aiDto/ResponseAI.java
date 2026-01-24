@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record ResponseAI (
-        String response,
+        Object response,
         LocalDateTime timeResponse
 ) {
 }

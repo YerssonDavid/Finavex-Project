@@ -1,7 +1,7 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.responseMovementsMoney.RequestRegistrySaveMoney;
-import com.semillero.Finavex.dto.responseMovementsMoney.saveMoneyDto;
+import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySaveMoney;
+import com.semillero.Finavex.dto.movementsMoney.ResponseSaveMoney;
 import com.semillero.Finavex.services.movementsS.RegisterSaveMoney;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,7 +33,8 @@ public class saveMoneyController {
                     required = true
             )
     )
-    public ResponseEntity<saveMoneyDto> saveMoney(@RequestBody RequestRegistrySaveMoney requestRegistrySaveMoney) {
-       return registerSaveMoney.registerSaveMoney(requestRegistrySaveMoney);
+    public ResponseEntity<ResponseSaveMoney> saveMoney(@RequestBody RequestRegistrySaveMoney requestRegistrySaveMoney) {
+       ResponseSaveMoney response = registerSaveMoney.registerSaveMoney(requestRegistrySaveMoney);
+       return ResponseEntity.ok().body(response);
     }
 }
