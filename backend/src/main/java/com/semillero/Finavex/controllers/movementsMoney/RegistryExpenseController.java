@@ -1,7 +1,7 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.responseMovementsMoney.RequestRegistryExpense;
-import com.semillero.Finavex.dto.responseMovementsMoney.ResponseRegistryExpense;
+import com.semillero.Finavex.dto.movementsMoney.RequestRegistryExpense;
+import com.semillero.Finavex.dto.movementsMoney.ResponseRegistryExpense;
 import com.semillero.Finavex.services.movementsS.RegistryExpense;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
