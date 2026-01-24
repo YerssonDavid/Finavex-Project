@@ -1,10 +1,9 @@
 package com.semillero.Finavex.services.movementsS;
 
-import com.semillero.Finavex.dto.responseMovementsMoney.RequestSumTotalExpensesMonth;
-import com.semillero.Finavex.dto.responseMovementsMoney.ResponseSumTotalExpensesMonth;
+import com.semillero.Finavex.dto.movementsMoney.RequestSumTotalExpensesMonth;
+import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalExpensesMonth;
 import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.NumberFormat;
