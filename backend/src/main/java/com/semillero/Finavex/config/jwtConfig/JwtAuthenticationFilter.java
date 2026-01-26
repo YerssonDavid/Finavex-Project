@@ -1,6 +1,5 @@
 package com.semillero.Finavex.config.jwtConfig;
 
-import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.services.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,7 +20,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
-    private final UserR userR;
     private final UserDetailsService userDetailsService;
 
     @Override
