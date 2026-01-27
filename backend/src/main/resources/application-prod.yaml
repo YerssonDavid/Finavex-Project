@@ -52,6 +52,12 @@ ai:
   timeout:
     execution: 40s
 
+sentry:
+  dsn: ${SENTRY_DSN}
+  send-default-pii: false
+  environment: production
+  enabled: true
+
 logging:
   level:
     root: INFO
