@@ -34,3 +34,10 @@ spring:
 ai:
   timeout:
     execution: 40s
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  send-default-pii: true
+  environment: development
+  enabled: true
+  traces-sample-rate: 1.0
