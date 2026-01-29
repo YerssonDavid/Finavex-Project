@@ -4,17 +4,18 @@ import com.azure.ai.inference.ChatCompletionsAsyncClient;
 import com.azure.ai.inference.ChatCompletionsClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Slf4j
 public class ClientModelAI {
+    @Value("${API_AI_GPT}")
+    private String key;
 
     @Bean
     public ChatCompletionsAsyncClient chatCompletionsAsyncClient(){
-        String key = System.getenv("API_AI_GPT");
-
         if(key == null || key.isEmpty()){
             log.error("Error en el token!");
             throw new IllegalStateException("El token esta vacio o nulo!");
