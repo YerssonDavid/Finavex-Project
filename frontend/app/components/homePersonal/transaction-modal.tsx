@@ -60,8 +60,8 @@ export function TransactionModal({ isOpen, onClose, type, onSubmit }: Transactio
       return
     }
 
-    if (numAmount > 999999999) {
-      setError("Oww, eso es mucho dinero! Por favor ingresa un monto menor a 1,000,000,000")
+    if (numAmount > 99000000000) {
+      setError("El monto no puede ser mayor a $99'000.000.000")
       return
     }
 
