@@ -1,4 +1,11 @@
 package com.semillero.Finavex.dto.movementsMoney;
 
-public record RequestGetMoneyNow() {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record RequestGetMoneyNow(
+        @NotBlank(message = "El email es requerido!")
+        @Email
+        String email
+) {
 }
