@@ -68,6 +68,7 @@ public class RegistryExpense {
                 ResponseRegistryExpense(
                 "Gasto Registrado con exito!",
                 true,
+
                 "$" + currencyFormatter.formatCurrencyWithoutSymbol(requestRegistryExpense.expenseAmount())
         );
     }

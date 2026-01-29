@@ -42,6 +42,7 @@ public class Security {
                         .requestMatchers(HttpMethod.POST, "AI/chat/question/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/code-recovery/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/save-money/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/get/money-now").permitAll()
                         .requestMatchers(HttpMethod.POST, "/sum-total-save-month").permitAll()
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/expenses/month/sum").permitAll()
