@@ -9,9 +9,6 @@ import { TransactionService } from "@/services/transactionService"
 import Swal from "sweetalert2"
 import { balanceEvents } from "@/lib/balanceEvents"
 
-// MODO DE DESARROLLO: Cambia a 'false' para usar la API real
-const SIMULATION_MODE = false
-
 export function TransactionSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [transactionType, setTransactionType] = useState<"income" | "expense">("income")
@@ -31,27 +28,6 @@ export function TransactionSection() {
     }
 
     console.log("📤 Enviando transacción al servidor:", transactionData)
-
-    if (SIMULATION_MODE) {
-      // ✅ MODO SIMULACIÓN (Para desarrollo)
-      console.log("⚠️ MODO SIMULACIÓN ACTIVADO")
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      console.log("✅ Transacción simulada exitosamente:", transactionData)
-
-      // Emitir evento para actualizar el saldo
-      balanceEvents.emit()
-
-      // Cerrar modal primero, luego mostrar Swal (sin await)
-      setTimeout(() => {
-        Swal.fire({
-          title: transactionType === 'income' ? "Ingreso registrado" : "Gasto registrado",
-          text: `✅ ${transactionType === 'income' ? 'Ingreso' : 'Gasto'} registrado exitosamente`,
-          icon: "success",
-          confirmButtonText: "OK"
-        })
-      }, 100)
-      return
-    }
 
     // 🚀 MODO PRODUCCIÓN (API Real)
     console.log("🚀 Enviando a API real...")
