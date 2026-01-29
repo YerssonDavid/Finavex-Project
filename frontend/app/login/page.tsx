@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { LogIn, Loader2 } from "lucide-react"
 import Link from "next/link"
 import {useFormLoginUser} from "@/login/Logic/LogicLoginUser";
+import { useState, useEffect } from "react"
 
 // Función auxiliar para convertir segundos a formato MM:SS
 const formatTimeRemaining = (seconds: number): string => {
@@ -22,9 +23,20 @@ const formatTimeRemaining = (seconds: number): string => {
 export default function LoginPage() {
 
   const {register, onSubmit, handleSubmit, errors, isSubmitting, reset, isAccountLocked, remainingTime} = useFormLoginUser();
+  const [showLoading, setShowLoading] = useState(false);
 
-  // Pantalla de carga mientras se inicia sesión
-  if (isSubmitting) {
+  // Verificar si hay un proceso de carga activo al montar
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isLoading = localStorage.getItem('isLoadingHomePersonal');
+      if (isLoading === 'true') {
+        setShowLoading(true);
+      }
+    }
+  }, []);
+
+  // Mostrar loading si está cargando o si hay un proceso activo
+  if (isSubmitting || showLoading) {
     return (
       <div className="min-h-screen relative overflow-hidden">
         <AnimatedBackground />

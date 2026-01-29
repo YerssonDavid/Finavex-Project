@@ -220,6 +220,11 @@ export const useFormLoginUser = () => {
             console.log("Inicio de sesión exitoso!");
             reset();
 
+            // Activar flag de loading para que persista durante la navegación
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('isLoadingHomePersonal', 'true');
+            }
+
             document.cookie = 'isAuthenticated=true; path=/; max-age=86400'; // 24 horas
             router.push('/homePersonal');
 

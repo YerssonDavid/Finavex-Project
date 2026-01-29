@@ -1,9 +1,11 @@
 import type { Transaction, TransactionResponse } from "@/types/transaction"
 
-// Configuración de la API - Solo endpoint de ingresos por ahora
+// Configuración de la API - Endpoints separados para ingresos y gastos
 const API_ENDPOINTS = {
   // Endpoint para registrar ingresos
   income: "http://localhost:8080/save-money",
+  // Endpoint para registrar gastos
+  expense: "http://localhost:8080/expenses/registry",
 }
 
 /**
@@ -11,7 +13,7 @@ const API_ENDPOINTS = {
  */
 export class TransactionService {
   /**
-   * Registra una nueva transacción de ingreso
+   * Registra una nueva transacción (ingreso o gasto)
    * Incluye el correo del usuario desde localStorage
    * @param transaction - Datos de la transacción
    * @param token - Token de autenticación (opcional)
@@ -44,16 +46,43 @@ export class TransactionService {
       const transactionDate = new Date(transaction.date)
       const formattedDate = transactionDate.toISOString().split('T')[0]
 
-      // Construir los datos en el formato exacto que requiere la API
-      const transactionData: any = {
-        date: formattedDate,
-        savedAmount: transaction.amount,
-        email: userEmail,
-      }
+      // Construir los datos según el tipo de transacción
+      let transactionData: any
+      let endpoint: string
+      let transactionLabel: string
 
-      // Agregar nota solo si está presente
-      if (transaction.note) {
-        transactionData.note = transaction.note
+      if (transaction.type === "income") {
+        // Formato para INGRESOS
+        transactionData = {
+          date: formattedDate,
+          savedAmount: transaction.amount,
+          email: userEmail,
+        }
+
+        // Agregar nota solo si está presente
+        if (transaction.note) {
+          transactionData.note = transaction.note
+        }
+
+        endpoint = API_ENDPOINTS.income
+        transactionLabel = "Ingreso"
+        console.log("💰 Registrando INGRESO")
+      } else {
+        // Formato para GASTOS
+        transactionData = {
+          date: formattedDate,
+          expenseAmount: transaction.amount,
+          email: userEmail,
+        }
+
+        // Agregar nota solo si está presente
+        if (transaction.note) {
+          transactionData.description = transaction.note
+        }
+
+        endpoint = API_ENDPOINTS.expense
+        transactionLabel = "Gasto"
+        console.log("💸 Registrando GASTO")
       }
 
       const headers: HeadersInit = {
@@ -65,9 +94,7 @@ export class TransactionService {
         headers["Authorization"] = `Bearer ${token}`
       }
 
-      // Usar solo el endpoint de ingresos
-      const endpoint = API_ENDPOINTS.income
-
+      console.log(`📋 Endpoint: ${endpoint}`)
       console.log("📋 Datos enviados:", JSON.stringify(transactionData, null, 2))
 
       const response = await fetch(endpoint, {
@@ -86,31 +113,31 @@ export class TransactionService {
 
       // Verificar si la respuesta fue exitosa
       if (response.ok) {
-        console.log("✅ Ingreso registrado exitosamente:", responseData)
+        console.log(`✅ ${transactionLabel} registrado exitosamente:`, responseData)
 
         return {
           success: true,
-          message: "✅ Ingreso registrado correctamente",
+          message: `✅ ${transactionLabel} registrado correctamente`,
           data: responseData.data || transactionData,
         }
       } else {
-        console.error("❌ Error en la respuesta del servidor:", responseData)
+        console.error(`❌ Error en la respuesta del servidor:`, responseData)
         const errorMessage =
           responseData.message || `Error ${response.status}: ${response.statusText}`
 
-
         return {
           success: false,
-          message: `❌ No fue posible registrar el ingreso. ${errorMessage}`,
+          message: `❌ No fue posible registrar el ${transactionLabel.toLowerCase()}. ${errorMessage}`,
           data: undefined,
         }
       }
     } catch (error) {
-      console.error("❌ Error al registrar ingreso:", error)
+      console.error("❌ Error al registrar transacción:", error)
       const errorMessage = error instanceof Error ? error.message : "Error desconocido"
+      const transactionLabel = transaction.type === "income" ? "ingreso" : "gasto"
       return {
         success: false,
-        message: `❌ No fue posible registrar el ingreso. ${errorMessage}`,
+        message: `❌ No fue posible registrar el ${transactionLabel}. ${errorMessage}`,
         data: undefined,
       }
     }
@@ -178,4 +205,3 @@ export class TransactionService {
     }
   }
 }
-
