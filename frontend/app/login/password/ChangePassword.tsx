@@ -6,10 +6,9 @@ import { Navigation } from "@/components/landing/navigation"
 import { AnimatedBackground } from "@/components/landing/animated-background"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { KeyRound } from "lucide-react"
 import Link from "next/link"
+import {ButtonShowPassword} from "@/components/ui/button-show-password";
 
 /**
  * Componente ChangePassword
@@ -59,20 +58,13 @@ export default function ChangePasswordComponent() {
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
                             {/* Campo Nueva Contraseña */}
-                            <div className="space-y-2">
-                                <Label htmlFor="newPassword">Nueva Contraseña</Label>
-                                <Input
-                                    id="newPassword"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    {...register("newPassword")}
-                                    required
-                                    className="h-11"
-                                />
-                                {errors.newPassword && (
-                                    <p className="text-sm text-red-500">{errors.newPassword.message}</p>
-                                )}
-                            </div>
+                            <ButtonShowPassword
+                                id="newPassword"
+                                label="Nueva Contraseña"
+                                register={register}
+                                fieldName={"newPassword"}
+                                errors={errors}
+                            />
 
                             {/* Indicadores de requisitos de contraseña */}
                             <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
@@ -104,20 +96,14 @@ export default function ChangePasswordComponent() {
                             </div>
 
                             {/* Campo Confirmar Nueva Contraseña */}
-                            <div className="space-y-2">
-                                <Label htmlFor="confirmNewPassword">Confirmar Nueva Contraseña</Label>
-                                <Input
-                                    id="confirmNewPassword"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    {...register("confirmNewPassword")}
-                                    required
-                                    className="h-11"
-                                />
-                                {errors.confirmNewPassword && (
-                                    <p className="text-sm text-red-500">{errors.confirmNewPassword.message}</p>
-                                )}
-                            </div>
+                            <ButtonShowPassword
+                                id="confirmNewPassword"
+                                label="Confirmar Nueva Contraseña"
+                                register={register}
+                                fieldName={"confirmNewPassword"}
+                                errors={errors}
+                                holdToShow={true}
+                            />
 
                             {/* Botón Enviar */}
                             <Button

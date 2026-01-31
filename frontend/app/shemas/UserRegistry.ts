@@ -7,7 +7,6 @@ export const userRegistrySchema = z.object({
     surname: z.string().min(1, 'Apellido es obligatorio'),
     secondSurname: z.string().optional(),
     documentNumber: z.number().min(100000, 'Número de documento inválido').max(9999999999, 'Número de documento inválido'),
-    age: z.number().min(18, 'Debes ser mayor de edad').max(75, 'La edad máxima es 75 años'),
     dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato de fecha inválido (YYYY-MM-DD)').refine((dateString) => {
         //Convert string to Date for validation
         const date = new Date(dateString + 'T00:00:00');
