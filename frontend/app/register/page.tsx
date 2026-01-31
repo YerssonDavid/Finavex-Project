@@ -109,20 +109,6 @@ export default function RegisterPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="age">Edad</Label>
-                                <Input
-                                    id="age"
-                                    type="number"
-                                    placeholder="18+"
-                                    {...register("age", {valueAsNumber: true})}
-                                    className="h-11"
-                                />
-                                {errors.age && (
-                                    <p className="text-sm text-red-500">{errors.age.message}</p>
-                                )}
-                            </div>
-
-                            <div className="space-y-2">
                                 <Label htmlFor="dateOfBirth">Fecha de Nacimiento</Label>
                                 <Input
                                     id="dateOfBirth"
@@ -166,19 +152,14 @@ export default function RegisterPage() {
                             <ButtonShowPassword id="password" label="Contraseña" register={register}
                                                 fieldName={"password"} errors={errors}/>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
-                                <Input
-                                    id="confirmPassword"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    {...register("confirmPassword")}
-                                    className="h-11"
-                                />
-                                {errors.confirmPassword && (
-                                    <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
-                                )}
-                            </div>
+                            <ButtonShowPassword
+                                id="confirmPassword"
+                                label="Confirmar Contraseña"
+                                register={register}
+                                fieldName={"confirmPassword"}
+                                errors={errors}
+                                holdToShow={true}
+                            />
 
                             <Button
                                 type="submit"
