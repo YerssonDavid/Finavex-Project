@@ -12,6 +12,7 @@ import { LogIn, Loader2 } from "lucide-react"
 import Link from "next/link"
 import {useFormLoginUser} from "@/login/Logic/LogicLoginUser";
 import { useState, useEffect } from "react"
+import {ButtonShowPassword} from "@/components/ui/button-show-password";
 
 // Función auxiliar para convertir segundos a formato MM:SS
 const formatTimeRemaining = (seconds: number): string => {
@@ -132,15 +133,15 @@ export default function LoginPage() {
                     ¿Olvidaste tu contraseña?
                   </Link>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register("password")}
-                  disabled={isAccountLocked}
-                  required
-                  className="h-11"
-                />
+                <div className="relative">
+                  <ButtonShowPassword
+                    id="password"
+                    label=""
+                    register={register}
+                    fieldName={"password"}
+                    errors={errors}
+                  />
+                </div>
               </div>
 
               <Button
