@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 
 @Service
@@ -22,7 +23,7 @@ public class GetMoneyNow {
 
         if(userR.existsByEmail(emailFormat)){
             User user = userR.findByEmail(emailFormat).orElseThrow();
-            Double amount = user.getMoneyNow().getCurrentBalance();
+            BigDecimal amount = user.getMoneyNow().getCurrentBalance();
 
             //Format amount
             NumberFormat format = NumberFormat.getCurrencyInstance();

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,8 +18,11 @@ public class SaveMoney {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="tipo-movimiento", nullable = false)
+    private String movementType;
+
     @Column(name="valor-ahorrado", nullable = false)
-    private Double savedAmount;
+    private BigDecimal amount;
 
     @Column(name="fecha-movimento-ingreso", nullable= false, length = 10)
     private LocalDateTime date;
