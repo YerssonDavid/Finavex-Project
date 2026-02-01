@@ -28,6 +28,10 @@ public class GetMovements {
             throw new UserNotFoundException("Usuario no encontrado!");
         }
 
+        if(!tokenProvider.validateToken(requestGetMovements.token())){
+            throw new InvalidCredentialsException("No estas autorizado!");
+        }
+
         LocalDateTime time = LocalDateTime.now().minusDays(30);
         List<ResponseGetMovements> movements = new ArrayList<>();
         Long userId = userR.findByEmail(emailFormat).get().getId();
