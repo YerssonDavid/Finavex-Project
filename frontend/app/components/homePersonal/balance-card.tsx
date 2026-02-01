@@ -184,7 +184,7 @@ export function BalanceCard() {
         throw new Error("No se encontró el correo del usuario")
       }
 
-      // Petición para obtener el saldo actual - API PROVISIONAL
+      // Petición para obtener el saldo actual
       const response = await fetch("http://localhost:8080/get/money-now", {
         method: "POST",
         headers: {
