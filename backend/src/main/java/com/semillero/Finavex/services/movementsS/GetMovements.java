@@ -2,10 +2,12 @@ package com.semillero.Finavex.services.movementsS;
 
 import com.semillero.Finavex.dto.movementsMoney.RequestGetMovements;
 import com.semillero.Finavex.dto.movementsMoney.ResponseGetMovements;
+import com.semillero.Finavex.exceptions.InvalidCredentialsException;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import com.semillero.Finavex.repository.movementsR.SaveR;
+import com.semillero.Finavex.services.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
