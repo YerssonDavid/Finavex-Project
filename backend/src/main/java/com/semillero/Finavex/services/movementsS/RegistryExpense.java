@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -33,11 +34,17 @@ public class RegistryExpense {
 
         LocalDateTime now = LocalDateTime.now();
 
+        BigDecimal balance = persistedUser.getMoneyNow().getCurrentBalance();
+        if(balance.compareTo(requestRegistryExpense.expenseAmount()) < 0){
+            throw new IllegalArgumentException("No tienes saldo suficiente para registrar este gasto");
+        }
+
         RegisterExpense registerExpense = new RegisterExpense();
         registerExpense.setUser(persistedUser);
-        registerExpense.setExpenseAmount(requestRegistryExpense.expenseAmount());
+        registerExpense.setAmount(requestRegistryExpense.expenseAmount());
         registerExpense.setDate(now);
         registerExpense.setNoteMovement(requestRegistryExpense.note());
+        registerExpense.setMovementType("gasto");
 
         expenseR.save(registerExpense);
 
@@ -48,8 +55,8 @@ public class RegistryExpense {
             MoneyNow moneyNow = new MoneyNow();
             moneyNow.setDateRegister(now);
             moneyNow.setUser(persistedUser);
-            Double money = moneyNow.getCurrentBalance();
-            moneyNow.setCurrentBalance(money - requestRegistryExpense.expenseAmount());
+            BigDecimal money = moneyNow.getCurrentBalance();
+            moneyNow.setCurrentBalance(money.subtract(requestRegistryExpense.expenseAmount()));
 
             persistedUser.setMoneyNow(moneyNow);
             userR.save(persistedUser);
@@ -74,12 +81,12 @@ public class RegistryExpense {
     }
 
     @Transactional
-    public void updateMoneyExpense (User user, Double expenseAmount){
+    public void updateMoneyExpense (User user, BigDecimal expenseAmount){
         User userMoneyExpense = userR.findByEmail(user.getEmail()).orElseThrow();
 
-        Double moneyActually = userMoneyExpense.getMoneyNow().getCurrentBalance();
+        BigDecimal moneyActually = userMoneyExpense.getMoneyNow().getCurrentBalance();
 
-        userMoneyExpense.getMoneyNow().setCurrentBalance(moneyActually - expenseAmount);
+        userMoneyExpense.getMoneyNow().setCurrentBalance(moneyActually.subtract(expenseAmount));
         userMoneyExpense.getMoneyNow().setDateRegister(LocalDateTime.now());
         userR.save(userMoneyExpense);
     }

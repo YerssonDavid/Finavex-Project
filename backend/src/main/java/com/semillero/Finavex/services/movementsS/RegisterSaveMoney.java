@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public class RegisterSaveMoney {
     // Inject dependencies here
-    private final SaveR SaveR;
+    private final SaveR saveR;
     private final UserR userR;
     private final CurrencyFormatter currencyFormatter;
 
@@ -38,11 +39,13 @@ public class RegisterSaveMoney {
 
         SaveMoney saveMoney = new SaveMoney();
         saveMoney.setUser(persistedUser);
-        saveMoney.setSavedAmount(requestRegistrySaveMoney.savedAmount());
+        saveMoney.setAmount(requestRegistrySaveMoney.savedAmount());
         saveMoney.setDate(now);
         saveMoney.setNoteMovement(requestRegistrySaveMoney.note());
+        saveMoney.setMovementType("ingreso");
 
-        SaveR.save(saveMoney);
+
+        saveR.save(saveMoney);
 
         boolean existUserMoneyNow = persistedUser.getMoneyNow() != null;
 
@@ -64,8 +67,8 @@ public class RegisterSaveMoney {
             );
             return responseSaveMoney;
         } else {
-            //Sum total
-            Double sum = persistedUser.getMoneyNow().getCurrentBalance() + requestRegistrySaveMoney.savedAmount();
+            //Sum total of BigDecimal (Utilice add in replace of +)
+            BigDecimal sum = persistedUser.getMoneyNow().getCurrentBalance().add(requestRegistrySaveMoney.savedAmount());
 
             updateMoneyNow(sum, persistedUser);
 
@@ -80,7 +83,7 @@ public class RegisterSaveMoney {
 
 
     @Transactional
-    public void updateMoneyNow (Double sumAmount, User user){
+    public void updateMoneyNow (BigDecimal sumAmount, User user){
         //Find user by email
         User userValid = userR.findByEmail(user.getEmail()).orElseThrow();
 

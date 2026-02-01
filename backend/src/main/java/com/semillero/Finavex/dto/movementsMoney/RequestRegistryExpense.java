@@ -4,11 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record RequestRegistryExpense(
         @NotNull(message="Debe ingresar un monto")
-        Double expenseAmount,
+        BigDecimal expenseAmount,
         String note,
         LocalDate date,
 
