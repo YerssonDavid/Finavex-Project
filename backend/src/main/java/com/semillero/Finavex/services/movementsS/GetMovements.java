@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -19,6 +20,7 @@ public class GetMovements {
     private final ExpenseR expenseR;
     private final SaveR saveR;
     private final UserR userR;
+    private final TokenProvider tokenProvider;
 
 
     public List<ResponseGetMovements> getMovementsUser (RequestGetMovements requestGetMovements){
@@ -27,11 +29,17 @@ public class GetMovements {
             throw new UserNotFoundException("Usuario no encontrado!");
         }
 
+        if(!tokenProvider.validateToken(requestGetMovements.token()) && !tokenProvider.isTokenExpiration(requestGetMovements.token())){
+            throw new InvalidCredentialsException("No estas autorizado!");
+        }
+
         LocalDateTime time = LocalDateTime.now().minusDays(30);
         List<ResponseGetMovements> movements = new ArrayList<>();
         Long userId = userR.findByEmail(emailFormat).get().getId();
         movements.addAll(expenseR.findMovementsByUserId(userId, time));
         movements.addAll(saveR.findMovementsByUserId(userId, time));
+
+        movements.sort(Comparator.comparing(ResponseGetMovements::date).reversed());
 
         return movements;
     }
