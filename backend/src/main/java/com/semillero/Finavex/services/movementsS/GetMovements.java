@@ -20,6 +20,7 @@ public class GetMovements {
     private final ExpenseR expenseR;
     private final SaveR saveR;
     private final UserR userR;
+    private final TokenProvider tokenProvider;
 
 
     public List<ResponseGetMovements> getMovementsUser (RequestGetMovements requestGetMovements){
