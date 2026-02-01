@@ -9,9 +9,10 @@ interface TransactionModalProps {
   onClose: () => void
   type: "income" | "expense"
   onSubmit: (amount: number, note?: string) => Promise<void>
+  currentBalance?: number
 }
 
-export function TransactionModal({ isOpen, onClose, type, onSubmit }: TransactionModalProps) {
+export function TransactionModal({ isOpen, onClose, type, onSubmit, currentBalance = 0 }: TransactionModalProps) {
   const [amount, setAmount] = useState("") // Valor real sin formato
   const [displayAmount, setDisplayAmount] = useState("") // Valor mostrado con formato
   const [note, setNote] = useState("")
@@ -62,6 +63,12 @@ export function TransactionModal({ isOpen, onClose, type, onSubmit }: Transactio
 
     if (numAmount > 99000000000) {
       setError("El monto no puede ser mayor a $99'000.000.000")
+      return
+    }
+
+    // Validación: Si es gasto, no puede ser mayor que el balance
+    if (!isIncome && currentBalance < numAmount) {
+      setError(`El gasto es mayor de lo que tienes disponible: $${Math.round(currentBalance).toLocaleString('es-CO')}`)
       return
     }
 
@@ -203,6 +210,16 @@ export function TransactionModal({ isOpen, onClose, type, onSubmit }: Transactio
 
           {/* Contenido del formulario */}
           <form onSubmit={handleSubmit} className="p-6 space-y-5">
+            {/* Indicador de balance para gastos */}
+            {!isIncome && (
+              <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <span className="text-sm font-medium text-blue-800 dark:text-blue-300">Balance disponible:</span>
+                <span className={`text-lg font-bold ${currentBalance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                  ${Math.round(currentBalance).toLocaleString('es-CO')}
+                </span>
+              </div>
+            )}
+
             {/* Estado de éxito */}
             {isSuccess && (
               <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl animate-in fade-in zoom-in duration-300">
