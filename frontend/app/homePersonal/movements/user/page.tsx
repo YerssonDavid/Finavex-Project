@@ -52,13 +52,13 @@ export default function MovementsUserPage() {
     }
   }
 
-  // Calcular totales
+  // Calcular totales - Normalizar para aceptar INCOME/EXPENSE o income/expense
   const totalIncome = movements
-    .filter(m => m.typeMovement === "income")
+    .filter(m => (m.typeMovement || "").toUpperCase() === "INCOME")
     .reduce((sum, m) => sum + m.amount, 0)
 
   const totalExpense = movements
-    .filter(m => m.typeMovement === "expense")
+    .filter(m => (m.typeMovement || "").toUpperCase() === "EXPENSE")
     .reduce((sum, m) => sum + m.amount, 0)
 
   const handleGoBack = () => {
@@ -200,47 +200,58 @@ export default function MovementsUserPage() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {movements.map((movement, index) => (
-                    <div
-                      key={movement.id || index}
-                      onClick={() => openMovementDetail(movement)}
-                      className="group flex items-center gap-4 p-4 rounded-xl bg-background/50 hover:bg-primary/5 border border-transparent hover:border-primary/20 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-primary/5"
-                    >
-                      {/* Icon */}
-                      <div className={`p-3 rounded-full transition-transform group-hover:scale-110 ${
-                        movement.typeMovement === "income" 
-                          ? "bg-green-500/20" 
-                          : "bg-red-500/20"
-                      }`}>
-                        {movement.typeMovement === "income" ? (
-                          <ArrowUpCircle className="h-6 w-6 text-green-500" />
-                        ) : (
-                          <ArrowDownCircle className="h-6 w-6 text-red-500" />
-                        )}
-                      </div>
+                  {movements.map((movement, index) => {
+                    // Normalizar el tipo para aceptar EXPENSE/INCOME y mostrar colores correctos
+                    const isIncome = (movement.typeMovement || "").toUpperCase() === "INCOME"
+                    const isExpense = (movement.typeMovement || "").toUpperCase() === "EXPENSE"
+                    return (
+                      <div
+                        key={movement.id || index}
+                        onClick={() => openMovementDetail(movement)}
+                        className="group flex items-center gap-4 p-4 rounded-xl bg-background/50 hover:bg-primary/5 border border-transparent hover:border-primary/20 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-primary/5"
+                      >
+                        {/* Icon */}
+                        <div className={`p-3 rounded-full transition-transform group-hover:scale-110 ${
+                          isIncome
+                            ? "bg-green-500/20"
+                            : isExpense
+                            ? "bg-red-500/20"
+                            : "bg-muted/20"
+                        }`}>
+                          {isIncome ? (
+                            <ArrowUpCircle className="h-6 w-6 text-green-500" />
+                          ) : isExpense ? (
+                            <ArrowDownCircle className="h-6 w-6 text-red-500" />
+                          ) : (
+                            <ArrowDownCircle className="h-6 w-6 text-muted-foreground" />
+                          )}
+                        </div>
 
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">
-                          {movement.note || (movement.typeMovement === "income" ? "Ingreso" : "Gasto")}
-                        </p>
-                        <p className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {MovementService.formatDate(movement.date)}
-                        </p>
-                      </div>
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">
+                            {movement.note || (isIncome ? "Ingreso" : isExpense ? "Gasto" : "Movimiento")}
+                          </p>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {MovementService.formatDate(movement.date)}
+                          </p>
+                        </div>
 
-                      {/* Amount */}
-                      <div className={`text-right font-bold ${
-                        movement.typeMovement === "income" 
-                          ? "text-green-500" 
-                          : "text-red-500"
-                      }`}>
-                        {movement.typeMovement === "income" ? "+" : "-"}
-                        {MovementService.formatAmount(movement.amount)}
+                        {/* Amount */}
+                        <div className={`text-right font-bold ${
+                          isIncome
+                            ? "text-green-500"
+                            : isExpense
+                            ? "text-red-500"
+                            : "text-muted-foreground"
+                        }`}>
+                          {isIncome ? "+" : isExpense ? "-" : ""}
+                          {MovementService.formatAmount(movement.amount)}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </CardContent>
@@ -248,108 +259,121 @@ export default function MovementsUserPage() {
         </div>
 
         {/* Movement Detail Modal */}
-        {selectedMovement && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-            onClick={closeMovementDetail}
-          >
-            <Card
-              className="w-full max-w-md bg-card/95 backdrop-blur-xl border-border/50 shadow-2xl animate-in fade-in zoom-in-95 duration-300"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <CardHeader className="relative pb-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={closeMovementDetail}
-                  className="absolute right-4 top-4 h-8 w-8 rounded-full hover:bg-destructive/10"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+        {selectedMovement && (() => {
+          const isIncome = (selectedMovement.typeMovement || "").toUpperCase() === "INCOME"
+          const isExpense = (selectedMovement.typeMovement || "").toUpperCase() === "EXPENSE"
+          const accentColor = isIncome ? "green" : isExpense ? "red" : "primary"
+          const textColor = isIncome ? "text-green-500" : isExpense ? "text-red-500" : "text-primary"
+          const bgGradient = isIncome
+            ? "from-green-500/5 to-green-500/10"
+            : isExpense
+            ? "from-red-500/5 to-red-500/10"
+            : "from-primary/5 to-secondary/5"
+          const borderColor = isIncome
+            ? "border-green-500/30"
+            : isExpense
+            ? "border-red-500/30"
+            : "border-border/50"
 
-                <div className="flex items-center gap-4">
-                  <div className={`p-4 rounded-full ${
-                    selectedMovement.typeMovement === "income" 
-                      ? "bg-green-500/20" 
-                      : "bg-red-500/20"
-                  }`}>
-                    {selectedMovement.typeMovement === "income" ? (
-                      <ArrowUpCircle className="h-8 w-8 text-green-500" />
-                    ) : (
-                      <ArrowDownCircle className="h-8 w-8 text-red-500" />
-                    )}
+          return (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+              onClick={closeMovementDetail}
+            >
+              <Card
+                className={`w-full max-w-md bg-card/95 backdrop-blur-xl ${borderColor} shadow-2xl animate-in fade-in zoom-in-95 duration-300`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <CardHeader className="relative pb-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={closeMovementDetail}
+                    className="absolute right-4 top-4 h-8 w-8 rounded-full hover:bg-destructive/10"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+
+                  <div className="flex items-center gap-4">
+                    <div className={`p-4 rounded-full bg-${accentColor}-500/20`}>
+                      {isIncome ? (
+                        <ArrowUpCircle className="h-8 w-8 text-green-500" />
+                      ) : isExpense ? (
+                        <ArrowDownCircle className="h-8 w-8 text-red-500" />
+                      ) : (
+                        <DollarSign className="h-8 w-8 text-primary" />
+                      )}
+                    </div>
+                    <div>
+                      <CardTitle className={`text-xl ${textColor}`}>
+                        {isIncome ? "Ingreso" : isExpense ? "Gasto" : "Movimiento"}
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground">
+                        Detalle de la transacción
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <CardTitle className="text-xl">
-                      {selectedMovement.typeMovement === "income" ? "Ingreso" : "Gasto"}
-                    </CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      Detalle del movimiento
+                </CardHeader>
+
+                <CardContent className="space-y-6 pt-4">
+                  {/* Amount */}
+                  <div className={`text-center py-4 rounded-xl bg-gradient-to-br ${bgGradient} border ${borderColor}`}>
+                    <p className="text-sm text-muted-foreground mb-1">Monto</p>
+                    <p className={`text-3xl font-bold ${textColor}`}>
+                      {isIncome ? "+" : isExpense ? "-" : ""}
+                      {MovementService.formatAmount(selectedMovement.amount)}
                     </p>
                   </div>
-                </div>
-              </CardHeader>
 
-              <CardContent className="space-y-6 pt-4">
-                {/* Amount */}
-                <div className="text-center py-4 rounded-xl bg-gradient-to-br from-primary/5 to-secondary/5 border border-border/50">
-                  <p className="text-sm text-muted-foreground mb-1">Monto</p>
-                  <p className={`text-3xl font-bold ${
-                    selectedMovement.typeMovement === "income" 
-                      ? "text-green-500" 
-                      : "text-red-500"
-                  }`}>
-                    {selectedMovement.typeMovement === "income" ? "+" : "-"}
-                    {MovementService.formatAmount(selectedMovement.amount)}
-                  </p>
-                </div>
+                  {/* Details */}
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
+                      <Calendar className={`h-5 w-5 ${textColor} mt-0.5`} />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Fecha y Hora</p>
+                        <p className="font-medium">{MovementService.formatDateTime(selectedMovement.date)}</p>
+                      </div>
+                    </div>
 
-                {/* Details */}
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
-                    <Calendar className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Fecha</p>
-                      <p className="font-medium">{MovementService.formatDate(selectedMovement.date)}</p>
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
+                      <FileText className={`h-5 w-5 ${textColor} mt-0.5`} />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Descripción</p>
+                        <p className="font-medium">
+                          {selectedMovement.note || "Sin descripción"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
+                      <DollarSign className={`h-5 w-5 ${textColor} mt-0.5`} />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Tipo de Movimiento</p>
+                        <p className={`font-medium ${textColor}`}>
+                          {isIncome ? "Ingreso ✓" : isExpense ? "Gasto ✗" : "Movimiento"}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
-                    <FileText className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Descripción</p>
-                      <p className="font-medium">
-                        {selectedMovement.note || "Sin descripción"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
-                    <DollarSign className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="text-sm text-muted-foreground">Tipo de Movimiento</p>
-                      <p className={`font-medium ${
-                        selectedMovement.typeMovement === "income" 
-                          ? "text-green-500" 
-                          : "text-red-500"
-                      }`}>
-                        {selectedMovement.typeMovement === "income" ? "Ingreso" : "Gasto"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Close Button */}
-                <Button
-                  onClick={closeMovementDetail}
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90"
-                >
-                  Cerrar
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+                  {/* Close Button */}
+                  <Button
+                    onClick={closeMovementDetail}
+                    className={`w-full bg-gradient-to-r ${
+                      isIncome
+                        ? "from-green-500 to-emerald-600"
+                        : isExpense
+                        ? "from-red-500 to-rose-600"
+                        : "from-primary to-secondary"
+                    } hover:opacity-90 text-white`}
+                  >
+                    Cerrar
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )
+        })()}
       </div>
     </ThemeProvider>
   )
