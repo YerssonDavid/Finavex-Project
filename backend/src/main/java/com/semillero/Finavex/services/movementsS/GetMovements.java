@@ -29,7 +29,7 @@ public class GetMovements {
             throw new UserNotFoundException("Usuario no encontrado!");
         }
 
-        if(!tokenProvider.validateToken(requestGetMovements.token())){
+        if(!tokenProvider.validateToken(requestGetMovements.token()) && !tokenProvider.isTokenExpiration(requestGetMovements.token())){
             throw new InvalidCredentialsException("No estas autorizado!");
         }
 
