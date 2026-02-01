@@ -4,6 +4,7 @@ import com.semillero.Finavex.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,7 +21,7 @@ public class MoneyNow {
     private User user;
 
     @Column(name="saldo_actual", nullable = false)
-    private Double currentBalance;
+    private BigDecimal currentBalance;
 
     @Column(name="Fecha_registro", nullable = false)
     private LocalDateTime dateRegister;
