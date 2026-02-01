@@ -33,6 +33,8 @@ public class GetMovements {
         movements.addAll(expenseR.findMovementsByUserId(userId, time));
         movements.addAll(saveR.findMovementsByUserId(userId, time));
 
+        movements.sort(Comparator.comparing(ResponseGetMovements::date));
+
         return movements;
     }
 }
