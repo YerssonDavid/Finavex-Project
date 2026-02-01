@@ -42,7 +42,7 @@ public class RegisterSaveMoney {
         saveMoney.setAmount(requestRegistrySaveMoney.savedAmount());
         saveMoney.setDate(now);
         saveMoney.setNoteMovement(requestRegistrySaveMoney.note());
-        saveMoney.setMovementType("ingreso");
+        saveMoney.setMovementType("INCOME");
 
 
         saveR.save(saveMoney);

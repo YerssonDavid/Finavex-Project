@@ -6,7 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 public record RequestGetMovements (
         @NotBlank(message = "El email no puede estar vacio")
         @Email
-        String email
+        String email,
+        String token
 )
 {
 
