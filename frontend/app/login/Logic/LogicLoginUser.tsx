@@ -192,10 +192,11 @@ export const useFormLoginUser = () => {
 
             const resp = await response.json();
 
-            // El backend envía: { data: { userId, email, name
+            // El backend envía: { data: { userId, email, name, token }
             const nameUser = resp.data?.name ?? "";
             const emailUser = resp.data?.email ?? "";
             const userId = resp.data?.userId ?? null;
+            const token = resp.data?.token ?? resp.token ?? null;
 
             const userObj = {
                 nombre: nameUser,
@@ -211,6 +212,10 @@ export const useFormLoginUser = () => {
                 // También guardar el userId por si lo necesitas después
                 if (userId) {
                     localStorage.setItem('userId', String(userId));
+                }
+                // ✅ GUARDAR EL TOKEN EN SESSIONSTORAGE
+                if (token) {
+                    sessionStorage.setItem('authToken', token);
                 }
             }
 

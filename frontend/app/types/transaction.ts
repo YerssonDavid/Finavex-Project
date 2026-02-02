@@ -13,3 +13,17 @@ export interface TransactionResponse {
   data?: Transaction
 }
 
+// Tipo para los movimientos del usuario recibidos de la API
+export interface Movement {
+  id?: string
+  typeMovement: "income" | "expense"
+  date: string
+  note: string
+  amount: number
+}
+
+export interface MovementsResponse {
+  success: boolean
+  message: string
+  data?: Movement[]
+}

@@ -1,16 +1,17 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { User, ArrowLeftRight, Wallet, AlertCircle, Target, Lightbulb, ChevronLeft, ChevronRight } from "lucide-react"
 
 const menuItems = [
-  { icon: User, label: "Perfil", color: "from-primary to-primary/70" },
-  { icon: ArrowLeftRight, label: "Movimientos", color: "from-secondary to-secondary/70" },
-  { icon: Wallet, label: "Presupuesto", color: "from-accent to-accent/70" },
-  { icon: AlertCircle, label: "Límites", color: "from-destructive to-destructive/70" },
-  { icon: Target, label: "Metas", color: "from-success to-success/70" },
-  { icon: Lightbulb, label: "Tips", color: "from-chart-3 to-chart-3/70" },
+  { icon: User, label: "Perfil", color: "from-primary to-primary/70", route: null as string | null },
+  { icon: ArrowLeftRight, label: "Movimientos", color: "from-secondary to-secondary/70", route: "/homePersonal/movements/user" },
+  { icon: Wallet, label: "Presupuesto", color: "from-accent to-accent/70", route: null as string | null },
+  { icon: AlertCircle, label: "Límites", color: "from-destructive to-destructive/70", route: null as string | null },
+  { icon: Target, label: "Metas", color: "from-success to-success/70", route: null as string | null },
+  { icon: Lightbulb, label: "Tips", color: "from-chart-3 to-chart-3/70", route: null as string | null },
 ]
 
 interface FloatingSidebarProps {
@@ -18,12 +19,20 @@ interface FloatingSidebarProps {
 }
 
 export function FloatingSidebar({ onCollapseChange }: FloatingSidebarProps) {
+  const router = useRouter()
   const [activeItem, setActiveItem] = useState("Perfil")
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   const handleCollapse = (collapsed: boolean) => {
     setIsCollapsed(collapsed)
     onCollapseChange?.(collapsed)
+  }
+
+  const handleMenuItemClick = (item: typeof menuItems[0]) => {
+    setActiveItem(item.label)
+    if (item.route) {
+      router.push(item.route)
+    }
   }
 
   return (
@@ -53,7 +62,7 @@ export function FloatingSidebar({ onCollapseChange }: FloatingSidebarProps) {
                   key={item.label}
                   variant="ghost"
                   size="icon"
-                  onClick={() => setActiveItem(item.label)}
+                  onClick={() => handleMenuItemClick(item)}
                   className={`
                     relative h-14 w-14 rounded-xl transition-all duration-300 group
                     ${isActive ? "bg-gradient-to-br " + item.color : "hover:bg-white/10"}

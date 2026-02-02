@@ -1,17 +1,93 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Plus, Minus, TrendingUp, TrendingDown } from "lucide-react"
 import { TransactionModal } from "./transaction-modal"
 import { Card } from "@/components/ui/card"
 import type { Transaction } from "@/types/transaction"
 import { TransactionService } from "@/services/transactionService"
-import Swal from "sweetalert2"
 import { balanceEvents } from "@/lib/balanceEvents"
 
 export function TransactionSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [transactionType, setTransactionType] = useState<"income" | "expense">("income")
+  const [currentBalance, setCurrentBalance] = useState<number>(0)
+
+  // Cargar el balance inicial
+  useEffect(() => {
+    fetchCurrentBalance()
+
+    // Escuchar cambios de balance
+    const unsubscribe = balanceEvents.subscribe(() => {
+      fetchCurrentBalance()
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
+  const fetchCurrentBalance = async () => {
+    try {
+      let userEmail = ""
+      if (typeof window !== "undefined") {
+        const userDataStr = localStorage.getItem("userData")
+        if (userDataStr) {
+          const userData = JSON.parse(userDataStr)
+          userEmail = userData.email || ""
+        }
+      }
+
+      if (!userEmail) return
+
+      // Obtener ingresos del mes
+      const incomeResponse = await fetch("http://localhost:8080/sum-total-save-month", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail }),
+      })
+
+      // Obtener gastos del mes
+      const expenseResponse = await fetch("http://localhost:8080/expenses/month/sum", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail }),
+      })
+
+      if (incomeResponse.ok && expenseResponse.ok) {
+        const incomeData = await incomeResponse.json()
+        const expenseData = await expenseResponse.json()
+
+        // Parsear ingresos
+        let income = 0
+        if (incomeData.totalSavedMonth) {
+          const cleanValue = incomeData.totalSavedMonth
+            .replace(/\$/g, '')
+            .replace(/\s/g, '')
+            .replace(/\./g, '')
+            .replace(',', '.')
+          income = parseFloat(cleanValue) || 0
+        }
+
+        // Parsear gastos
+        let expense = 0
+        if (expenseData.totalExpensesMonth) {
+          const cleanValue = expenseData.totalExpensesMonth
+            .replace(/\$/g, '')
+            .replace(/\s/g, '')
+            .replace(/\./g, '')
+            .replace(',', '.')
+          expense = parseFloat(cleanValue) || 0
+        }
+
+        // Calcular balance: ingresos - gastos
+        const balance = income - expense
+        setCurrentBalance(balance)
+      }
+    } catch (err) {
+      console.error("Error al obtener el balance:", err)
+    }
+  }
 
 
   const handleOpenModal = (type: "income" | "expense") => {
@@ -40,31 +116,12 @@ export function TransactionSection() {
     // Verificar si la respuesta fue exitosa
     if (response.success) {
       console.log("✅ Transacción registrada exitosamente:", response.data)
-
       // Emitir evento para actualizar el saldo
       balanceEvents.emit()
 
-      // Mostrar Swal después de cerrar el modal (sin await para no bloquear)
-      setTimeout(() => {
-        Swal.fire({
-          title: transactionType === 'income' ? "Ingreso registrado" : "Gasto registrado",
-          text: "✅ Movimiento registrado correctamente",
-          icon: "success",
-          confirmButtonText: "OK"
-        })
-      }, 100)
       return
     } else {
       console.error("❌ Error en la respuesta:", response.message)
-
-      // Mostrar error con Swal
-      Swal.fire({
-        title: "Error al registrar",
-        text: response.message || "No fue posible registrar el movimiento",
-        icon: "error",
-        confirmButtonText: "OK"
-      })
-
       throw new Error(response.message || "Error al registrar")
     }
   }
@@ -119,6 +176,7 @@ export function TransactionSection() {
         onClose={() => setIsModalOpen(false)}
         type={transactionType}
         onSubmit={handleSubmitTransaction}
+        currentBalance={currentBalance}
       />
     </>
   )
