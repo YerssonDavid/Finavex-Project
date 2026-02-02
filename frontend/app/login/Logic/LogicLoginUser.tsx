@@ -8,7 +8,8 @@ import { useState, useEffect } from 'react';
 
 // Constantes para el bloqueo
 const MAX_ATTEMPTS = 3;
-const BLOCK_DURATION_MS = 30 * 60 * 1000; // 30 minutos en milisegundos
+//const BLOCK_DURATION_MS = 30 * 60 * 1000; // 30 minutos en milisegundos
+const BLOCK_DURATION_MS = 3 * 60 * 1000; // 3 minutos en milisegundos
 const LOGIN_ATTEMPTS_KEY = 'loginAttempts';
 const LOGIN_BLOCK_TIME_KEY = 'loginBlockTime';
 
@@ -160,7 +161,7 @@ export const useFormLoginUser = () => {
 
                     await Swal.fire({
                         title: "Cuenta Bloqueada por el Servidor",
-                        text: `${errorData.message || 'Tu cuenta ha sido bloqueada. Intenta nuevamente en 30 minutos.'}`,
+                        text: `${errorData.message || 'Tu cuenta ha sido bloqueada. Intenta nuevamente en 3 minutos.'}`,
                         icon: "error",
                         confirmButtonText: "Aceptar"
                     });
@@ -191,10 +192,11 @@ export const useFormLoginUser = () => {
 
             const resp = await response.json();
 
-            // El backend envía: { data: { userId, email, name
+            // El backend envía: { data: { userId, email, name, token }
             const nameUser = resp.data?.name ?? "";
             const emailUser = resp.data?.email ?? "";
             const userId = resp.data?.userId ?? null;
+            const token = resp.data?.token ?? resp.token ?? null;
 
             const userObj = {
                 nombre: nameUser,
@@ -211,6 +213,10 @@ export const useFormLoginUser = () => {
                 if (userId) {
                     localStorage.setItem('userId', String(userId));
                 }
+                // ✅ GUARDAR EL TOKEN EN SESSIONSTORAGE
+                if (token) {
+                    sessionStorage.setItem('authToken', token);
+                }
             }
 
             // Limpiar intentos fallidos tras login exitoso
@@ -218,6 +224,11 @@ export const useFormLoginUser = () => {
 
             console.log("Inicio de sesión exitoso!");
             reset();
+
+            // Activar flag de loading para que persista durante la navegación
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('isLoadingHomePersonal', 'true');
+            }
 
             document.cookie = 'isAuthenticated=true; path=/; max-age=86400'; // 24 horas
             router.push('/homePersonal');

@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { LogIn } from "lucide-react"
+import { LogIn, Loader2 } from "lucide-react"
 import Link from "next/link"
 import {useFormLoginUser} from "@/login/Logic/LogicLoginUser";
+import { useState, useEffect } from "react"
+import {ButtonShowPassword} from "@/components/ui/button-show-password";
 
 // Función auxiliar para convertir segundos a formato MM:SS
 const formatTimeRemaining = (seconds: number): string => {
@@ -22,6 +24,64 @@ const formatTimeRemaining = (seconds: number): string => {
 export default function LoginPage() {
 
   const {register, onSubmit, handleSubmit, errors, isSubmitting, reset, isAccountLocked, remainingTime} = useFormLoginUser();
+  const [showLoading, setShowLoading] = useState(false);
+
+  // Verificar si hay un proceso de carga activo al montar
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isLoading = localStorage.getItem('isLoadingHomePersonal');
+      if (isLoading === 'true') {
+        setShowLoading(true);
+      }
+    }
+  }, []);
+
+  // Mostrar loading si está cargando o si hay un proceso activo
+  if (isSubmitting || showLoading) {
+    return (
+      <div className="min-h-screen relative overflow-hidden">
+        <AnimatedBackground />
+
+        {/* Contenedor centrado para el loader */}
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center gap-8">
+            {/* Rueda de carga con gradiente */}
+            <div className="relative">
+              {/* Anillo exterior con gradiente animado */}
+              <div className="w-24 h-24 rounded-full border-4 border-transparent bg-gradient-to-r from-primary via-secondary to-accent p-1 animate-spin">
+                <div className="w-full h-full rounded-full bg-background/90 backdrop-blur-sm" />
+              </div>
+
+              {/* Anillo interior giratorio */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Loader2 className="w-12 h-12 text-primary animate-spin" style={{ animationDuration: '0.8s' }} />
+              </div>
+
+              {/* Efecto de brillo pulsante */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl animate-pulse" />
+            </div>
+
+            {/* Texto de carga */}
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent animate-pulse">
+                Iniciando sesión
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                Preparando tu espacio financiero...
+              </p>
+
+              {/* Puntos animados */}
+              <div className="flex justify-center gap-1 mt-4">
+                <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-2 h-2 rounded-full bg-secondary animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-2 h-2 rounded-full bg-accent animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -73,15 +133,15 @@ export default function LoginPage() {
                     ¿Olvidaste tu contraseña?
                   </Link>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  {...register("password")}
-                  disabled={isAccountLocked}
-                  required
-                  className="h-11"
-                />
+                <div className="relative">
+                  <ButtonShowPassword
+                    id="password"
+                    label=""
+                    register={register}
+                    fieldName={"password"}
+                    errors={errors}
+                  />
+                </div>
               </div>
 
               <Button
