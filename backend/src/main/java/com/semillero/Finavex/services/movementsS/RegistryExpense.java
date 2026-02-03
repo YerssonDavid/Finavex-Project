@@ -10,6 +10,7 @@ import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,14 +24,12 @@ public class RegistryExpense {
     private final CurrencyFormatter currencyFormatter;
 
     public ResponseRegistryExpense registryExpense (RequestRegistryExpense requestRegistryExpense){
-        String email = requestRegistryExpense.email().trim().toLowerCase();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName().toLowerCase().trim();
         if(!userR.existsByEmail(email)){
             throw new UserNotFoundException("El usuario no existe!");
         }
 
-        String emailFormat = requestRegistryExpense.email().toLowerCase().trim();
-
-        User persistedUser = userR.findByEmail(emailFormat).orElseThrow();
+        User persistedUser = userR.findByEmail(email).orElseThrow();
 
         LocalDateTime now = LocalDateTime.now();
 
