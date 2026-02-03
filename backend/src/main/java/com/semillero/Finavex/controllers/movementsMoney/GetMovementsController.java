@@ -1,15 +1,12 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.movementsMoney.RequestGetMovements;
 import com.semillero.Finavex.dto.movementsMoney.ResponseGetMovements;
 import com.semillero.Finavex.services.movementsS.GetMovements;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,8 +33,8 @@ public class GetMovementsController {
                     required = true
             )
     )
-    public ResponseEntity<List<ResponseGetMovements>> getMovements(@Valid @RequestBody RequestGetMovements requestGetMovements){
-        List<ResponseGetMovements> movements = getMovements.getMovementsUser(requestGetMovements);
+    public ResponseEntity<List<ResponseGetMovements>> getMovements(){
+        List<ResponseGetMovements> movements = getMovements.getMovementsUser();
         return ResponseEntity.ok(movements);
     }
 }

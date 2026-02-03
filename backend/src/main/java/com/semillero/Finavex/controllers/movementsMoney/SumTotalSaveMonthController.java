@@ -1,6 +1,5 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.movementsMoney.RequestSumTotalSaveMonth;
 import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalSaveMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalSaveMonth;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,8 +30,8 @@ public class SumTotalSaveMonthController {
                     required = true
             )
     )
-    public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(@RequestBody @Validated RequestSumTotalSaveMonth emailRequest){
-        ResponseSumTotalSaveMonth response = sumTotalSaveMonth.sumTotalSaveMonth(emailRequest.email().toLowerCase().trim());
+    public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(){
+        ResponseSumTotalSaveMonth response = sumTotalSaveMonth.sumTotalSaveMonth();
         return ResponseEntity.ok(response);
     }
 }

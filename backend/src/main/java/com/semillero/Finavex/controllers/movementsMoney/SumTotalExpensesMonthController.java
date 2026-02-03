@@ -1,6 +1,5 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.movementsMoney.RequestSumTotalExpensesMonth;
 import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalExpensesMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalExpenseMonth;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,8 +29,8 @@ public class SumTotalExpensesMonthController {
                     required = true
             )
     )
-    public ResponseEntity<ResponseSumTotalExpensesMonth> sumTotalExpensesMonth (@RequestBody RequestSumTotalExpensesMonth requestSumTotalExpensesMonth){
-        ResponseSumTotalExpensesMonth response = sumTotalExpenseMonth.sumTotalExpenseMonth(requestSumTotalExpensesMonth);
+    public ResponseEntity<ResponseSumTotalExpensesMonth> sumTotalExpensesMonth (){
+        ResponseSumTotalExpensesMonth response = sumTotalExpenseMonth.sumTotalExpenseMonth();
         return ResponseEntity.ok(response);
     }
 }
