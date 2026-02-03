@@ -16,6 +16,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,6 +36,7 @@ public class LoginServ {
     private final TokenProvider tokenProvider;
     @Getter
     private final java.util.concurrent.ConcurrentHashMap<String, LocalDateTime> emailAlertCache = new java.util.concurrent.ConcurrentHashMap<>();
+    private final AuthenticationManager authenticationManager;
 
     /**
      * Autentica un usuario con sus credenciales
@@ -41,7 +46,6 @@ public class LoginServ {
      * @throws InvalidCredentialsException si la contraseña es incorrecta
      */
     public ApiResponse loginUser(DtoLogin dtoLogin){
-
         //Verificamos si el usuario ha superado el límite de intentos
         if(!rateLimitingService.tryConsume(dtoLogin.getEmail())){
             log.warn("Limite de intentos agotados para el usuario: {}", dtoLogin.getEmail());
@@ -64,16 +68,16 @@ public class LoginServ {
 
         log.info("Intento de inicio de sesión para email: {}", dtoLogin.getEmail());
 
-        // Verificar si el usuario existe
+        // Verify if user exist by email
         if(!userRepo.existsByEmail(dtoLogin.getEmail())) {
             log.warn("Email no registrado: {}", dtoLogin.getEmail());
             throw new UserNotFoundException("No existe un usuario registrado con el email: " + dtoLogin.getEmail());
         }
 
-        // Obtener usuario de la base de datos
+        // get user from database
         User userDB = userRepo.findByEmail(dtoLogin.getEmail()).orElseThrow(() -> new UserNotFoundException("Usuerio no encontrado"));
 
-        // Verificar contraseña
+        // Verify password
         boolean isPasswordValid = security.passwordEncoder().matches(dtoLogin.getPassword(), userDB.getPassword());
 
         if(!isPasswordValid) {
@@ -89,8 +93,21 @@ public class LoginServ {
         dtoUserDBJwt.setEmail(userDB.getEmail());
         dtoUserDBJwt.setPassword(userDB.getPassword());
 
+        //Generate rol of User
+        var authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+
         // Generate token
         String token = tokenProvider.generateToken(dtoUserDBJwt);
+
+        // Create object of authentication
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                dtoLogin.getEmail(),
+                null,
+                authorities
+        );
+
+        // Save authentication in security context
+        SecurityContextHolder.getContext().setAuthentication(authToken);
 
         // Construir respuesta de login exitoso
         LoginResponse loginResponse = LoginResponse.builder()
