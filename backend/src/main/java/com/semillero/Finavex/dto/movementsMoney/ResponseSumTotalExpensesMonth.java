@@ -1,4 +1,6 @@
 package com.semillero.Finavex.dto.movementsMoney;
 
-public class ResponseSumTotalExpensesMonth {
+public record ResponseSumTotalExpensesMonth (
+        String totalExpensesMonth
+){
 }
