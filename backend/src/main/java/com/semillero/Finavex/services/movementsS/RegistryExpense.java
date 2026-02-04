@@ -26,11 +26,11 @@ public class RegistryExpense {
     public ResponseRegistryExpense registryExpense (RequestRegistryExpense requestRegistryExpense){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         String emailFormat = email != null ? email.toLowerCase().trim() : null;
-        if(!userR.existsByEmail(email)){
+        if(!userR.existsByEmail(emailFormat)){
             throw new UserNotFoundException("El usuario no existe!");
         }
 
-        User persistedUser = userR.findByEmail(email).orElseThrow();
+        User persistedUser = userR.findByEmail(emailFormat).orElseThrow();
 
         LocalDateTime now = LocalDateTime.now();
 
