@@ -19,8 +19,10 @@ public class SumTotalSaveMonth {
     private final SaveR saveR;
 
     public ResponseSumTotalSaveMonth sumTotalSaveMonth (){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName().toLowerCase().trim();
-        if(email.isEmpty() || !saveR.existsByEmail(email)){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String emailFormat = email != null ? email.toLowerCase().trim() : null;
+
+        if(emailFormat.isEmpty() || !saveR.existsByEmail(emailFormat)){
             log.error("El email no existe o no es llega!");
             throw new IllegalArgumentException("El email ingresado no es valido!");
         }
@@ -33,7 +35,7 @@ public class SumTotalSaveMonth {
 
         LocalDateTime end = start.plusMonths(1);
 
-        Double sum = saveR.sumByPeriod(start, end, email);
+        Double sum = saveR.sumByPeriod(start, end, emailFormat);
 
         NumberFormat format = NumberFormat.getCurrencyInstance();
         String sumFormat = format.format(sum);
