@@ -27,23 +27,19 @@ public class ChangePassword {
     private final UserR userR;
     private final RateLimitingService rateLimitingService;
 
-    public ResponseEntity<ApiResponse> changePassword(ChangePasswordDto changePasswordDto) {
+    public ApiResponse changePassword(ChangePasswordDto changePasswordDto) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String emailFormat = principal.toString();
         log.info("Email del usuario autenticado: {}", emailFormat);
 
         if(!userR.existsByEmail(emailFormat)){
-           ResponseEntity<ApiResponse> response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    ApiResponse.builder()
+            return ApiResponse.builder()
                             .status(HttpStatus.NOT_FOUND.value())
                             .success(false)
                             .timestamp(LocalDateTime.now())
                             .message("Usuario no encontrado con el email proporcionado.")
-                            .build()
-           );
-
-           return response;
+                            .build();
         }
 
         user = userR.findByEmail(emailFormat).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -59,12 +55,11 @@ public class ChangePassword {
         rateLimitingService.resetBucket(user.getEmail());
 
         // Build success response
-        ApiResponse<Object> responseOk = ApiResponse.builder()
+        return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .timestamp(LocalDateTime.now())
                 .message("Contraseña actualizada exitosamente!")
                 .build();
-        return ResponseEntity.ok(responseOk);
     }
 }
