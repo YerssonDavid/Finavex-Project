@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+@import "tailwind-animations";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -137,122 +137,21 @@
   }
 }
 
-/* Minimal custom animations - only keyframes that Tailwind can't handle inline */
-@keyframes float-orb {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
+/* Animaciones personalizadas si es necesario */
+@layer utilities {
+  @keyframes blurred-fade-in {
+    0% {
+      opacity: 0;
+      filter: blur(10px);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0px);
+    }
   }
-  33% {
-    transform: translate(30px, -30px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
+
+  .animate-blurred-fade-in {
+    animation: blurred-fade-in 0.6s ease-out forwards;
   }
 }
 
-@keyframes shooting-star {
-  0% {
-    transform: translateX(100vw) translateY(-100px);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-100px) translateY(100vh);
-    opacity: 0;
-  }
-}
-
-@keyframes twinkle {
-  0%,
-  100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-@keyframes comet-1 {
-  0% {
-    transform: translate(-100px, -100px);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.6;
-  }
-  90% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: translate(100vw, 100vh);
-    opacity: 0;
-  }
-}
-
-@keyframes comet-2 {
-  0% {
-    transform: translate(100vw, 30vh);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.6;
-  }
-  90% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: translate(-100px, 100vh);
-    opacity: 0;
-  }
-}
-
-@keyframes comet-3 {
-  0% {
-    transform: translate(50vw, -100px);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.5;
-  }
-  90% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: translate(90vw, 100vh);
-    opacity: 0;
-  }
-}
-
-.animate-float-orb {
-  animation: float-orb 20s ease-in-out infinite;
-}
-
-.animate-shooting-star {
-  animation: shooting-star 2s linear;
-}
-
-.animate-twinkle {
-  animation: twinkle 5s ease-in-out infinite;
-}
-
-.animate-comet-1 {
-  animation: comet-1 8s linear infinite;
-}
-
-.animate-comet-2 {
-  animation: comet-2 10s linear infinite;
-  animation-delay: 3s;
-}
-
-.animate-comet-3 {
-  animation: comet-3 9s linear infinite;
-  animation-delay: 6s;
-}

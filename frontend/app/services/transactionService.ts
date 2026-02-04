@@ -89,17 +89,18 @@ export class TransactionService {
         "Content-Type": "application/json",
       }
 
-      // Si tienes un token de autenticación, agrégalo
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`
-      }
+      //Obtenemos el token en Session Storage
+      const authToken = token || (typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null);
 
       console.log(`📋 Endpoint: ${endpoint}`)
       console.log("📋 Datos enviados:", JSON.stringify(transactionData, null, 2))
 
       const response = await fetch(endpoint, {
         method: "POST",
-        headers,
+        headers:{
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        },
         body: JSON.stringify(transactionData),
       })
 
@@ -140,68 +141,6 @@ export class TransactionService {
         message: `❌ No fue posible registrar el ${transactionLabel}. ${errorMessage}`,
         data: undefined,
       }
-    }
-  }
-  /**
-   * Obtiene todas las transacciones del usuario
-   * @param token - Token de autenticación
-   * @returns Lista de transacciones
-   */
-  static async getTransactions(token?: string): Promise<Transaction[]> {
-    try {
-      const headers: HeadersInit = {
-        "Content-Type": "application/json",
-      }
-
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`
-      }
-
-      // Actualiza esta URL con tu endpoint real para obtener transacciones
-      const response = await fetch("http://localhost:8080/transactions", {
-        method: "GET",
-        headers,
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`)
-      }
-
-      const data = await response.json()
-      return data
-    } catch (error) {
-      console.error("❌ Error al obtener transacciones:", error)
-      throw error
-    }
-  }
-
-  /**
-   * Elimina una transacción
-   * @param id - ID de la transacción
-   * @param token - Token de autenticación
-   */
-  static async deleteTransaction(id: string, token?: string): Promise<void> {
-    try {
-      const headers: HeadersInit = {
-        "Content-Type": "application/json",
-      }
-
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`
-      }
-
-      // Actualiza esta URL con tu endpoint real para eliminar transacciones
-      const response = await fetch(`http://localhost:8080/transactions/${id}`, {
-        method: "DELETE",
-        headers,
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`)
-      }
-    } catch (error) {
-      console.error("❌ Error al eliminar transacción:", error)
-      throw error
     }
   }
 }

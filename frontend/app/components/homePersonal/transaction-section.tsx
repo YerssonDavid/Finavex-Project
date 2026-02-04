@@ -38,20 +38,27 @@ export function TransactionSection() {
         }
       }
 
+      //Obtenemos el token en Session Storage
+      const authToken = typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null;
+
       if (!userEmail) return
 
       // Obtener ingresos del mes
       const incomeResponse = await fetch("http://localhost:8080/sum-total-save-month", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: userEmail }),
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        }
       })
 
       // Obtener gastos del mes
       const expenseResponse = await fetch("http://localhost:8080/expenses/month/sum", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: userEmail }),
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`
+        }
       })
 
       if (incomeResponse.ok && expenseResponse.ok) {

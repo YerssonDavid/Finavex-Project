@@ -41,17 +41,13 @@ export class MovementService {
 
       console.log("📋 Obteniendo movimientos del usuario:", userEmail)
 
-      // Construir el body con correo y token
-      const requestBody: any = { email: userEmail }
-      if (authToken) {
-        requestBody.token = authToken
-      }
-
       //SE DEBE DE ENVIAR EL CORREO Y TOKEN
       const response = await fetch(`http://localhost:8080/movements`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(requestBody),
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        }
       })
 
       if (!response.ok) {

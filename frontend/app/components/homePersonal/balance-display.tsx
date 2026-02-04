@@ -38,19 +38,20 @@ export function BalanceDisplay({ showBalance }: BalanceDisplayProps) {
         }
       }
 
+      //Obtenemos el token en Session Storage
+      const token = typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null;
+
       if (!userEmail) {
         throw new Error("No se encontró el correo del usuario")
       }
 
       // Enviar petición POST con el correo del usuario
       const response = await fetch("http://localhost:8080/sum-total-save-month?", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: userEmail,
-        }),
+          "Authorization": `Bearer ${token}`,
+        }
       })
 
       if (!response.ok) {

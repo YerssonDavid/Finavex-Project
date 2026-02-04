@@ -68,7 +68,7 @@ export default function AboutPage() {
             </div>
 
             {/* Statistics Cards */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 timeline-view animate-zoom-in animate-range-cover">
               <StatCard
                 icon={<TrendingDown className="h-8 w-8" />}
                 percentage="68%"
@@ -116,7 +116,7 @@ export default function AboutPage() {
           </section>
 
           {/* CTA Section */}
-          <Card className="p-12 text-center bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border-primary/20">
+          <Card className="p-12 text-center bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border-primary/20 timeline-view animate-slide-in-left animate-range-[entry_5%_contain_20%]">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Únete a la Revolución Financiera</h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Esta plataforma web es solo el comienzo de una evolución tecnológica sin límites, diseñada para crecer y
