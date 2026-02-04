@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,20 +18,26 @@ import java.util.List;
 public class GetMovementsController {
     private final GetMovements getMovements;
 
-    @PostMapping
+    @GetMapping
     @Operation(
             summary = "Get list of movements",
-            description = "Endpoint for get the list of movements of the last 30 days of a user",
-            method = "POST",
+            description = "Returns the list of movements of the last 30 days for the authenticated user. The user email is automatically extracted from the JWT token.",
+            method = "GET",
             tags = {"Get list of movements"},
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "It is expected email and token",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = String.class)
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Movements retrieved successfully",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ResponseGetMovements.class)
+                            )
                     ),
-                    required = true
-            )
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized - Invalid or missing JWT token"
+                    )
+            }
     )
     public ResponseEntity<List<ResponseGetMovements>> getMovements(){
         List<ResponseGetMovements> movements = getMovements.getMovementsUser();
