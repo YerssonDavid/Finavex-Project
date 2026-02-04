@@ -15,20 +15,26 @@ import org.springframework.web.bind.annotation.*;
 public class SumTotalSaveMonthController {
     private final SumTotalSaveMonth sumTotalSaveMonth;
 
-    @PostMapping()
+    @GetMapping()
     @Operation(
             summary = "Sum total of savings for the month",
-            description = "Endpoint for summing the total savings of a user in the current month",
-            method = "POST",
+            description = "Returns the total savings of the authenticated user for the current month. The user email is automatically extracted from the JWT token.",
+            method = "GET",
             tags = {"Sum total"},
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "It is expected email",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = String.class)
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Total savings retrieved successfully",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ResponseSumTotalSaveMonth.class)
+                            )
                     ),
-                    required = true
-            )
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized - Invalid or missing JWT token"
+                    )
+            }
     )
     public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(){
         ResponseSumTotalSaveMonth response = sumTotalSaveMonth.sumTotalSaveMonth();

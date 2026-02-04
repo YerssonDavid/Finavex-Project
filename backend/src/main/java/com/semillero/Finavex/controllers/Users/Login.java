@@ -26,17 +26,31 @@ public class Login {
     @PostMapping("/login")
     @Operation(
             summary="User login",
-            description="Endpoint for user authentication",
+            description="Authenticates user and returns JWT token for subsequent requests",
             method="POST",
             tags={"User Login"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Login credentials",
+                    description = "Login credentials (email and password)",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = DtoLogin.class)
                     ),
                     required = true
-            )
+            ),
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Login successful - Returns JWT token",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "401",
+                            description = "Invalid credentials"
+                    )
+            }
     )
     public ResponseEntity<ApiResponse> loginUser(@Valid @RequestBody DtoLogin dtoLogin){
         ApiResponse response = loginServ.loginUser(dtoLogin);
