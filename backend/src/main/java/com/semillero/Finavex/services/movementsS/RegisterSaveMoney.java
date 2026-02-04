@@ -27,23 +27,14 @@ public class RegisterSaveMoney {
     private final CurrencyFormatter currencyFormatter;
 
     public ResponseSaveMoney registerSaveMoney(RequestRegistrySaveMoney requestRegistrySaveMoney){
-
-        //Debug para saber si el correo se extrae correctamente del token
-        /*String token = tokenProvider.extractToken(requestRegistrySaveMoney.token());
-        String email = tokenProvider.extractEmail(token);
-        log.info("El email extraido del token en el servicio es {}", email);*/
-
-
-        String emailFormat = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("Email del usuario autenticado: {}", emailFormat);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String emailFormat = email != null ? email.toLowerCase().trim() : null;
+        log.debug("Email del usuario autenticado: {}", emailFormat);
 
 
         if(!userR.existsByEmail(emailFormat)){
             throw new UserNotFoundException("El usuario no existe");
         }
-
-        //String emailFormat = requestRegistrySaveMoney.email().toLowerCase().trim();
-        log.warn(emailFormat);
 
         User persistedUser = userR.findByEmail(emailFormat).orElseThrow();
 
