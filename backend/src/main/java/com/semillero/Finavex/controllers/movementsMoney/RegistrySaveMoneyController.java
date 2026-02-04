@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/save-money")
 @RequiredArgsConstructor
-public class saveMoneyController {
+public class RegistrySaveMoneyController {
     private final RegisterSaveMoney registerSaveMoney;
 
     @PostMapping()

@@ -1,8 +1,9 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.movementsMoney.RequestSumTotalSaveMonth;
 import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalSaveMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalSaveMonth;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,8 +16,22 @@ public class SumTotalSaveMonthController {
     private final SumTotalSaveMonth sumTotalSaveMonth;
 
     @PostMapping()
-    public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(@RequestBody @Validated RequestSumTotalSaveMonth emailRequest){
-        ResponseSumTotalSaveMonth response = sumTotalSaveMonth.sumTotalSaveMonth(emailRequest.email().toLowerCase().trim());
+    @Operation(
+            summary = "Sum total of savings for the month",
+            description = "Endpoint for summing the total savings of a user in the current month",
+            method = "POST",
+            tags = {"Sum total"},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "It is expected email",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = String.class)
+                    ),
+                    required = true
+            )
+    )
+    public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(){
+        ResponseSumTotalSaveMonth response = sumTotalSaveMonth.sumTotalSaveMonth();
         return ResponseEntity.ok(response);
     }
 }

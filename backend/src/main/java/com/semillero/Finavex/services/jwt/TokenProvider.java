@@ -41,9 +41,9 @@ public class TokenProvider {
     public String generateToken(DtoLogin user) {
         //Metadata of user in the Token
         Map<String, Object> claims = new HashMap<>();
-        claims.put("Id", user.getId().orElse(null));
-        claims.put("Email", user.getEmail());
-        claims.put("Type", "Access");
+        claims.put("id", user.getId().orElse(null));
+        claims.put("email", user.getEmail());
+        claims.put("type", "Access");
 
         return buildToken(claims, user.getEmail(), jwtExpiration);
     }
@@ -51,8 +51,8 @@ public class TokenProvider {
     // Generate Refresh Token
     public String generateRefreshToken(User user){
         Map<String, Object> claims = new HashMap<>();
-        claims.put("Id", user.getId());
-        claims.put("Type", "Refresh");
+        claims.put("id", user.getId());
+        claims.put("type", "Refresh");
 
         return buildToken(claims, user.getEmail(), refreshExpiration);
     }
@@ -84,16 +84,23 @@ public class TokenProvider {
                 .getBody();
     }
 
+    public String extractToken(String authHeader) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
+    }
+
     //Extract id of the token
     public Long extractUserId(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get("Id", Long.class);
+        return claims.get("id", Long.class);
     }
 
     //Extract email of the token
     public String extractEmail (String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get("Email", String.class);
+        return claims.get("email", String.class);
     }
 
     //Extract Expiration Date

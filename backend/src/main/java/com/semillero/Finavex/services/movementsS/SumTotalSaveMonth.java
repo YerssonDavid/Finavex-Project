@@ -4,6 +4,8 @@ import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalSaveMonth;
 import com.semillero.Finavex.repository.movementsR.SaveR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.NumberFormat;
@@ -16,8 +18,9 @@ import java.time.LocalDateTime;
 public class SumTotalSaveMonth {
     private final SaveR saveR;
 
-    public ResponseSumTotalSaveMonth sumTotalSaveMonth (String email){
-        if(email == null || email.isEmpty() || !saveR.existsByEmail(email)){
+    public ResponseSumTotalSaveMonth sumTotalSaveMonth (){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName().toLowerCase().trim();
+        if(email.isEmpty() || !saveR.existsByEmail(email)){
             log.error("El email no existe o no es llega!");
             throw new IllegalArgumentException("El email ingresado no es valido!");
         }

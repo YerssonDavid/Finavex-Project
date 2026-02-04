@@ -6,8 +6,10 @@ import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.services.bucked.RateLimitingService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChangePassword {
     private User user;
 
@@ -26,7 +29,11 @@ public class ChangePassword {
 
     public ResponseEntity<ApiResponse> changePassword(ChangePasswordDto changePasswordDto) {
 
-        if(!userR.existsByEmail(changePasswordDto.getEmail())){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String emailFormat = principal.toString();
+        log.info("Email del usuario autenticado: {}", emailFormat);
+
+        if(!userR.existsByEmail(emailFormat)){
            ResponseEntity<ApiResponse> response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     ApiResponse.builder()
                             .status(HttpStatus.NOT_FOUND.value())
@@ -39,7 +46,7 @@ public class ChangePassword {
            return response;
         }
 
-        user = userR.findByEmail(changePasswordDto.getEmail()).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        user = userR.findByEmail(emailFormat).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         // update the password
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
