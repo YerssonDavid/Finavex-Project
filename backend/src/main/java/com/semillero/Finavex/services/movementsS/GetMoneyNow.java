@@ -19,7 +19,8 @@ public class GetMoneyNow {
     private final UserR userR;
 
     public ResponseGetMoneyNow getMoneyNow (){
-        String emailFormat = SecurityContextHolder.getContext().getAuthentication().getName().toLowerCase().trim();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String emailFormat = email != null ? email.toLowerCase().trim() : null;
 
         if(userR.existsByEmail(emailFormat)){
             User user = userR.findByEmail(emailFormat).orElseThrow();
