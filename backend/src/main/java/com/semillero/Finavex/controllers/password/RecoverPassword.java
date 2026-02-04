@@ -55,6 +55,8 @@ public class RecoverPassword {
             )
     )
     public ResponseEntity<ApiResponse> recoverPassword(@RequestBody ChangePasswordDto changePasswordDto) {
-        return changePassword.changePassword(changePasswordDto);
+        ApiResponse response = changePassword.changePassword(changePasswordDto);
+        return ResponseEntity.ok().body(response);
+
     }
 }
