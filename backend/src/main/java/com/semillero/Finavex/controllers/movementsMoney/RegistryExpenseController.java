@@ -19,17 +19,31 @@ public class RegistryExpenseController {
     @PostMapping()
     @Operation(
             summary = "Registry expense",
-            description = "Endpoint for registry an expense",
+            description = "Registers a new expense for the authenticated user. The user email is automatically extracted from the JWT token.",
             method = "POST",
             tags = {"Registry expense to user"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "It is expected to email, amount of expense and note",
+                    description = "Expense details: amount and optional note",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = String.class)
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = RequestRegistryExpense.class)
                     ),
                     required = true
-            )
+            ),
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Expense registered successfully",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ResponseRegistryExpense.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized - Invalid or missing JWT token"
+                    )
+            }
     )
     public ResponseEntity<ResponseRegistryExpense> registryExpense(@RequestBody @Valid RequestRegistryExpense requestRegistryExpense){
         ResponseRegistryExpense response = registryExpense.registryExpense(requestRegistryExpense);
