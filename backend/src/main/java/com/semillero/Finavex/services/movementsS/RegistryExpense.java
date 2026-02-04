@@ -24,7 +24,8 @@ public class RegistryExpense {
     private final CurrencyFormatter currencyFormatter;
 
     public ResponseRegistryExpense registryExpense (RequestRegistryExpense requestRegistryExpense){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName().toLowerCase().trim();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String emailFormat = email != null ? email.toLowerCase().trim() : null;
         if(!userR.existsByEmail(email)){
             throw new UserNotFoundException("El usuario no existe!");
         }
