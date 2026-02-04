@@ -1,6 +1,7 @@
 package com.semillero.Finavex.controllers.password;
 
 import com.semillero.Finavex.dto.ApiResponse;
+import com.semillero.Finavex.dto.codePassword.ResponseComparisonCode;
 import com.semillero.Finavex.dto.users.RecoverPassword.ChangePasswordDto;
 import com.semillero.Finavex.dto.users.RecoverPassword.ComparisionCodeUser;
 import com.semillero.Finavex.services.recoveryPassword.ChangePassword;
@@ -35,24 +36,38 @@ public class RecoverPassword {
             )
     )
     public ResponseEntity<?> validationCodeRecoveryPassword (@RequestBody ComparisionCodeUser comparisionCodeUser){
-        return confirmationCode.comparisonCode(comparisionCodeUser.getEmail(), comparisionCodeUser.getCode());
+        ResponseComparisonCode response = confirmationCode.comparisonCode(comparisionCodeUser.getEmail(), comparisionCodeUser.getCode());
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("reset/password")
     @Operation(
-            summary = "Recover password",
-            description = "Endpoint to recover user password by providing the old and new passwords",
+            summary = "Reset password",
+            description = "Resets user password after code verification. Requires the new password.",
             method = "POST",
             tags = {"Password Recovery"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Old and new passwords",
+                    description = "New password details",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = String.class)
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ChangePasswordDto.class)
                     ),
                     required = true
-
-            )
+            ),
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Password changed successfully",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ApiResponse.class)
+                            )
+                    ),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid password format"
+                    )
+            }
     )
     public ResponseEntity<ApiResponse> recoverPassword(@RequestBody ChangePasswordDto changePasswordDto) {
         ApiResponse response = changePassword.changePassword(changePasswordDto);
