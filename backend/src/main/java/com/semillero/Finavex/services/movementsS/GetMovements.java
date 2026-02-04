@@ -25,7 +25,8 @@ public class GetMovements {
 
 
     public List<ResponseGetMovements> getMovementsUser (){
-        String emailFormat = SecurityContextHolder.getContext().getAuthentication().getName().toLowerCase().trim();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String emailFormat = email != null ? email.toLowerCase().trim() : null;
 
         if(!userR.existsByEmail(emailFormat)){
             throw new UserNotFoundException("Usuario no encontrado!");
