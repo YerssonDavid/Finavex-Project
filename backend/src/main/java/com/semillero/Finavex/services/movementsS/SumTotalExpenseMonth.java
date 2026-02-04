@@ -19,7 +19,7 @@ public class SumTotalExpenseMonth {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         String emailFormat = email != null ? email.toLowerCase().trim() : null;
 
-        if(emailFormat.isEmpty() || expenseR.idByEmail(emailFormat) == null){
+        if(emailFormat == null || expenseR.idByEmail(emailFormat) == null){
             throw new IllegalArgumentException();
         }
 
