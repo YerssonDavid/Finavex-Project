@@ -29,6 +29,14 @@ export function BalanceCard() {
     isLoading: true
   })
 
+  // Función para obtener el token del sessionStorage
+  const getAuthToken = (): string => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("authToken") || ""
+    }
+    return ""
+  }
+
   // Función para obtener ingresos del mes
   const fetchMonthlyIncome = useCallback(async () => {
     setIncomeData(prev => ({ ...prev, isLoading: true }))
@@ -48,15 +56,16 @@ export function BalanceCard() {
         throw new Error("No se encontró el correo del usuario")
       }
 
+      // Obtener el token del sessionStorage
+      const token = getAuthToken()
+
       // Petición para obtener ingresos del mes
       const response = await fetch("http://localhost:8080/sum-total-save-month", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: userEmail,
-        }),
+          "Authorization": `Bearer ${token}`
+        }
       })
 
       if (!response.ok) {
@@ -116,15 +125,16 @@ export function BalanceCard() {
         throw new Error("No se encontró el correo del usuario")
       }
 
+      // Obtener el token del sessionStorage
+      const token = getAuthToken()
+
       // Petición para obtener gastos del mes
       const response = await fetch("http://localhost:8080/expenses/month/sum", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: userEmail,
-        }),
+          "Authorization": `Bearer ${token}`
+        }
       })
 
       if (!response.ok) {
@@ -184,15 +194,16 @@ export function BalanceCard() {
         throw new Error("No se encontró el correo del usuario")
       }
 
+      // Obtener el token del sessionStorage
+      const token = getAuthToken()
+
       // Petición para obtener el saldo actual
       const response = await fetch("http://localhost:8080/get/money-now", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: userEmail,
-        }),
+          "Authorization": `Bearer ${token}`
+        }
       })
 
       if (!response.ok) {

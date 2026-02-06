@@ -72,7 +72,7 @@ export const ButtonShowPassword = ({
                     size="sm"
                     className={`absolute right-0 top-0 h-11 px-3 transition-all duration-200 ${
                         showPassword 
-                            ? 'bg-primary/10 text-primary hover:bg-primary/20' 
+                            ? 'bg-primary/10 text-primary hover:bg-primary/20'
                             : 'hover:bg-primary/10 text-muted-foreground hover:text-primary'
                     }`}
                     onClick={holdToShow ? undefined : togglePassword}
