@@ -8,6 +8,11 @@ import java.util.Locale;
 
 @Component
 public class CurrencyFormatter {
+
+    /**
+     * Formatea un BigDecimal a moneda sin símbolo ($)
+     * Ejemplo: 14000.00 -> "14.000,00"
+     */
     public String formatCurrencyWithoutSymbol(BigDecimal amount) {
         if (amount == null) {
             return "0,00";
@@ -17,3 +22,4 @@ public class CurrencyFormatter {
         return decimalFormat.format(amount);
     }
 }
+

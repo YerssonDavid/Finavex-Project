@@ -11,7 +11,6 @@ import com.semillero.Finavex.repository.movementsR.SaveR;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,14 +26,12 @@ public class RegisterSaveMoney {
     private final CurrencyFormatter currencyFormatter;
 
     public ResponseSaveMoney registerSaveMoney(RequestRegistrySaveMoney requestRegistrySaveMoney){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email != null ? email.toLowerCase().trim() : null;
-        log.debug("Email del usuario autenticado: {}", emailFormat);
-
-
-        if(!userR.existsByEmail(emailFormat)){
+        if(!userR.existsByEmail(requestRegistrySaveMoney.email().toLowerCase().trim())){
             throw new UserNotFoundException("El usuario no existe");
         }
+
+        String emailFormat = requestRegistrySaveMoney.email().toLowerCase().trim();
+        log.warn(emailFormat);
 
         User persistedUser = userR.findByEmail(emailFormat).orElseThrow();
 

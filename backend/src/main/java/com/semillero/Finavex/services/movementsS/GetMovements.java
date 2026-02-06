@@ -1,13 +1,14 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.movementsMoney.RequestGetMovements;
 import com.semillero.Finavex.dto.movementsMoney.ResponseGetMovements;
+import com.semillero.Finavex.exceptions.InvalidCredentialsException;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import com.semillero.Finavex.repository.movementsR.SaveR;
 import com.semillero.Finavex.services.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,12 +25,14 @@ public class GetMovements {
     private final TokenProvider tokenProvider;
 
 
-    public List<ResponseGetMovements> getMovementsUser (){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email != null ? email.toLowerCase().trim() : null;
-
+    public List<ResponseGetMovements> getMovementsUser (RequestGetMovements requestGetMovements){
+        String emailFormat = requestGetMovements.email().toLowerCase().trim();
         if(!userR.existsByEmail(emailFormat)){
             throw new UserNotFoundException("Usuario no encontrado!");
+        }
+
+        if(!tokenProvider.validateToken(requestGetMovements.token()) && !tokenProvider.isTokenExpiration(requestGetMovements.token())){
+            throw new InvalidCredentialsException("No estas autorizado!");
         }
 
         LocalDateTime time = LocalDateTime.now().minusDays(30);
