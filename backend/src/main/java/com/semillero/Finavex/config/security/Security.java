@@ -1,10 +1,15 @@
 package com.semillero.Finavex.config.security;
 
 import com.semillero.Finavex.config.jwtConfig.JwtAuthenticationFilter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,15 +42,16 @@ public class Security {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/Users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Users/login").permitAll()
-                        //.requestMatchers(HttpMethod.POST, "/recover-password/recover-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "recover-password/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "AI/chat/question/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/code-recovery/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/save-money/**").permitAll()
+                        // Rutas que requieren autenticación (eliminadas de permitAll):
+                        // - /save-money/** ahora requiere token JWT
+                        //.requestMatchers(HttpMethod.POST, "/movements").permitAll()
+                        //.requestMatchers(HttpMethod.POST, "/recover-password/recover-password").permitAll()
+                        //.requestMatchers(HttpMethod.POST, "recover-password/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/get/money-now").permitAll()
                         .requestMatchers(HttpMethod.POST, "/sum-total-save-month").permitAll()
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/movements").permitAll()
                         .requestMatchers(HttpMethod.POST, "/expenses/month/sum").permitAll()
                         .requestMatchers(HttpMethod.POST, "/expenses/registry").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/ai-voice").permitAll()
@@ -82,5 +88,11 @@ public class Security {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+    }
+
+    //Autentication manager
+    @Bean
+    public AuthenticationManager authenticationManager(){
+        return authentication -> authentication;
     }
 }
