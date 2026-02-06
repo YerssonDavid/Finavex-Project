@@ -7,12 +7,7 @@ import java.math.BigDecimal;
 
 public record RequestRegistrySaveMoney(
         BigDecimal savedAmount,
-        String note,
-
-        @NotBlank(message = "El email no puede estar vacio")
-        @Email(message = "El email debe tener un formato valido")
-        String email
-
+        String note
 ) {
 }
 
