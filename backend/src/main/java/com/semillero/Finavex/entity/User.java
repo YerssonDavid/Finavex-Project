@@ -84,7 +84,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return "";
     }
 
     //Guarda el registro en la tabla MoneyNow con una relación uno a uno

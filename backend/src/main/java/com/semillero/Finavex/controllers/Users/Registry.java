@@ -29,31 +29,17 @@ public class Registry {
     @PostMapping("/register")
     @Operation(
             summary="Register a new user",
-            description = "Creates a new user account in the application",
+            description = "Endpoint to register a new user in the application",
             method = "POST",
             tags = {"Registry new users"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "User registration details",
+                    description = "User object that needs to be registered",
                     content = @Content (
                             mediaType = "application/json",
-                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = RegistryUserDto.class)
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = User.class)
                     ),
                     required = true
-            ),
-            responses = {
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                            responseCode = "201",
-                            description = "User registered successfully",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ApiResponse.class)
-                            )
-                    ),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                            responseCode = "409",
-                            description = "User already exists"
-                    )
-            }
+            )
     )
     public ResponseEntity<ApiResponse<User>> registerUser(@Valid @RequestBody RegistryUserDto registryUserDto){
         ApiResponse<User> registry = registryServ.registerUser(registryUserDto);

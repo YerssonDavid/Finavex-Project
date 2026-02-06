@@ -1,9 +1,9 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.movementsMoney.RequestSumTotalExpensesMonth;
 import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalExpensesMonth;
 import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.text.NumberFormat;
@@ -15,11 +15,9 @@ import java.time.LocalDateTime;
 public class SumTotalExpenseMonth {
     private final ExpenseR expenseR;
 
-    public ResponseSumTotalExpensesMonth sumTotalExpenseMonth() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email != null ? email.toLowerCase().trim() : null;
-
-        if(emailFormat == null || expenseR.idByEmail(emailFormat) == null){
+    public ResponseSumTotalExpensesMonth sumTotalExpenseMonth(RequestSumTotalExpensesMonth requestSumTotalExpensesMonth) {
+        String emailFormat = requestSumTotalExpensesMonth.email().trim().toLowerCase();
+        if(emailFormat.isEmpty() || expenseR.idByEmail(emailFormat) == null){
             throw new IllegalArgumentException();
         }
 

@@ -21,27 +21,17 @@ public class sendCodeRecovery {
     @PostMapping("send-code")
     @Operation(
             summary = "Send code for recovery password",
-            description = "Sends a recovery code to the user's email for password reset",
+            description = "Endpoint to send the recovery code of password to the user's email",
             method = "POST",
             tags = {"Send recovery code"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "User email to send recovery code",
+                    description = "Ruquest body to send code to email",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = SendCodeRecoveryPassword.class)
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = String.class)
                     ),
                     required = true
-            ),
-            responses = {
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                            responseCode = "200",
-                            description = "Recovery code sent successfully"
-                    ),
-                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-                            responseCode = "404",
-                            description = "User not found"
-                    )
-            }
+            )
     )
     public ResponseEntity<?> sendCodeForEmailVerify (@RequestBody SendCodeRecoveryPassword sendCodeRecoveryPassword){
         emailSendCode.sendEmailCodeRecoverPassword(

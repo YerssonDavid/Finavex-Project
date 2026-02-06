@@ -1,12 +1,12 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.movementsMoney.RequestGetMoneyNow;
 import com.semillero.Finavex.dto.movementsMoney.ResponseGetMoneyNow;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,9 +18,8 @@ import java.text.NumberFormat;
 public class GetMoneyNow {
     private final UserR userR;
 
-    public ResponseGetMoneyNow getMoneyNow (){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email != null ? email.toLowerCase().trim() : null;
+    public ResponseGetMoneyNow getMoneyNow (RequestGetMoneyNow requestGetMoneyNow){
+        String emailFormat = requestGetMoneyNow.email().toLowerCase().trim();
 
         if(userR.existsByEmail(emailFormat)){
             User user = userR.findByEmail(emailFormat).orElseThrow();
@@ -36,7 +35,7 @@ public class GetMoneyNow {
             );
             return response;
         } else {
-            log.error("El usuario no existe! {}", emailFormat);
+            log.error("El usuario no existe! {}", requestGetMoneyNow.email());
             throw new UserNotFoundException("El usuario no existe!");
         }
     }

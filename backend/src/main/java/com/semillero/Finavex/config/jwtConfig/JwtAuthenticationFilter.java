@@ -6,7 +6,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +18,6 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
     private final UserDetailsService userDetailsService;
@@ -30,40 +28,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        //Extract Header authorization of the request
+        String authHeader = request.getHeader("Authorization");
 
-        try{
-            //Extract Header authorization of the request
-            String authHeader = request.getHeader("Authorization");
-            String token = tokenProvider.extractToken(authHeader);
+        // verify if exists and start with Bearer
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            // Continue with the filter chain
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            // verify if exists and start with Bearer
-            if (token == null) {
-                log.debug("No se encontro el token en el header");
-                // Continue with the filter chain
-                filterChain.doFilter(request, response);
-                return;
-            }
+        try {
+            //Extract token
+            String token = authHeader.substring(7); // "Bearer " has 7 characters
 
-            if(!tokenProvider.validateToken(token)){
-                log.debug("Token invalido!");
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            if (SecurityContextHolder.getContext().getAuthentication() != null) {
-                log.debug("Autenticación ya existe en el contexto");
-                filterChain.doFilter(request, response);
-                return;
-            }
-
+            // Validate token
             String email = tokenProvider.extractEmail(token);
-            Long userId = tokenProvider.extractUserId(token);
-
-            if(email == null){
-                log.debug("No se pudo extraer el email del token");
-                filterChain.doFilter(request, response);
-                return;
-            }
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // Load user from database
@@ -72,18 +52,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 //Validate token with user details
                 if (tokenProvider.validateToken(token)) {
                     //Build authentication
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, null, user.getAuthorities());
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     // Save the user in the security context
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-
-        }catch (Exception e) {
-            log.error("Error processing JWT token: {}", e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error processing JWT token: " + e.getMessage());
         }
+
         // Always continue with the filter chain
         filterChain.doFilter(request, response);
+
     }
 }
