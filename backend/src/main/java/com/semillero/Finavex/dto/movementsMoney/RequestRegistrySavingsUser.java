@@ -1,4 +1,9 @@
 package com.semillero.Finavex.dto.movementsMoney;
 
-public record RequestRegistrySavingsUser() {
+import java.math.BigDecimal;
+
+public record RequestRegistrySavingsUser(
+        BigDecimal amount,
+        String nameSavings
+) {
 }
