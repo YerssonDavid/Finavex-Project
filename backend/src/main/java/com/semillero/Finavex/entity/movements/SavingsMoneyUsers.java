@@ -1,5 +1,6 @@
 package com.semillero.Finavex.entity.movements;
 
+import com.semillero.Finavex.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -17,10 +18,9 @@ public class SavingsMoneyUsers {
     @Id
     private long id;
 
-    @Email
-    @NotBlank(message = "El email se requiere")
-    @Column(name="email", nullable = false)
-    private String email;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @NotBlank(message = "El nombre se requiere")
     @Column(name="name_savings", nullable = false)
