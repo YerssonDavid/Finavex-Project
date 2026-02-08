@@ -2,6 +2,7 @@ name: automation issues bot
 on:
   schedule:
     - cron: '10 1 * * sun'
+  workflow_dispatch:  # ✅ Permite ejecución manual
 
 jobs:
   send-issues:
