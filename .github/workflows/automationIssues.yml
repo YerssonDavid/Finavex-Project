@@ -56,6 +56,11 @@ jobs:
                 dm_response.raise_for_status()
                 dm = dm_response.json()
                 
+                if 'id' not in dm:
+                    print(f"Error: Discord API response missing 'id' field")
+                    print(f"Response: {dm}")
+                    sys.exit(1)
+                
                 channel_id = dm['id']
                 print(f"DM Channel ID: {channel_id}")
 
@@ -73,7 +78,7 @@ jobs:
                 sys.exit(1)
             except KeyError as e:
                 print(f"KeyError: {e}")
-                print(f"Response data: {dm if 'id' in dm and 'dm' in locals() else 'N/A'}")
+                print(f"Response data: {locals().get('dm', 'N/A')}")
                 sys.exit(1)
             except Exception as e:
                 print(f"Unexpected error: {e}")
