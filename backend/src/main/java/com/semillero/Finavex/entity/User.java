@@ -3,6 +3,7 @@ package com.semillero.Finavex.entity;
 import com.semillero.Finavex.Validated.Create;
 import com.semillero.Finavex.Validated.Update;
 import com.semillero.Finavex.entity.movements.MoneyNow;
+import com.semillero.Finavex.entity.movements.SavingsMoneyUsers;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -90,4 +91,8 @@ public class User implements UserDetails {
     //Guarda el registro en la tabla MoneyNow con una relación uno a uno
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private MoneyNow moneyNow;
+
+    // Guardamos el registro de los ahorros del usuario en la tabla SavingsMoneyUsers con una relación uno a muchos
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SavingsMoneyUsers> savingsMoneyUsers;
 }

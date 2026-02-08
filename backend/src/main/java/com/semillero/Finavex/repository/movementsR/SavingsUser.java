@@ -8,5 +8,4 @@ import java.math.BigDecimal;
 
 @Repository
 public interface SavingsUser extends JpaRepository<SavingsMoneyUsers, Long> {
-    boolean existsByEmail(String email);
 }
