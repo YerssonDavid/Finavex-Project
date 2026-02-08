@@ -47,45 +47,59 @@ jobs:
                     print("No issues found. Exiting.")
                     sys.exit(0)
 
-                message = "**Issues pendientes**\n\n"
+                # Construir texto de issues para enviar a la AI
+                issues_text = ""
                 for issue in issues[:10]:
-                    message += f"- [{issue['title']}]({issue['html_url']})\n"
+                    # Extraer etiquetas del issue
+                    labels = [label['name'] for label in issue.get('labels', [])]
+                    labels_str = ', '.join(labels) if labels else 'sin etiquetas'
+                    issues_text += f"- Título: {issue['title']}\n  URL: {issue['html_url']}\n  Etiquetas: {labels_str}\n\n"
 
-                response_ai= request.post(
+                print("Sending issues to AI for formatting...")
+                
+                # Enviar a la AI para formatear el mensaje
+                ai_token = "${{ secrets.AI_TOKEN_BOT }}"
+                response_ai = requests.post(
                     "https://models.github.ai/inference",
                     headers={
-                        "x-api-key": "${{ secrets.AI_TOKEN_BOT }}",
-                        "content-type": "application/json"
+                        "Authorization": f"Bearer {ai_token}",
+                        "Content-Type": "application/json"
                     },
                     json={
-                      "model": "openai/gpt-4.1-nano",
-                      "max_tokens": 500,
-                      "messages": [{
-                          "role": "user",
-                          "content": f"""Formatea estos issues de GitHub para notificar en un mensaje de Discord.
+                        "model": "openai/gpt-4.1-nano",
+                        "max_tokens": 500,
+                        "messages": [{
+                            "role": "user",
+                            "content": f"""Formatea estos issues de GitHub para notificar en un mensaje de Discord.
                 Requisitos:
-                - Agregales emojis relevantes por tipo, por ejemplo, bug, feature, docs
-                - Ordenalos por prioridad (Critico, importante, normal)
+                - Agregales emojis relevantes por tipo, por ejemplo: 🐛 bug, ✨ feature, 📚 docs
+                - Ordenalos por prioridad (🔴 Critico, 🟠 Importante, 🟢 Normal)
                 - Resume de manera breve cada uno
                 - Total de issues al final
-                - Mensaje de motivación al final para el dev!. ("David")
+                - Mensaje de motivación al final para el dev! ("David")
+                - El mensaje debe ser corto y conciso (máximo 1500 caracteres para Discord)
 
                 Issues:
                 {issues_text}"""
-                      }]
+                        }]
                     }
-                ).json
+                )
+                response_ai.raise_for_status()
+                ai_response = response_ai.json()
 
-                print(f"Sending message to Discord...")
+                print("AI Response received successfully")
 
-                #Extraemos el mensaje del modelo de AI
-                message = response_ai ['content'][0]['text']
+                # Extraemos el mensaje del modelo de AI (formato OpenAI)
+                message = ai_response['choices'][0]['message']['content']
+                
+                print("Sending message to Discord...")
                 
                 token = "${{ secrets.BOT_DISCORD }}"
                 user_id = "${{ secrets.DISCORD_USER_ID }}"
 
                 headers = {"Authorization": f"Bot {token}"}
-                url = f"https://discord.com/api/v10/users/{user_id}/channels"
+                # El endpoint correcto para crear un canal DM es /users/@me/channels
+                url = "https://discord.com/api/v10/users/@me/channels"
 
                 dm_response = requests.post(url, headers=headers, json={"recipient_id": user_id})
                 dm_response.raise_for_status()
@@ -105,12 +119,16 @@ jobs:
                 
             except requests.exceptions.RequestException as e:
                 print(f"Request error: {e}")
+                if hasattr(e, 'response') and e.response is not None:
+                    print(f"Response status: {e.response.status_code}")
+                    print(f"Response body: {e.response.text[:500] if e.response.text else 'N/A'}")
                 sys.exit(1)
             except KeyError as e:
                 print(f"KeyError: {e}")
-                print(f"Response data: {locals().get('dm', 'N/A')}")
+                print(f"AI Response data: {locals().get('ai_response', 'N/A')}")
+                print(f"DM Response data: {locals().get('dm', 'N/A')}")
                 sys.exit(1)
             except Exception as e:
-                print(f"Unexpected error: {e}")
+                print(f"Unexpected error: {type(e).__name__}: {e}")
                 sys.exit(1)
             EOF
