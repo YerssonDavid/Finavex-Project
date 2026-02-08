@@ -2,38 +2,80 @@ name: automation issues bot
 on:
   schedule:
     - cron: '10 1 * * sun'
-  workflow_dispatch:  # ✅ Permite ejecución manual
+  workflow_dispatch:  # Permite ejecución manual
 
 jobs:
   send-issues:
     runs-on: ubuntu-latest
     steps:
-        - name: Send issues bot
-          run: |
+      - name: Install dependencies
+        run: pip install requests
+        
+      - name: Send issues bot
+        run: |
             python3 - <<'EOF'
             import requests
             import json
+            import sys
 
-            # Obtenemos las issues del repositorio
-            repo = "YerssonDavid/Finavex"
-            issues = requests.get(f"https://api.github.com/repos/{repo}/issues").json()
+            try:
+                # Obtenemos las issues del repositorio
+                repo = "YerssonDavid/Finavex"
+                print(f"Fetching issues from {repo}...")
+                
+                response = requests.get(f"https://api.github.com/repos/{repo}/issues")
+                response.raise_for_status()
+                
+                issues = response.json()
+                
+                # Validar que issues es una lista
+                if not isinstance(issues, list):
+                    print(f"Error: Expected list but got {type(issues)}")
+                    print(f"Response: {issues}")
+                    sys.exit(1)
+                
+                print(f"Found {len(issues)} issues")
+                
+                if len(issues) == 0:
+                    print("No issues found. Exiting.")
+                    sys.exit(0)
 
-            message = "**Issues pendientes**\n\n"
-            for issue in issues[:10]:
-                message += f"- [{issue['title']}]({issue['html_url']})\n"
+                message = "**Issues pendientes**\n\n"
+                for issue in issues[:10]:
+                    message += f"- [{issue['title']}]({issue['html_url']})\n"
 
-            token = "${{ secrets.BOT_DISCORD }}"
-            user_id = "${{ secrets.DISCORD_USER_ID }}"
+                print(f"Sending message to Discord...")
+                
+                token = "${{ secrets.BOT_DISCORD }}"
+                user_id = "${{ secrets.DISCORD_USER_ID }}"
 
-            headers = {"Authorization": f"Bot {token}"}
-            url = f"https://discord.com/api/v10/users/{user_id}/channels"
+                headers = {"Authorization": f"Bot {token}"}
+                url = f"https://discord.com/api/v10/users/{user_id}/channels"
 
-            dm = requests.post(url, headers=headers, json={"recipient_id": user_id}).json()
-            channel_id = dm['id']
+                dm_response = requests.post(url, headers=headers, json={"recipient_id": user_id})
+                dm_response.raise_for_status()
+                dm = dm_response.json()
+                
+                channel_id = dm['id']
+                print(f"DM Channel ID: {channel_id}")
 
-            requests.post(
-                f"https://discord.com/api/v10/channels/{channel_id}/messages",
-                headers=headers,
-                json={"content": message}
-            )
+                msg_response = requests.post(
+                    f"https://discord.com/api/v10/channels/{channel_id}/messages",
+                    headers=headers,
+                    json={"content": message}
+                )
+                msg_response.raise_for_status()
+                
+                print("Message sent successfully!")
+                
+            except requests.exceptions.RequestException as e:
+                print(f"Request error: {e}")
+                sys.exit(1)
+            except KeyError as e:
+                print(f"KeyError: {e}")
+                print(f"Response data: {locals().get('dm', 'N/A')}")
+                sys.exit(1)
+            except Exception as e:
+                print(f"Unexpected error: {e}")
+                sys.exit(1)
             EOF
