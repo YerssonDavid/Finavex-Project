@@ -1,0 +1,37 @@
+name: automation issues bot
+on:
+  schedule:
+    - cron: '20 8 * * SAT'
+
+jobs:
+  send-issues:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Send issues bot
+          run: |
+            python3 - <<'EOF'
+            import request
+            import json
+
+            #Obtenemos las issues del repositorio
+            repo = "https://github.com/YerssonDavid/Finavex.git"
+            issues = request.get(f"https://github.com/YerssonDavid/Finavex/issues").json()
+
+            message = "**Issues pendientes**\n\n"
+            for issue in issues[:10]:
+              message += f". [{issue['title']}]({issue['html_url']})\n"
+
+            token = "${{secrets.BOT_DISCORD}}"
+            user_is = "{{secrets.DISCORD_USER_ID}}"
+
+            headers = {"Authorization": f"Bot {token}"}
+            url = f"https://discord.com/api/v10/users/{user_id}/channels"
+
+            dm = request.post(url, headers=headers).json()
+            channel_id = dm['id']
+
+            request.post(
+                f"https://discord.com/api/v10/channels/{channel_id}/messages"
+                headers=headers,
+                json={"content":message}
+            )
