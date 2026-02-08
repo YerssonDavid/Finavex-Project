@@ -51,7 +51,35 @@ jobs:
                 for issue in issues[:10]:
                     message += f"- [{issue['title']}]({issue['html_url']})\n"
 
+                response_ai= request.post(
+                    "https://models.github.ai/inference",
+                    headers={
+                        "x-api-key": "${{ secrets.AI_TOKEN_BOT }}",
+                        "content-type": "application/json"
+                    },
+                    json={
+                      "model": "openai/gpt-4.1-nano",
+                      "max_tokens": 500,
+                      "messages": [{
+                          "role": "user",
+                          "content": f"""Formatea estos issues de GitHub para notificar en un mensaje de Discord.
+                Requisitos:
+                - Agregales emojis relevantes por tipo, por ejemplo, bug, feature, docs
+                - Ordenalos por prioridad (Critico, importante, normal)
+                - Resume de manera breve cada uno
+                - Total de issues al final
+                - Mensaje de motivación al final para el dev!. ("David")
+
+                Issues:
+                {issues_text}"""
+                      }]
+                    }
+                ).json
+
                 print(f"Sending message to Discord...")
+
+                #Extraemos el mensaje del modelo de AI
+                message = response_ai ['content'][0]['text']
                 
                 token = "${{ secrets.BOT_DISCORD }}"
                 user_id = "${{ secrets.DISCORD_USER_ID }}"
