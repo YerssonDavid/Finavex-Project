@@ -10,28 +10,29 @@ jobs:
         - name: Send issues bot
           run: |
             python3 - <<'EOF'
-            import request
+            import requests
             import json
 
-            #Obtenemos las issues del repositorio
-            repo = "https://github.com/YerssonDavid/Finavex.git"
-            issues = request.get(f"https://github.com/YerssonDavid/Finavex/issues").json()
+            # Obtenemos las issues del repositorio
+            repo = "YerssonDavid/Finavex"
+            issues = requests.get(f"https://api.github.com/repos/{repo}/issues").json()
 
             message = "**Issues pendientes**\n\n"
             for issue in issues[:10]:
-              message += f". [{issue['title']}]({issue['html_url']})\n"
+                message += f"- [{issue['title']}]({issue['html_url']})\n"
 
-            token = "${{secrets.BOT_DISCORD}}"
-            user_is = "{{secrets.DISCORD_USER_ID}}"
+            token = "${{ secrets.BOT_DISCORD }}"
+            user_id = "${{ secrets.DISCORD_USER_ID }}"
 
             headers = {"Authorization": f"Bot {token}"}
             url = f"https://discord.com/api/v10/users/{user_id}/channels"
 
-            dm = request.post(url, headers=headers).json()
+            dm = requests.post(url, headers=headers, json={"recipient_id": user_id}).json()
             channel_id = dm['id']
 
-            request.post(
-                f"https://discord.com/api/v10/channels/{channel_id}/messages"
+            requests.post(
+                f"https://discord.com/api/v10/channels/{channel_id}/messages",
                 headers=headers,
-                json={"content":message}
+                json={"content": message}
             )
+            EOF
