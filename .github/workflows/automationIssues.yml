@@ -12,18 +12,25 @@ jobs:
         run: pip install requests
         
       - name: Send issues bot
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
             python3 - <<'EOF'
             import requests
             import json
             import sys
+            import os
 
             try:
                 # Obtenemos las issues del repositorio
                 repo = "YerssonDavid/Finavex"
                 print(f"Fetching issues from {repo}...")
                 
-                response = requests.get(f"https://api.github.com/repos/{repo}/issues")
+                # Usar token de GitHub para autenticación (requerido para repositorios privados)
+                github_token = os.environ.get("GITHUB_TOKEN")
+                headers = {"Authorization": f"Bearer {github_token}"} if github_token else {}
+                
+                response = requests.get(f"https://api.github.com/repos/{repo}/issues", headers=headers)
                 response.raise_for_status()
                 
                 issues = response.json()
