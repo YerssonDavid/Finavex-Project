@@ -1,7 +1,7 @@
 name: automation issues bot
 on:
   schedule:
-    - cron: '3 1 * * sun'
+    - cron: '10 1 * * sun'
 
 jobs:
   send-issues:
