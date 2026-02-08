@@ -60,7 +60,7 @@ jobs:
                 # Enviar a la AI para formatear el mensaje
                 ai_token = "${{ secrets.AI_TOKEN_BOT }}"
                 response_ai = requests.post(
-                    "https://models.github.ai/inference",
+                    "https://models.inference.ai.azure.com/chat/completions",
                     headers={
                         "Authorization": f"Bearer {ai_token}",
                         "Content-Type": "application/json"
