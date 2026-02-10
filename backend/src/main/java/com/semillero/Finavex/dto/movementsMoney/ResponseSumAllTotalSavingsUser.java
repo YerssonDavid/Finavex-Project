@@ -1,4 +1,6 @@
 package com.semillero.Finavex.dto.movementsMoney;
 
-public record ResponseSumAllTotalSavingsUser() {
+import java.math.BigDecimal;
+
+public record ResponseSumAllTotalSavingsUser(BigDecimal totalSavings) {
 }
