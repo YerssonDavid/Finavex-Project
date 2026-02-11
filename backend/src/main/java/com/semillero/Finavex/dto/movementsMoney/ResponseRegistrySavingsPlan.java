@@ -1,4 +1,7 @@
 package com.semillero.Finavex.dto.movementsMoney;
 
-public record ResponseRegistrySavingsPlan() {
+public record ResponseRegistrySavingsPlan(
+        String message,
+        boolean success
+) {
 }
