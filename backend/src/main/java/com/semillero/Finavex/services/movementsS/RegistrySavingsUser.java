@@ -3,10 +3,12 @@ package com.semillero.Finavex.services.movementsS;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySavingsUser;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsUser;
 import com.semillero.Finavex.entity.User;
-import com.semillero.Finavex.entity.movements.SavingsMoneyUsers;
+import com.semillero.Finavex.entity.movements.SavingsMovements;
+import com.semillero.Finavex.entity.movements.SavingsPlan;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
-import com.semillero.Finavex.repository.movementsR.SavingsUser;
+import com.semillero.Finavex.repository.movementsR.SavingsPlanR;
+import com.semillero.Finavex.repository.movementsR.SavingsUserR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,24 +21,27 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Slf4j
 public class RegistrySavingsUser {
-    private final SavingsUser savingUser;
+    private final SavingsUserR savingUser;
+    private final SavingsPlanR savingsPlanR;
     private final UserR userR;
 
     public ResponseRegistrySavingsUser registrySavingsUser(RequestRegistrySavingsUser request){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         String emailFormat = email.toLowerCase().trim();
 
-        // Obtener el usuario autenticado
-        User user = userR.findByEmail(emailFormat)
+        Long id = userR.getIdByEmail(emailFormat);
+
+        User user = userR.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("El usuario no existe!"));
 
-        SavingsMoneyUsers savingsMoneyUsers = new SavingsMoneyUsers();
-        savingsMoneyUsers.setUser(user);  // Asignar el usuario propietario
-        savingsMoneyUsers.setAmount(request.amount());
-        savingsMoneyUsers.setDateOfRegistry(LocalDateTime.now());
-        savingsMoneyUsers.setNameSavings(request.nameSavings());
 
-        savingUser.save(savingsMoneyUsers);
+        SavingsPlan savingsPlan = savingsPlanR.getSavingsPlanByUserId(id);
+
+        SavingsMovements savingsMovements = new SavingsMovements();
+        savingsMovements.setAmount(request.amount());
+        savingsMovements.setDateRegistry(LocalDateTime.now());
+        savingsMovements.setSavingsPlan(savingsPlan);
+        savingUser.save(savingsMovements);
 
         return new ResponseRegistrySavingsUser(true);
     }
