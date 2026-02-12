@@ -27,3 +27,41 @@ export interface MovementsResponse {
   message: string
   data?: Movement[]
 }
+
+// Tipos para planeación
+export interface Planning {
+  id?: string
+  name: string
+  category: string
+  totalAmount: number
+  currentAmount: number
+  description?: string
+  createdAt: string
+  updatedAt?: string
+}
+
+export interface PlanningMovement {
+  id?: string
+  planningId: string
+  amount: number
+  note?: string
+  date: string
+}
+
+export interface PlanningResponse {
+  success: boolean
+  message: string
+  data?: Planning
+}
+
+export interface PlanningsResponse {
+  success: boolean
+  message: string
+  data?: Planning[]
+}
+
+export interface PlanningMovementsResponse {
+  success: boolean
+  message: string
+  data?: PlanningMovement[]
+}
