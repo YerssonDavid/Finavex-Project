@@ -101,6 +101,17 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Modo Desarrollo - Credenciales de prueba */}
+              <div className="p-3 mb-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">
+                  🛠️ Modo Desarrollo
+                </p>
+                <p className="text-xs text-blue-600/80 dark:text-blue-300/80">
+                  Email: <span className="font-mono">prueba@gmail.com</span><br />
+                  Contraseña: <span className="font-mono">Test222@</span>
+                </p>
+              </div>
+
               {/* Mostrar alerta de bloqueo si la cuenta está bloqueada */}
               {isAccountLocked && (
                 <div className="p-4 mb-4 rounded-lg bg-destructive/20 border border-destructive/50">
