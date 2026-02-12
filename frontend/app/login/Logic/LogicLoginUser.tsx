@@ -136,6 +136,43 @@ export const useFormLoginUser = () => {
                 return;
             }
 
+            // ✅ MODO DESARROLLO: Credenciales de prueba
+            if (data.email === "prueba@gmail.com" && data.password === "Test222@") {
+                const userObj = {
+                    nombre: "Desarrollador",
+                    apellido: "Test",
+                    email: "prueba@gmail.com"
+                };
+
+                setUserData(userObj);
+
+                // Persistir datos de desarrollo en localStorage
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('userData', JSON.stringify(userObj));
+                    localStorage.setItem('userId', 'dev-user-123');
+                    sessionStorage.setItem('authToken', 'dev-token-mode');
+                }
+
+                clearAttempts();
+                reset();
+
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('isLoadingHomePersonal', 'true');
+                }
+
+                document.cookie = 'isAuthenticated=true; path=/; max-age=86400';
+
+                await Swal.fire({
+                    title: "Modo Desarrollo",
+                    text: "Acceso directo al modo desarrollo sin servidor",
+                    icon: "success",
+                    timer: 1500
+                });
+
+                router.push('/homePersonal');
+                return;
+            }
+
             const response = await fetch("http://localhost:8080/Users/login", {
                 method: "POST",
                 headers: {
