@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public record RequestRegistrySavingsPlan (
         String nameSavingsPlan,
-        BigDecimal amountMetaPlan
+        BigDecimal amountMetaPlan,
+        String descriptionPlanSavings
 ){
 }
