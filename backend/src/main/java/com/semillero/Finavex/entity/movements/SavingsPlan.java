@@ -27,7 +27,11 @@ public class SavingsPlan {
     @Column(name="meta_plan", nullable = false)
     private BigDecimal amountMetaPlan;
 
+    @Column(name="description_plan_savings")
+    @NotBlank(message = "Se requiere una descripción para el plan de ahorro")
+    private String descriptionPlanSavings;
+
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
-    private User userId;
+    private User user;
 }
