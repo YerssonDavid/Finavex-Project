@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -35,7 +36,17 @@ public class RegistrySavingsUser {
                 .orElseThrow(() -> new UserNotFoundException("El usuario no existe!"));
 
 
-        SavingsPlan savingsPlan = savingsPlanR.getSavingsPlanByUserId(id);
+        if(!userR.existsByEmail(user.getEmail())){
+            throw new UserNotFoundException("El usuario no existe!");
+        }
+
+        List<SavingsPlan> savingsPlanList = savingsPlanR.getSavingsPlanByUserId(id);
+
+        if(savingsPlanList.isEmpty()){
+            throw new UserNotFoundException("El usuario no tiene planes de ahorro registrados!");
+        }
+
+        SavingsPlan savingsPlan = savingsPlanList.get(0);
 
         SavingsMovements savingsMovements = new SavingsMovements();
         savingsMovements.setAmount(request.amount());
