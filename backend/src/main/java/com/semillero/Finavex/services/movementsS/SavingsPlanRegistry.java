@@ -31,7 +31,8 @@ public class SavingsPlanRegistry {
         SavingsPlan savingsPlan = new SavingsPlan();
         savingsPlan.setAmountMetaPlan(requestRegistrySavingsPlan.amountMetaPlan());
         savingsPlan.setNameSavingsPlan(requestRegistrySavingsPlan.nameSavingsPlan());
-        savingsPlan.setUserId(user);
+        savingsPlan.setDescriptionPlanSavings(requestRegistrySavingsPlan.descriptionPlanSavings());
+        savingsPlan.setUser(user);
 
         savingsPlanR.save(savingsPlan);
 
