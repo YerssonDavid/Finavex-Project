@@ -104,16 +104,37 @@ export default function PlanningPage() {
   }
 
   const handleCreatePlanning = async () => {
-    if (!newPlanning.name || !newPlanning.totalAmount) return
+    // Validaciones
+    if (!newPlanning.name) {
+      setError("El nombre del plan es requerido")
+      return
+    }
+
+    if (!newPlanning.totalAmount) {
+      setError("El monto objetivo es requerido")
+      return
+    }
+
+    const amount = parseFloat(newPlanning.totalAmount)
+    if (amount <= 1000) {
+      setError("El monto objetivo debe ser mayor a $1.000")
+      return
+    }
+
+    if (!newPlanning.description || newPlanning.description.trim() === "") {
+      setError("La descripción es requerida")
+      return
+    }
 
     setIsCreating(true)
+    setError(null)
 
     try {
       const response = await PlanningService.createPlanning({
         name: newPlanning.name,
         category: newPlanning.category,
-        totalAmount: parseFloat(newPlanning.totalAmount),
-        description: newPlanning.description,
+        totalAmount: amount,
+        description: newPlanning.description.trim(),
       })
 
       if (response.success) {
@@ -137,6 +158,23 @@ export default function PlanningPage() {
   const closePlanningDetail = () => {
     setSelectedPlanning(null)
     setPlanningMovements([])
+  }
+
+  const formatAmountInput = (value: string): string => {
+    if (!value) return ""
+    // Remover caracteres no numéricos
+    const numericValue = value.replace(/[^\d]/g, "")
+    // Convertir a número y formatear con puntuación
+    if (numericValue === "") return ""
+    const num = parseInt(numericValue, 10)
+    return new Intl.NumberFormat("es-CO").format(num)
+  }
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    // Almacenar solo números en el estado
+    const numericValue = value.replace(/[^\d]/g, "")
+    setNewPlanning({ ...newPlanning, totalAmount: numericValue })
   }
 
   const getCategoryIcon = (category: string) => {
@@ -395,31 +433,50 @@ export default function PlanningPage() {
                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="totalAmount"
-                      type="number"
+                      type="text"
                       placeholder="0"
                       className="pl-10"
-                      value={newPlanning.totalAmount}
-                      onChange={(e) => setNewPlanning({ ...newPlanning, totalAmount: e.target.value })}
+                      value={formatAmountInput(newPlanning.totalAmount)}
+                      onChange={handleAmountChange}
                     />
                   </div>
+                  {newPlanning.totalAmount && parseFloat(newPlanning.totalAmount) <= 1000 && (
+                    <p className="text-xs text-destructive mt-1">
+                      El monto debe ser mayor a $1.000
+                    </p>
+                  )}
                 </div>
 
                 {/* Descripción */}
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descripción (opcional)</Label>
+                  <Label htmlFor="description">
+                    Descripción <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="description"
                     placeholder="Describe tu plan..."
                     value={newPlanning.description}
                     onChange={(e) => setNewPlanning({ ...newPlanning, description: e.target.value })}
                   />
+                  {newPlanning.description.trim() === "" && (
+                    <p className="text-xs text-destructive">
+                      La descripción es requerida
+                    </p>
+                  )}
                 </div>
 
                 {/* Botón Crear */}
                 <Button
                   onClick={handleCreatePlanning}
-                  disabled={!newPlanning.name || !newPlanning.totalAmount || isCreating}
-                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+                  disabled={
+                    !newPlanning.name ||
+                    !newPlanning.totalAmount ||
+                    parseFloat(newPlanning.totalAmount || "0") <= 1000 ||
+                    !newPlanning.description ||
+                    newPlanning.description.trim() === "" ||
+                    isCreating
+                  }
+                  className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isCreating ? (
                     <>

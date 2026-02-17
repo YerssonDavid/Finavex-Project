@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "next": "^16.1.6",
+    "tailwind-animations": "^1.0.1"
+  }
+}
