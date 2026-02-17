@@ -34,7 +34,7 @@ export class PlanningService {
 
       console.log("📋 Obteniendo planeaciones del usuario...")
 
-      const response = await fetch(`http://localhost:8080/plannings`, {
+      const response = await fetch(`http://localhost:8080/get/plan-savings`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -51,13 +51,15 @@ export class PlanningService {
       console.log("✅ Planeaciones obtenidas:", data)
 
       // Adaptar los datos al formato esperado por el frontend
-      const plannings = (data.plannings || data.data || data || []).map((item: any) => ({
+      // Extraer de savingsPlansList del servidor
+      const planningsArray = data.savingsPlansList || data.nameSavingsPlan || data.data || data || []
+      const plannings = planningsArray.map((item: any) => ({
         id: item.id || item._id,
-        name: item.name || item.planningName || "",
+        name: item.nameSavingsPlan || item.name || item.planningName || "",
         category: item.category || "otros",
-        totalAmount: item.totalAmount || item.total || 0,
+        totalAmount: item.amountMetaPlan || item.totalAmount || item.total || 0,
         currentAmount: item.currentAmount || item.current || 0,
-        description: item.description || item.note || "",
+        description: item.descriptionPlanSavings || item.description || item.note || "",
         createdAt: item.createdAt || item.date || new Date().toISOString(),
         updatedAt: item.updatedAt,
       }))
@@ -91,17 +93,16 @@ export class PlanningService {
 
       console.log("📝 Creando nueva planeación:", planning)
 
-      const response = await fetch(`http://localhost:8080/plannings`, {
+      const response = await fetch(`http://localhost:8080/registry/saving-plan`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${authToken}`,
         },
         body: JSON.stringify({
-          name: planning.name,
-          category: planning.category,
-          totalAmount: planning.totalAmount,
-          description: planning.description,
+          nameSavingsPlan: planning.name,
+          amountMetaPlan: planning.totalAmount,
+          descriptionPlanSavings: planning.description,
         })
       })
 
@@ -259,6 +260,44 @@ export class PlanningService {
   static getCategoryLabel(category: string): string {
     const cat = PLANNING_CATEGORIES.find(c => c.id === category)
     return cat?.label || "Otros"
+  }
+
+  /**
+   * Obtiene el saldo total de todos los ahorros del usuario
+   * @returns Saldo total de ahorros
+   */
+  static async getTotalSavings(): Promise<number> {
+    try {
+      // Obtener el token del sessionStorage
+      let authToken: string | undefined
+      if (typeof window !== "undefined") {
+        authToken = sessionStorage.getItem("authToken") || undefined
+      }
+
+      console.log("💰 Obteniendo saldo total de ahorros...")
+
+      const response = await fetch(`http://localhost:8080/sumTotal/savings`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        }
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      console.log("✅ Saldo total obtenido:", data)
+
+      // Extraer y retornar el totalSavings de la respuesta
+      return data.totalSavings || 0
+    } catch (error) {
+      console.error("❌ Error al obtener saldo total de ahorros:", error)
+      return 0
+    }
   }
 }
 
