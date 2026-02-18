@@ -1,4 +1,11 @@
 package com.semillero.Finavex.dto.exception;
 
-public record ErrorPlanNotExist() {
+import java.time.LocalDateTime;
+
+public record ErrorPlanNotExist(
+        int codeStatus,
+        String message,
+        LocalDateTime timeNow,
+        String path
+) {
 }
