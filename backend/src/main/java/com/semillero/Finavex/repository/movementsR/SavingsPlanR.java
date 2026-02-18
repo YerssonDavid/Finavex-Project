@@ -18,4 +18,7 @@ public interface SavingsPlanR extends JpaRepository <SavingsPlan, Long> {
 
     boolean existsByUserId(Long id);
 
+
+    boolean existsByNameSavingsPlan(String namePlan);
+
 }
