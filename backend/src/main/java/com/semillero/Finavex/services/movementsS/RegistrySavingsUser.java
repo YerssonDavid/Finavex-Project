@@ -5,6 +5,7 @@ import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsUser;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.entity.movements.SavingsMovements;
 import com.semillero.Finavex.entity.movements.SavingsPlan;
+import com.semillero.Finavex.exceptions.PlanNotExist;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.SavingsPlanR;
@@ -12,6 +13,7 @@ import com.semillero.Finavex.repository.movementsR.SavingsUserR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -44,9 +46,16 @@ public class RegistrySavingsUser {
 
         if(savingsPlanList.isEmpty()){
             throw new UserNotFoundException("El usuario no tiene planes de ahorro registrados!");
+        } else if (!savingsPlanR.existsByNameSavingsPlan(request.namePlan())){
+            throw new PlanNotExist("El plan de ahorro no existe!");
         }
 
-        SavingsPlan savingsPlan = savingsPlanList.get(0);
+        //nameSavingsPlan
+
+        SavingsPlan savingsPlan = savingsPlanList.stream()
+                .filter(p -> p.getNameSavingsPlan().equals(request.namePlan()))
+                .findFirst()
+                .orElseThrow();
 
         SavingsMovements savingsMovements = new SavingsMovements();
         savingsMovements.setAmount(request.amount());
