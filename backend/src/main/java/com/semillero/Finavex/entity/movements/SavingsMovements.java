@@ -17,7 +17,7 @@ public class SavingsMovements {
     private Long id;
 
     @Positive
-    @DecimalMin("0.01")
+    @DecimalMin("50.00")
     @Column(name="amount", nullable = false)
     private BigDecimal amount;
 
