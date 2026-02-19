@@ -5,6 +5,7 @@ import type {
   PlanningResponse,
   PlanningMovementsResponse
 } from "@/types/transaction"
+import Swal from "sweetalert2";
 
 // Categorías predefinidas de planeación
 export const PLANNING_CATEGORIES = [
@@ -260,6 +261,61 @@ export class PlanningService {
   static getCategoryLabel(category: string): string {
     const cat = PLANNING_CATEGORIES.find(c => c.id === category)
     return cat?.label || "Otros"
+  }
+
+  /**
+   * Registra un movimiento de ahorro en un plan
+   * @param namePlan - Nombre del plan
+   * @param amount - Monto a ahorrar
+   * @returns Respuesta del registro
+   */
+  static async registerSavingMovement(namePlan: string, amount: number): Promise<PlanningResponse> {
+    try {
+      let authToken: string | undefined
+      if (typeof window !== "undefined") {
+        authToken = sessionStorage.getItem("authToken") || undefined
+      }
+
+      console.log("💰 Registrando movimiento de ahorro:", { namePlan, amount })
+
+      const response = await fetch(`http://localhost:8080/registry/savings-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          namePlan: namePlan,
+          amount: amount,
+        })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      console.log("✅ Movimiento de ahorro registrado:", data)
+
+      Swal.fire({
+        title: "¡Ahorro registrado!",
+        text: "Tu ahorro ha sido registrado exitosamente!",
+        icon: "success"
+      });
+
+      return {
+        success: true,
+        message: "Ahorro registrado exitosamente",
+        data: data,
+      }
+    } catch (error) {
+      console.error("❌ Error al registrar movimiento de ahorro:", error)
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error al registrar el ahorro",
+      }
+    }
   }
 
   /**
