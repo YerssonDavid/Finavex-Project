@@ -23,11 +23,13 @@ import {
   MoreHorizontal,
   Calendar,
   ChevronRight,
-  ListFilter
+  ListFilter,
+  PiggyBank
 } from "lucide-react"
 import { PlanningService, PLANNING_CATEGORIES } from "@/services/planningService"
 import type { Planning, PlanningMovement } from "@/types/transaction"
 import { ThemeProvider } from "@/components/homePersonal/theme-provider"
+import { SavingMovementModal } from "@/components/homePersonal/saving-movement-modal"
 
 // Mapa de iconos para las categorías
 const categoryIcons: Record<string, React.ElementType> = {
@@ -49,6 +51,10 @@ export default function PlanningPage() {
   const [error, setError] = useState<string | null>(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
+
+  // Estados para el modal de ahorro
+  const [showSavingModal, setShowSavingModal] = useState(false)
+  const [selectedPlanForSaving, setSelectedPlanForSaving] = useState<Planning | null>(null)
 
   // Form state para crear planeación
   const [newPlanning, setNewPlanning] = useState({
@@ -158,6 +164,30 @@ export default function PlanningPage() {
   const closePlanningDetail = () => {
     setSelectedPlanning(null)
     setPlanningMovements([])
+  }
+
+  const openSavingModal = (planning: Planning, e: React.MouseEvent) => {
+    e.stopPropagation() // Evitar que se abra el detalle del plan
+    setSelectedPlanForSaving(planning)
+    setShowSavingModal(true)
+  }
+
+  const handleSavingSubmit = async (amount: number) => {
+    if (!selectedPlanForSaving) {
+      throw new Error("No hay plan seleccionado")
+    }
+
+    const response = await PlanningService.registerSavingMovement(
+      selectedPlanForSaving.name,
+      amount
+    )
+
+    if (!response.success) {
+      throw new Error(response.message || "Error al registrar el ahorro")
+    }
+
+    // Recargar las planeaciones para actualizar el progreso
+    loadPlannings()
   }
 
   const formatAmountInput = (value: string): string => {
@@ -338,6 +368,18 @@ export default function PlanningPage() {
                                     {PlanningService.formatAmount(planning.currentAmount)} / {PlanningService.formatAmount(planning.totalAmount)}
                                   </p>
                                 </div>
+
+                                {/* Botón Agregar Ahorro */}
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={(e) => openSavingModal(planning, e)}
+                                  className="gap-1 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-blue-500/30 hover:border-blue-500/50 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400"
+                                  title="Agregar ahorro"
+                                >
+                                  <PiggyBank className="h-4 w-4" />
+                                  <span className="hidden sm:inline">Ahorrar</span>
+                                </Button>
 
                                 {/* Arrow */}
                                 <ChevronRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -617,6 +659,17 @@ export default function PlanningPage() {
             </Card>
           </div>
         )}
+
+        {/* Modal para registrar movimiento de ahorro */}
+        <SavingMovementModal
+          isOpen={showSavingModal}
+          onClose={() => {
+            setShowSavingModal(false)
+            setSelectedPlanForSaving(null)
+          }}
+          planName={selectedPlanForSaving?.name || ""}
+          onSubmit={handleSavingSubmit}
+        />
       </div>
     </ThemeProvider>
   )
