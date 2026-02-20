@@ -66,6 +66,10 @@ export default function PlanningPage() {
 
   // Cargar planeaciones al montar
   useEffect(() => {
+    // Asegurar que los planes estén en localStorage para poder registrar ahorros
+    PlanningService.fetchAndStorePlans().then(() => {
+      console.log("✅ Planes cargados en localStorage desde la página de planning")
+    })
     loadPlannings()
   }, [])
 
