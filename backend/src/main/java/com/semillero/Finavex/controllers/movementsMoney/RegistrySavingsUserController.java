@@ -1,6 +1,6 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
-import com.semillero.Finavex.dto.exception.ErrorPlanNotExist;
+import com.semillero.Finavex.dto.exception.ErrorGeneral;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySavingsUser;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsUser;
 import com.semillero.Finavex.exceptions.PlanNotExist;
@@ -24,11 +24,11 @@ public class RegistrySavingsUserController {
 
 
     @ExceptionHandler(PlanNotExist.class)
-    public ResponseEntity<ErrorPlanNotExist> planNotExist (PlanNotExist ex, HttpServletRequest request){
+    public ResponseEntity<ErrorGeneral> planNotExist (PlanNotExist ex, HttpServletRequest request){
         //Intercept petition and escape the path to prevent XSS attacks
         String safePath = HtmlUtils.htmlEscape(request.getRequestURI());
 
-        ErrorPlanNotExist error = new ErrorPlanNotExist(
+        ErrorGeneral error = new ErrorGeneral(
                 HttpStatus.BAD_REQUEST_400,
                 "Error -> " + ex.getMessage(),
                 LocalDateTime.now(),
