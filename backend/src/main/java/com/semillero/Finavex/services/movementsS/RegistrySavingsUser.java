@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.exception.ErrorGeneral;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySavingsUser;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsUser;
 import com.semillero.Finavex.entity.User;
@@ -13,7 +14,6 @@ import com.semillero.Finavex.repository.movementsR.SavingsUserR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,9 +32,9 @@ public class RegistrySavingsUser {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         String emailFormat = email.toLowerCase().trim();
 
-        Long id = userR.getIdByEmail(emailFormat);
+        Long idUser = userR.getIdByEmail(emailFormat);
 
-        User user = userR.findById(id)
+        User user = userR.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException("El usuario no existe!"));
 
 
@@ -42,20 +42,18 @@ public class RegistrySavingsUser {
             throw new UserNotFoundException("El usuario no existe!");
         }
 
-        List<SavingsPlan> savingsPlanList = savingsPlanR.getSavingsPlanByUserId(id);
+        List<SavingsPlan> savingsPlanList = savingsPlanR.getSavingsPlanByUserId(idUser);
 
         if(savingsPlanList.isEmpty()){
             throw new UserNotFoundException("El usuario no tiene planes de ahorro registrados!");
-        } else if (!savingsPlanR.existsByNameSavingsPlan(request.namePlan())){
+        } else if (!savingsPlanR.existsById(request.idPlan())){
             throw new PlanNotExist("El plan de ahorro no existe!");
         }
 
-        //nameSavingsPlan
-
         SavingsPlan savingsPlan = savingsPlanList.stream()
-                .filter(p -> p.getNameSavingsPlan().equals(request.namePlan()))
+                .filter(p -> p.getId().equals(request.idPlan()) && p.getUser().getId().equals(idUser))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new PlanNotExist("El plan de ahorro no existe o no pertenece al usuario!"));
 
         SavingsMovements savingsMovements = new SavingsMovements();
         savingsMovements.setAmount(request.amount());
