@@ -1,6 +1,5 @@
 package com.semillero.Finavex.repository.movementsR;
 
-import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.entity.movements.SavingsPlan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +17,8 @@ public interface SavingsPlanR extends JpaRepository <SavingsPlan, Long> {
 
     boolean existsByUserId(Long id);
 
-
     boolean existsByNameSavingsPlan(String namePlan);
+
+    boolean existsById(Long id);
 
 }
