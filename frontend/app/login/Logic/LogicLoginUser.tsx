@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { useUser } from "../../../context/ContextUserData";
 import { useState, useEffect } from 'react';
+import { PlanningService } from "@/services/planningService";
 
 // Constantes para el bloqueo
 const MAX_ATTEMPTS = 3;
@@ -162,6 +163,9 @@ export const useFormLoginUser = () => {
 
                 document.cookie = 'isAuthenticated=true; path=/; max-age=86400';
 
+                // Obtener y almacenar planes de ahorro en localStorage
+                await PlanningService.fetchAndStorePlans();
+
                 await Swal.fire({
                     title: "Modo Desarrollo",
                     text: "Acceso directo al modo desarrollo sin servidor",
@@ -261,6 +265,9 @@ export const useFormLoginUser = () => {
 
             console.log("Inicio de sesión exitoso!");
             reset();
+
+            // Obtener y almacenar planes de ahorro en localStorage
+            await PlanningService.fetchAndStorePlans();
 
             // Activar flag de loading para que persista durante la navegación
             if (typeof window !== 'undefined') {
