@@ -65,6 +65,16 @@ export class PlanningService {
         updatedAt: item.updatedAt,
       }))
 
+      // Almacenar los planes en localStorage para uso futuro
+      if (typeof window !== "undefined") {
+        const plansForStorage = planningsArray.map((item: any) => ({
+          idPlan: item.id || item._id,
+          namePlan: item.nameSavingsPlan || item.name || item.planningName || "",
+        }))
+        localStorage.setItem("savingsPlans", JSON.stringify(plansForStorage))
+        console.log("💾 Planes almacenados en localStorage:", plansForStorage)
+      }
+
       return {
         success: true,
         message: "Planeaciones obtenidas exitosamente",
@@ -115,16 +125,30 @@ export class PlanningService {
       const data = await response.json()
       console.log("✅ Planeación creada:", data)
 
+      // Almacenar el idPlan en localStorage
+      if (typeof window !== "undefined" && data.idPlan) {
+        localStorage.setItem(`idPlan_${data.namePlan || planning.name}`, String(data.idPlan))
+
+        // También actualizar la lista de planes en localStorage
+        const existingPlans = JSON.parse(localStorage.getItem("savingsPlans") || "[]")
+        existingPlans.push({
+          idPlan: data.idPlan,
+          namePlan: data.namePlan || planning.name,
+        })
+        localStorage.setItem("savingsPlans", JSON.stringify(existingPlans))
+        console.log("💾 idPlan almacenado en localStorage:", data.idPlan)
+      }
+
       return {
         success: true,
         message: "Planeación creada exitosamente",
         data: {
-          id: data.id || data._id,
-          name: data.name,
-          category: data.category,
-          totalAmount: data.totalAmount,
+          id: data.idPlan || data.id || data._id,
+          name: data.namePlan || data.name || planning.name,
+          category: data.category || planning.category,
+          totalAmount: data.totalAmount || planning.totalAmount,
           currentAmount: data.currentAmount || 0,
-          description: data.description,
+          description: data.description || planning.description,
           createdAt: data.createdAt || new Date().toISOString(),
         },
       }
@@ -264,6 +288,27 @@ export class PlanningService {
   }
 
   /**
+   * Obtiene el idPlan desde localStorage a partir del nombre del plan
+   * @param planName - Nombre del plan
+   * @returns idPlan o null si no se encuentra
+   */
+  static getPlanIdByName(planName: string): number | null {
+    if (typeof window === "undefined") return null
+
+    try {
+      const plansJson = localStorage.getItem("savingsPlans")
+      if (!plansJson) return null
+
+      const plans: Array<{ idPlan: number; namePlan: string }> = JSON.parse(plansJson)
+      const found = plans.find(p => p.namePlan === planName)
+      return found?.idPlan ?? null
+    } catch {
+      console.error("❌ Error al leer planes desde localStorage")
+      return null
+    }
+  }
+
+  /**
    * Registra un movimiento de ahorro en un plan
    * @param namePlan - Nombre del plan
    * @param amount - Monto a ahorrar
@@ -276,7 +321,13 @@ export class PlanningService {
         authToken = sessionStorage.getItem("authToken") || undefined
       }
 
-      console.log("💰 Registrando movimiento de ahorro:", { namePlan, amount })
+      // Obtener el idPlan desde localStorage
+      const idPlan = this.getPlanIdByName(namePlan)
+      if (idPlan === null) {
+        throw new Error(`No se encontró el id del plan "${namePlan}". Recarga la página e intenta de nuevo.`)
+      }
+
+      console.log("💰 Registrando movimiento de ahorro:", { idPlan, amount })
 
       const response = await fetch(`http://localhost:8080/registry/savings-user`, {
         method: "POST",
@@ -285,7 +336,7 @@ export class PlanningService {
           "Authorization": `Bearer ${authToken}`,
         },
         body: JSON.stringify({
-          namePlan: namePlan,
+          idPlan: idPlan,
           amount: amount,
         })
       })
@@ -353,6 +404,54 @@ export class PlanningService {
     } catch (error) {
       console.error("❌ Error al obtener saldo total de ahorros:", error)
       return 0
+    }
+  }
+
+  /**
+   * Obtiene todos los planes de ahorro y los almacena en localStorage.
+   * Diseñado para llamarse al iniciar sesión.
+   * @returns true si se almacenaron correctamente, false si hubo un error
+   */
+  static async fetchAndStorePlans(): Promise<boolean> {
+    try {
+      let authToken: string | undefined
+      if (typeof window !== "undefined") {
+        authToken = sessionStorage.getItem("authToken") || undefined
+      }
+
+      console.log("📋 Obteniendo planes para almacenar en localStorage...")
+
+      const response = await fetch(`http://localhost:8080/list/registry/saving-plan`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${authToken}`,
+        }
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      console.log("✅ Planes obtenidos para localStorage:", data)
+
+      const planningsArray = data.savingsPlansList || data.nameSavingsPlan || data.data || data || []
+
+      if (typeof window !== "undefined") {
+        const plansForStorage = planningsArray.map((item: any) => ({
+          idPlan: item.id || item._id,
+          namePlan: item.nameSavingsPlan || item.name || item.planningName || "",
+        }))
+        localStorage.setItem("savingsPlans", JSON.stringify(plansForStorage))
+        console.log("💾 Planes almacenados en localStorage al iniciar sesión:", plansForStorage)
+      }
+
+      return true
+    } catch (error) {
+      console.error("❌ Error al obtener planes para localStorage:", error)
+      return false
     }
   }
 }
