@@ -17,7 +17,7 @@ public class SavingsMovements {
     private Long id;
 
     @Positive
-    @DecimalMin("0.01")
+    @DecimalMin("50.00")
     @Column(name="amount", nullable = false)
     private BigDecimal amount;
 
@@ -26,6 +26,6 @@ public class SavingsMovements {
 
     // Relation directly with the savings plan
     @ManyToOne
-    @JoinColumn(name = "savings-plan", nullable = false)
+    @JoinColumn(name = "savings_plan_id", nullable = false)
     private SavingsPlan savingsPlan;
 }

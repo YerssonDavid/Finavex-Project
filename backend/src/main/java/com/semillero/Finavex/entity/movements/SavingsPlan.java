@@ -10,7 +10,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name="savings_plan")
+@Table(name="savings_plan_id")
 @Data
 public class SavingsPlan {
     @Id

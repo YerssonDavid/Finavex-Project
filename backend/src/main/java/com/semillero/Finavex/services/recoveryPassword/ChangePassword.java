@@ -51,7 +51,6 @@ public class ChangePassword {
         userR.save(user);
 
         // Reset counter in rate limiting service and NumberAttempt of entity user
-        user.setNumberAttemptPassword(0);
         rateLimitingService.resetBucket(user.getEmail());
 
         // Build success response

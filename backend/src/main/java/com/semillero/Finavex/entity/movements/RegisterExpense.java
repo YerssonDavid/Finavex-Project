@@ -9,25 +9,25 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name="Gastos")
+@Table(name="Expenses")
 public class RegisterExpense {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="tipo-movimiento", nullable = false)
+    @Column(name="movement_type", nullable = false)
     private String movementType;
 
-    @Column(name="Valor-gasto", nullable=false)
+    @Column(name="expense_value", nullable=false)
     private BigDecimal amount;
 
-    @Column(name="Fecha-movimiento-gasto", nullable = false)
+    @Column(name="date_movement_expense", nullable = false)
     private LocalDateTime date;
 
-    @Column(name="nota-movimiento", nullable=true)
+    @Column(name="movement_note", nullable=true)
     private String noteMovement;
 
     @ManyToOne
-    @JoinColumn(name="id-user", nullable=false, unique = false)
+    @JoinColumn(name="id_user", nullable=false, unique = false)
     private User user;
 }
