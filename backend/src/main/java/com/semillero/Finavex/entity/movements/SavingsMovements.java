@@ -26,6 +26,6 @@ public class SavingsMovements {
 
     // Relation directly with the savings plan
     @ManyToOne
-    @JoinColumn(name = "savings-plan", nullable = false)
+    @JoinColumn(name = "savings_plan_id", nullable = false)
     private SavingsPlan savingsPlan;
 }
