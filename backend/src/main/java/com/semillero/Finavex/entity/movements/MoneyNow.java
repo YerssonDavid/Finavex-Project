@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name="Saldo-actual")
+@Table(name="current_balances")
 public class MoneyNow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -20,9 +20,9 @@ public class MoneyNow {
     @JoinColumn(name="id_user", nullable=false, unique= true)
     private User user;
 
-    @Column(name="saldo_actual", nullable = false)
+    @Column(name="current_balance", nullable = false)
     private BigDecimal currentBalance;
 
-    @Column(name="Fecha_registro", nullable = false)
+    @Column(name="date_register", nullable = false)
     private LocalDateTime dateRegister;
 }
