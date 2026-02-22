@@ -20,28 +20,28 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(exclude="password")
-@Table(name= "Usuarios")
+@Table(name= "users")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="nombre", nullable = false, length = 100)
+    @Column(name="name", nullable = false, length = 100)
     @NotBlank(groups = {Create.class, Update.class}, message = "El nombre es obligatorio")
     private String name;
 
-    @Column(name="Segundo Nombre", nullable = true, length = 100)
+    @Column(name="middle_name", nullable = true, length = 100)
     private String middleName;
 
-    @Column(name="Apellido", nullable = false, length = 100)
+    @Column(name="last_name", nullable = false, length = 100)
     @NotBlank(groups = {Create.class, Update.class}, message = "El apellido es obligatorio")
     private String surname;
 
-    @Column(name="Segundo Apellido", nullable = true, length = 100)
+    @Column(name="second_surname", nullable = true, length = 100)
     private String secondSurname;
 
-    @Column(name="Numero_Documento", nullable = false, length = 11, unique = true)
+    @Column(name="document_number", nullable = false, length = 11, unique = true)
     @NotBlank(groups={Create.class, Update.class}, message = "El número de documento es obligatorio")
     private String documentNumber;
 
@@ -50,11 +50,11 @@ public class User implements UserDetails {
     @Min(value = 18, groups = {Create.class, Update.class}, message = "La edad debe ser mayor a 18")
     private Integer age;
 
-    @Column(name="fecha_nacimiento", nullable = false, length = 10)
+    @Column(name="date_of_birth", nullable = false, length = 10)
     @NotBlank(groups = {Create.class, Update.class}, message = "La fecha de nacimiento es obligatoria")
     private String dateOfBirth;
 
-    @Column(name="telefono", nullable = false, length = 10)
+    @Column(name="phone", nullable = false, length = 10)
     @NotBlank(groups = {Create.class, Update.class}, message = "El teléfono es obligatorio")
     private String phone;
 
@@ -74,9 +74,6 @@ public class User implements UserDetails {
     @Column(name="password", nullable = false, length = 100)
     @NotBlank(groups = {Create.class, Update.class}, message = "La contraseña es obligatoria")
     private String password;
-
-    @Column(name="numero-intentos-contraseña", nullable = false)
-    private Integer numberAttemptPassword = 0;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
