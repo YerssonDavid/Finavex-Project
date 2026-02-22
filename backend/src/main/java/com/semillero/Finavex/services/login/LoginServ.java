@@ -69,13 +69,13 @@ public class LoginServ {
         log.info("Intento de inicio de sesión para email: {}", dtoLogin.getEmail());
 
         // Verify if user exist by email
-        if(!userRepo.existsByEmail(dtoLogin.getEmail())) {
+        if(!userRepo.existsByEmail(dtoLogin.getEmail().toLowerCase())) {
             log.warn("Email no registrado: {}", dtoLogin.getEmail());
             throw new UserNotFoundException("No existe un usuario registrado con el email: " + dtoLogin.getEmail());
         }
 
         // get user from database
-        User userDB = userRepo.findByEmail(dtoLogin.getEmail()).orElseThrow(() -> new UserNotFoundException("Usuerio no encontrado"));
+        User userDB = userRepo.findByEmail(dtoLogin.getEmail().toLowerCase()).orElseThrow(() -> new UserNotFoundException("Usuerio no encontrado"));
 
         // Verify password
         boolean isPasswordValid = security.passwordEncoder().matches(dtoLogin.getPassword(), userDB.getPassword());
