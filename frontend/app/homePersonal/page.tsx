@@ -35,15 +35,7 @@ export default function HomePage() {
 
   // Obtener y almacenar planes de ahorro en localStorage al cargar/recargar la página
   useEffect(() => {
-    const loadPlans = async () => {
-      try {
-        await PlanningService.fetchAndStorePlans()
-        console.log("✅ Planes de ahorro cargados al iniciar/recargar la página")
-      } catch (error) {
-        console.error("❌ Error al cargar planes de ahorro:", error)
-      }
-    }
-    loadPlans()
+    PlanningService.fetchAndStorePlans()
   }, [])
 
   // Desactivar loading cuando la página esté lista
