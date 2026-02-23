@@ -1,6 +1,5 @@
 import type {
   Planning,
-  PlanningMovement,
   PlanningsResponse,
   PlanningResponse,
   PlanningMovementsResponse
@@ -33,8 +32,6 @@ export class PlanningService {
         authToken = sessionStorage.getItem("authToken") || undefined
       }
 
-      console.log("📋 Obteniendo planeaciones del usuario...")
-
       const response = await fetch(`http://localhost:8080/get/plan-savings`, {
         method: "GET",
         headers: {
@@ -49,7 +46,6 @@ export class PlanningService {
       }
 
       const data = await response.json()
-      console.log("✅ Planeaciones obtenidas:", data)
 
       // Adaptar los datos al formato esperado por el frontend
       // Extraer de savingsPlansList del servidor
@@ -72,7 +68,6 @@ export class PlanningService {
           namePlan: item.nameSavingsPlan || item.name || item.planningName || "",
         }))
         localStorage.setItem("savingsPlans", JSON.stringify(plansForStorage))
-        console.log("💾 Planes almacenados en localStorage:", plansForStorage)
       }
 
       return {
@@ -81,7 +76,6 @@ export class PlanningService {
         data: plannings,
       }
     } catch (error) {
-      console.error("❌ Error al obtener planeaciones:", error)
       return {
         success: false,
         message: error instanceof Error ? error.message : "Error al obtener las planeaciones",
@@ -97,12 +91,11 @@ export class PlanningService {
    */
   static async createPlanning(planning: Omit<Planning, "id" | "createdAt" | "currentAmount">): Promise<PlanningResponse> {
     try {
+      // Obtener el token del sessionStorage
       let authToken: string | undefined
       if (typeof window !== "undefined") {
         authToken = sessionStorage.getItem("authToken") || undefined
       }
-
-      console.log("📝 Creando nueva planeación:", planning)
 
       const response = await fetch(`http://localhost:8080/registry/saving-plan`, {
         method: "POST",
@@ -123,7 +116,6 @@ export class PlanningService {
       }
 
       const data = await response.json()
-      console.log("✅ Planeación creada:", data)
 
       // Almacenar el idPlan en localStorage
       if (typeof window !== "undefined" && data.idPlan) {
@@ -136,7 +128,6 @@ export class PlanningService {
           namePlan: data.namePlan || planning.name,
         })
         localStorage.setItem("savingsPlans", JSON.stringify(existingPlans))
-        console.log("💾 idPlan almacenado en localStorage:", data.idPlan)
       }
 
       return {
@@ -153,7 +144,6 @@ export class PlanningService {
         },
       }
     } catch (error) {
-      console.error("❌ Error al crear planeación:", error)
       return {
         success: false,
         message: error instanceof Error ? error.message : "Error al crear la planeación",
@@ -168,12 +158,11 @@ export class PlanningService {
    */
   static async getPlanningMovements(planningId: string): Promise<PlanningMovementsResponse> {
     try {
+      // Obtener el token del sessionStorage
       let authToken: string | undefined
       if (typeof window !== "undefined") {
         authToken = sessionStorage.getItem("authToken") || undefined
       }
-
-      console.log("📋 Obteniendo movimientos de planeación:", planningId)
 
       const response = await fetch(`http://localhost:8080/plannings/${planningId}/movements`, {
         method: "GET",
@@ -189,7 +178,6 @@ export class PlanningService {
       }
 
       const data = await response.json()
-      console.log("✅ Movimientos de planeación obtenidos:", data)
 
       const movements = (data.movements || data.data || data || []).map((item: any) => ({
         id: item.id || item._id,
@@ -205,7 +193,6 @@ export class PlanningService {
         data: movements,
       }
     } catch (error) {
-      console.error("❌ Error al obtener movimientos de planeación:", error)
       return {
         success: false,
         message: error instanceof Error ? error.message : "Error al obtener los movimientos",
@@ -226,20 +213,6 @@ export class PlanningService {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount)
-  }
-
-  /**
-   * Formatea la fecha para mostrar
-   * @param dateString - Fecha en formato ISO
-   * @returns Fecha formateada
-   */
-  static formatDate(dateString: string): string {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })
   }
 
   /**
@@ -303,7 +276,6 @@ export class PlanningService {
       const found = plans.find(p => p.namePlan === planName)
       return found?.idPlan ?? null
     } catch {
-      console.error("❌ Error al leer planes desde localStorage")
       return null
     }
   }
@@ -316,6 +288,7 @@ export class PlanningService {
    */
   static async registerSavingMovement(namePlan: string, amount: number): Promise<PlanningResponse> {
     try {
+      // Obtener el token del sessionStorage
       let authToken: string | undefined
       if (typeof window !== "undefined") {
         authToken = sessionStorage.getItem("authToken") || undefined
@@ -326,8 +299,6 @@ export class PlanningService {
       if (idPlan === null) {
         throw new Error(`No se encontró el id del plan "${namePlan}". Recarga la página e intenta de nuevo.`)
       }
-
-      console.log("💰 Registrando movimiento de ahorro:", { idPlan, amount })
 
       const response = await fetch(`http://localhost:8080/registry/savings-user`, {
         method: "POST",
@@ -347,7 +318,6 @@ export class PlanningService {
       }
 
       const data = await response.json()
-      console.log("✅ Movimiento de ahorro registrado:", data)
 
       Swal.fire({
         title: "¡Ahorro registrado!",
@@ -361,7 +331,6 @@ export class PlanningService {
         data: data,
       }
     } catch (error) {
-      console.error("❌ Error al registrar movimiento de ahorro:", error)
       return {
         success: false,
         message: error instanceof Error ? error.message : "Error al registrar el ahorro",
@@ -369,43 +338,6 @@ export class PlanningService {
     }
   }
 
-  /**
-   * Obtiene el saldo total de todos los ahorros del usuario
-   * @returns Saldo total de ahorros
-   */
-  static async getTotalSavings(): Promise<number> {
-    try {
-      // Obtener el token del sessionStorage
-      let authToken: string | undefined
-      if (typeof window !== "undefined") {
-        authToken = sessionStorage.getItem("authToken") || undefined
-      }
-
-      console.log("💰 Obteniendo saldo total de ahorros...")
-
-      const response = await fetch(`http://localhost:8080/sumTotal/savings`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`,
-        }
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`)
-      }
-
-      const data = await response.json()
-      console.log("✅ Saldo total obtenido:", data)
-
-      // Extraer y retornar el totalSavings de la respuesta
-      return data.totalSavings || 0
-    } catch (error) {
-      console.error("❌ Error al obtener saldo total de ahorros:", error)
-      return 0
-    }
-  }
 
   /**
    * Obtiene todos los planes de ahorro y los almacena en localStorage.
@@ -414,12 +346,11 @@ export class PlanningService {
    */
   static async fetchAndStorePlans(): Promise<boolean> {
     try {
+      // Obtener el token del sessionStorage
       let authToken: string | undefined
       if (typeof window !== "undefined") {
         authToken = sessionStorage.getItem("authToken") || undefined
       }
-
-      console.log("📋 Obteniendo planes para almacenar en localStorage...")
 
       const response = await fetch(`http://localhost:8080/list/registry/saving-plan`, {
         method: "GET",
@@ -435,7 +366,6 @@ export class PlanningService {
       }
 
       const data = await response.json()
-      console.log("✅ Planes obtenidos para localStorage:", data)
 
       const planningsArray = data.savingsPlansList || data.nameSavingsPlan || data.data || data || []
 
@@ -445,12 +375,10 @@ export class PlanningService {
           namePlan: item.nameSavingsPlan || item.name || item.planningName || "",
         }))
         localStorage.setItem("savingsPlans", JSON.stringify(plansForStorage))
-        console.log("💾 Planes almacenados en localStorage al iniciar sesión:", plansForStorage)
       }
 
       return true
     } catch (error) {
-      console.error("❌ Error al obtener planes para localStorage:", error)
       return false
     }
   }

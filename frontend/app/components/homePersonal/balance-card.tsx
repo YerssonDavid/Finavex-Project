@@ -18,6 +18,37 @@ interface BalanceData {
   isLoading: boolean
 }
 
+// Obtiene el token de autenticación del sessionStorage
+const getAuthToken = (): string => {
+  if (typeof window !== "undefined") {
+    return sessionStorage.getItem("authToken") || ""
+  }
+  return ""
+}
+
+// Verifica que exista un usuario autenticado en localStorage
+const validateUserSession = (): boolean => {
+  if (typeof window === "undefined") return false
+  const userDataStr = localStorage.getItem("userData")
+  if (!userDataStr) return false
+  try {
+    const userData = JSON.parse(userDataStr)
+    return !!(userData.email)
+  } catch {
+    return false
+  }
+}
+
+// Parsea un valor monetario formateado (ej: "$ 327.000.000,00") a número
+const parseCurrencyValue = (value: string): number => {
+  const cleanValue = value
+    .replace(/\$/g, '')
+    .replace(/\s/g, '')
+    .replace(/\./g, '')
+    .replace(',', '.')
+  return parseFloat(cleanValue) || 0
+}
+
 export function BalanceCard() {
   const [showBalance, setShowBalance] = useState(true)
   const [incomeData, setIncomeData] = useState<MonthlyData>({ amount: 0, isLoading: true })
@@ -29,42 +60,20 @@ export function BalanceCard() {
     isLoading: true
   })
 
-  // Función para obtener el token del sessionStorage
-  const getAuthToken = (): string => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem("authToken") || ""
-    }
-    return ""
-  }
-
   // Función para obtener ingresos del mes
   const fetchMonthlyIncome = useCallback(async () => {
     setIncomeData(prev => ({ ...prev, isLoading: true }))
 
     try {
-      // Obtener el correo del usuario del localStorage
-      let userEmail = ""
-      if (typeof window !== "undefined") {
-        const userDataStr = localStorage.getItem("userData")
-        if (userDataStr) {
-          const userData = JSON.parse(userDataStr)
-          userEmail = userData.email || ""
-        }
-      }
-
-      if (!userEmail) {
+      if (!validateUserSession()) {
         throw new Error("No se encontró el correo del usuario")
       }
 
-      // Obtener el token del sessionStorage
-      const token = getAuthToken()
-
-      // Petición para obtener ingresos del mes
       const response = await fetch("http://localhost:8080/sum-total-save-month", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": `Bearer ${getAuthToken()}`
         }
       })
 
@@ -73,35 +82,18 @@ export function BalanceCard() {
       }
 
       const data = await response.json()
-      console.log("📈 Ingresos del mes - Respuesta completa:", JSON.stringify(data, null, 2))
 
-      // Parsear el valor (mismo formato que balance-display)
       let income = 0
       if (data.totalSavedMonth) {
-        console.log("📊 Valor original totalSavedMonth:", data.totalSavedMonth)
-        const cleanValue = data.totalSavedMonth
-          .replace(/\$/g, '')
-          .replace(/\s/g, '')
-          .replace(/\./g, '')
-          .replace(',', '.')
-        console.log("📊 Valor limpio:", cleanValue)
-        income = parseFloat(cleanValue) || 0
-        console.log("📊 Valor parseado:", income)
+        income = parseCurrencyValue(data.totalSavedMonth)
       } else if (data.totalIncomeMonth) {
-        const cleanValue = data.totalIncomeMonth
-          .replace(/\$/g, '')
-          .replace(/\s/g, '')
-          .replace(/\./g, '')
-          .replace(',', '.')
-        income = parseFloat(cleanValue) || 0
+        income = parseCurrencyValue(data.totalIncomeMonth)
       } else {
         income = data.income ?? data.total ?? data.amount ?? 0
       }
 
-      console.log("✅ Ingresos finales:", income)
       setIncomeData({ amount: income, isLoading: false })
-    } catch (err) {
-      console.error("❌ Error al obtener ingresos:", err)
+    } catch {
       setIncomeData({ amount: 0, isLoading: false })
     }
   }, [])
@@ -111,29 +103,15 @@ export function BalanceCard() {
     setExpenseData(prev => ({ ...prev, isLoading: true }))
 
     try {
-      // Obtener el correo del usuario del localStorage
-      let userEmail = ""
-      if (typeof window !== "undefined") {
-        const userDataStr = localStorage.getItem("userData")
-        if (userDataStr) {
-          const userData = JSON.parse(userDataStr)
-          userEmail = userData.email || ""
-        }
-      }
-
-      if (!userEmail) {
+      if (!validateUserSession()) {
         throw new Error("No se encontró el correo del usuario")
       }
 
-      // Obtener el token del sessionStorage
-      const token = getAuthToken()
-
-      // Petición para obtener gastos del mes
       const response = await fetch("http://localhost:8080/expenses/month/sum", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": `Bearer ${getAuthToken()}`
         }
       })
 
@@ -142,35 +120,18 @@ export function BalanceCard() {
       }
 
       const data = await response.json()
-      console.log("📉 Gastos del mes - Respuesta completa:", JSON.stringify(data, null, 2))
 
-      // Parsear el valor (mismo formato que balance-display)
       let expense = 0
       if (data.totalExpensesMonth) {
-        console.log("📊 Valor original totalExpensesMonth:", data.totalExpensesMonth)
-        const cleanValue = data.totalExpensesMonth
-          .replace(/\$/g, '')
-          .replace(/\s/g, '')
-          .replace(/\./g, '')
-          .replace(',', '.')
-        console.log("📊 Valor limpio:", cleanValue)
-        expense = parseFloat(cleanValue) || 0
-        console.log("📊 Valor parseado:", expense)
+        expense = parseCurrencyValue(data.totalExpensesMonth)
       } else if (data.totalExpenseMonth) {
-        const cleanValue = data.totalExpenseMonth
-          .replace(/\$/g, '')
-          .replace(/\s/g, '')
-          .replace(/\./g, '')
-          .replace(',', '.')
-        expense = parseFloat(cleanValue) || 0
+        expense = parseCurrencyValue(data.totalExpenseMonth)
       } else {
         expense = data.expense ?? data.total ?? data.amount ?? 0
       }
 
-      console.log("✅ Gastos finales:", expense)
       setExpenseData({ amount: expense, isLoading: false })
-    } catch (err) {
-      console.error("❌ Error al obtener gastos:", err)
+    } catch {
       setExpenseData({ amount: 0, isLoading: false })
     }
   }, [])
@@ -180,29 +141,15 @@ export function BalanceCard() {
     setCurrentBalance(prev => ({ ...prev, isLoading: true }))
 
     try {
-      // Obtener el correo del usuario del localStorage
-      let userEmail = ""
-      if (typeof window !== "undefined") {
-        const userDataStr = localStorage.getItem("userData")
-        if (userDataStr) {
-          const userData = JSON.parse(userDataStr)
-          userEmail = userData.email || ""
-        }
-      }
-
-      if (!userEmail) {
+      if (!validateUserSession()) {
         throw new Error("No se encontró el correo del usuario")
       }
 
-      // Obtener el token del sessionStorage
-      const token = getAuthToken()
-
-      // Petición para obtener el saldo actual
       const response = await fetch("http://localhost:8080/get/money-now", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": `Bearer ${getAuthToken()}`
         }
       })
 
@@ -211,43 +158,27 @@ export function BalanceCard() {
       }
 
       const data = await response.json()
-      console.log("💰 Saldo actual - Respuesta completa:", JSON.stringify(data, null, 2))
 
-      // Parsear el valor del saldo
       let balance = 0
       if (data.currentBalance) {
-        const cleanValue = data.currentBalance
-          .replace(/\$/g, '')
-          .replace(/\s/g, '')
-          .replace(/\./g, '')
-          .replace(',', '.')
-        balance = parseFloat(cleanValue) || 0
+        balance = parseCurrencyValue(data.currentBalance)
       } else if (data.balance) {
-        if (typeof data.balance === 'string') {
-          const cleanValue = data.balance
-            .replace(/\$/g, '')
-            .replace(/\s/g, '')
-            .replace(/\./g, '')
-            .replace(',', '.')
-          balance = parseFloat(cleanValue) || 0
-        } else {
-          balance = data.balance
-        }
+        balance = typeof data.balance === 'string'
+          ? parseCurrencyValue(data.balance)
+          : data.balance
       } else {
         balance = data.total ?? data.amount ?? data.saldo ?? 0
       }
 
       const percentageChange = data.percentageChange ?? data.percentage ?? data.change ?? 0
 
-      console.log("✅ Saldo actual:", balance, "Cambio %:", percentageChange)
       setCurrentBalance({
-        balance: balance,
-        percentageChange: percentageChange,
+        balance,
+        percentageChange,
         isPositive: percentageChange >= 0,
         isLoading: false
       })
-    } catch (err) {
-      console.error("❌ Error al obtener saldo actual:", err)
+    } catch {
       setCurrentBalance({
         balance: 0,
         percentageChange: 0,
@@ -267,7 +198,6 @@ export function BalanceCard() {
   // Escuchar eventos de actualización de balance
   useEffect(() => {
     const handleBalanceUpdate = () => {
-      console.log("🔄 Actualizando ingresos, gastos y saldo actual...")
       fetchMonthlyIncome()
       fetchMonthlyExpenses()
       fetchCurrentBalance()
