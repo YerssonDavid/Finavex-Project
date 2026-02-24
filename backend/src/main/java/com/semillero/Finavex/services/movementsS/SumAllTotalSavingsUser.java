@@ -3,7 +3,7 @@ package com.semillero.Finavex.services.movementsS;
 import com.semillero.Finavex.dto.movementsMoney.ResponseSumAllTotalSavingsUser;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
-import com.semillero.Finavex.repository.movementsR.SavingsUserR;
+import com.semillero.Finavex.repository.movementsR.SavingsMoneyUserR;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @Slf4j
 public class SumAllTotalSavingsUser {
-    private final SavingsUserR savingsUser;
+    private final SavingsMoneyUserR savingsUser;
     private final UserR userR;
 
     public ResponseSumAllTotalSavingsUser sumtotal(){
