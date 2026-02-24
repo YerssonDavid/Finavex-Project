@@ -63,7 +63,7 @@ public class RegistrySavingsUser {
         savingsMovements.setSavingsPlan(savingsPlan);
         savingsMovementsR.save(savingsMovements);
 
-        //Save in table de money user
+        // Save in user savings money table
         SavingsMoneyUsers savingsMoneyUsers = new SavingsMoneyUsers();
         savingsMoneyUsers.setUser(user);
         savingsMoneyUsers.setNameSavings(savingsMovements.getSavingsPlan().getNameSavingsPlan());
