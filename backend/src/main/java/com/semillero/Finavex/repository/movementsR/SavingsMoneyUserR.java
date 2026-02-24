@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 @Repository
-public interface SavingsUserR extends JpaRepository<SavingsMoneyUsers, Long> {
+public interface SavingsMoneyUserR extends JpaRepository<SavingsMoneyUsers, Long> {
     boolean existsById(Long id);
 
     @Query("""
