@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistryExpense;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistryExpense;
 import com.semillero.Finavex.entity.User;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,14 +25,14 @@ public class RegistryExpense {
     private final UserR userR;
     private final CurrencyFormatter currencyFormatter;
 
-    public ResponseRegistryExpense registryExpense (RequestRegistryExpense requestRegistryExpense){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email != null ? email.toLowerCase().trim() : null;
-        if(!userR.existsByEmail(emailFormat)){
+    public ResponseRegistryExpense registryExpense (RequestRegistryExpense requestRegistryExpense, DataService dataService){
+        Optional<String> email = dataService.email();
+
+        if(!userR.existsByEmail(email.orElse("No se pudo obtener el email!"))){
             throw new UserNotFoundException("El usuario no existe!");
         }
 
-        User persistedUser = userR.findByEmail(emailFormat).orElseThrow();
+        User persistedUser = userR.findByEmail(email.orElse("No se pudo obtener el email!")).orElseThrow();
 
         LocalDateTime now = LocalDateTime.now();
 

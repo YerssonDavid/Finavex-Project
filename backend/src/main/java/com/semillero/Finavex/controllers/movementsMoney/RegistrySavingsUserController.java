@@ -1,5 +1,6 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.exception.ErrorGeneral;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySavingsUser;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsUser;
@@ -9,11 +10,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("registry/savings-user")
@@ -39,7 +43,12 @@ public class RegistrySavingsUserController {
 
     @PostMapping
     public ResponseEntity<ResponseRegistrySavingsUser> registrySavings (@Validated @RequestBody RequestRegistrySavingsUser request){
-        ResponseRegistrySavingsUser response = registrySavingsUser.registrySavingsUser(request);
+        Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getName)
+                .filter(name -> !name.isBlank())
+                .map(name -> name.toLowerCase().trim());
+
+        ResponseRegistrySavingsUser response = registrySavingsUser.registrySavingsUser(request, DataService.builder().email(email).build());
         return ResponseEntity.ok(response);
     }
 }

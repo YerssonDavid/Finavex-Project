@@ -5,10 +5,7 @@ import com.semillero.Finavex.Validated.Update;
 import com.semillero.Finavex.entity.movements.MoneyNow;
 import com.semillero.Finavex.entity.movements.SavingsMoneyUsers;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,16 +26,20 @@ public class User implements UserDetails {
 
     @Column(name="name", nullable = false, length = 100)
     @NotBlank(groups = {Create.class, Update.class}, message = "El nombre es obligatorio")
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String name;
 
     @Column(name="middle_name", nullable = true, length = 100)
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String middleName;
 
     @Column(name="last_name", nullable = false, length = 100)
     @NotBlank(groups = {Create.class, Update.class}, message = "El apellido es obligatorio")
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String surname;
 
     @Column(name="second_surname", nullable = true, length = 100)
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String secondSurname;
 
     @Column(name="document_number", nullable = false, length = 11, unique = true)

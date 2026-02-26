@@ -1,16 +1,20 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.ResponseGetMovements;
 import com.semillero.Finavex.services.movementsS.GetMovements;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/movements")
@@ -40,7 +44,13 @@ public class GetMovementsController {
             }
     )
     public ResponseEntity<List<ResponseGetMovements>> getMovements(){
-        List<ResponseGetMovements> movements = getMovements.getMovementsUser();
+        Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getName)
+                .filter(name -> !name.isBlank())
+                .map(name -> name.toLowerCase().trim());
+
+        List<ResponseGetMovements> movements = getMovements.getMovementsUser(DataService.builder().email(email).build());
+
         return ResponseEntity.ok(movements);
     }
 }

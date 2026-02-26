@@ -3,6 +3,7 @@ package com.semillero.Finavex.entity.movements;
 
 import com.semillero.Finavex.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ public class SaveMoney {
     private Long id;
 
     @Column(name="movement_type", nullable = false)
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String movementType;
 
     @Column(name="savings_value", nullable = false)
@@ -28,6 +30,7 @@ public class SaveMoney {
     private LocalDateTime date;
 
     @Column(name="movement_note", nullable=true, length = 100)
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String noteMovement;
 
     @ManyToOne

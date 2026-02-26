@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySavingsUser;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsUser;
 import com.semillero.Finavex.entity.User;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +31,10 @@ public class RegistrySavingsUser {
     private final SavingsMovementsR savingsMovementsR;
     private final UserR userR;
 
-    public ResponseRegistrySavingsUser registrySavingsUser(RequestRegistrySavingsUser request){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email.toLowerCase().trim();
+    public ResponseRegistrySavingsUser registrySavingsUser(RequestRegistrySavingsUser request, DataService dataService){
+        Optional<String> email = dataService.email();
 
-        Long idUser = userR.getIdByEmail(emailFormat);
+        Long idUser = userR.getIdByEmail(email.orElse("No se puedo obtener el email!"));
 
         User user = userR.findById(idUser)
                 .orElseThrow(() -> new UserNotFoundException("El usuario no existe!"));
