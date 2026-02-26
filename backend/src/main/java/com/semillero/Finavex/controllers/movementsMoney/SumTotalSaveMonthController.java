@@ -1,13 +1,17 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalSaveMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalSaveMonth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/sum-total-save-month")
@@ -37,7 +41,12 @@ public class SumTotalSaveMonthController {
             }
     )
     public ResponseEntity<ResponseSumTotalSaveMonth> sumTotal(){
-        ResponseSumTotalSaveMonth response = sumTotalSaveMonth.sumTotalSaveMonth();
+        Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getName)
+                .filter(name -> !name.isBlank())
+                .map(name -> name.toLowerCase().trim());
+
+        ResponseSumTotalSaveMonth response = sumTotalSaveMonth.sumTotalSaveMonth(DataService.builder().email(email).build());
         return ResponseEntity.ok(response);
     }
 }
