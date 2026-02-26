@@ -1,5 +1,6 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistryExpense;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistryExpense;
 import com.semillero.Finavex.services.movementsS.RegistryExpense;
@@ -8,7 +9,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/expenses/registry")
@@ -46,7 +51,12 @@ public class RegistryExpenseController {
             }
     )
     public ResponseEntity<ResponseRegistryExpense> registryExpense(@RequestBody @Valid RequestRegistryExpense requestRegistryExpense){
-        ResponseRegistryExpense response = registryExpense.registryExpense(requestRegistryExpense);
-        return ResponseEntity.ok().body(response);
+        Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getName)
+                .filter(name -> !name.isBlank())
+                .map(name -> name.toLowerCase().trim());
+
+        ResponseRegistryExpense response = registryExpense.registryExpense(requestRegistryExpense, DataService.builder().email(email).build());
+        return ResponseEntity.ok(response);
     }
 }
