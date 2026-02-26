@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySaveMoney;
 import com.semillero.Finavex.dto.movementsMoney.ResponseSaveMoney;
 import com.semillero.Finavex.entity.movements.MoneyNow;
@@ -11,11 +12,11 @@ import com.semillero.Finavex.repository.movementsR.SaveR;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +27,17 @@ public class RegisterSaveMoney {
     private final UserR userR;
     private final CurrencyFormatter currencyFormatter;
 
-    public ResponseSaveMoney registerSaveMoney(RequestRegistrySaveMoney requestRegistrySaveMoney){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email != null ? email.toLowerCase().trim() : null;
-        log.debug("Email del usuario autenticado: {}", emailFormat);
+    public ResponseSaveMoney registerSaveMoney(RequestRegistrySaveMoney requestRegistrySaveMoney, DataService dataService){
+        Optional<String> email = dataService.email();
+
+        log.debug("Email del usuario autenticado: {}", email);
 
 
-        if(!userR.existsByEmail(emailFormat)){
+        if(!userR.existsByEmail(email.orElse("El usuario no existe!"))){
             throw new UserNotFoundException("El usuario no existe");
         }
 
-        User persistedUser = userR.findByEmail(emailFormat).orElseThrow();
+        User persistedUser = userR.findByEmail(email.orElse("No se pudo obtener el email!")).orElseThrow();
 
         LocalDateTime now = LocalDateTime.now();
 
