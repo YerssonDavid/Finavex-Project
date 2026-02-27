@@ -1,6 +1,6 @@
 package com.semillero.Finavex.repository.movementsR;
 
-import com.semillero.Finavex.entity.movements.SavingsMovements;
+import com.semillero.Finavex.entity.movements.SavingsMoneyUsers;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 @Repository
-public interface SavingsUserR extends JpaRepository<SavingsMovements, Long> {
+public interface SavingsMoneyUserR extends JpaRepository<SavingsMoneyUsers, Long> {
     boolean existsById(Long id);
 
     @Query("""

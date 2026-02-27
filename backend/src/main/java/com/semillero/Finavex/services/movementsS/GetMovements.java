@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.ResponseGetMovements;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,22 +26,20 @@ public class GetMovements {
     private final TokenProvider tokenProvider;
 
 
-    public List<ResponseGetMovements> getMovementsUser (){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email != null ? email.toLowerCase().trim() : null;
+    public List<ResponseGetMovements> getMovementsUser (DataService dataService) {
+        Optional<String> email = dataService.email();
 
-        if(!userR.existsByEmail(emailFormat)){
+        if(!userR.existsByEmail(email.orElse("No se pudo obtener el email!"))){
             throw new UserNotFoundException("Usuario no encontrado!");
         }
 
         LocalDateTime time = LocalDateTime.now().minusDays(30);
         List<ResponseGetMovements> movements = new ArrayList<>();
-        Long userId = userR.findByEmail(emailFormat).get().getId();
+        Long userId = userR.findByEmail(email.orElse("No se pudo obtener el usuario")).get().getId();
         movements.addAll(expenseR.findMovementsByUserId(userId, time));
         movements.addAll(saveR.findMovementsByUserId(userId, time));
 
         movements.sort(Comparator.comparing(ResponseGetMovements::date).reversed());
-
         return movements;
     }
 }

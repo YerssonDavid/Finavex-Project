@@ -24,6 +24,7 @@ public class SavingsMoneyUsers {
 
     @NotBlank(message = "El nombre se requiere")
     @Column(name="name_savings", nullable = false)
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String nameSavings;
 
     @Positive

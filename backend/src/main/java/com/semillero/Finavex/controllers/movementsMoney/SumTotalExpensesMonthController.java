@@ -1,12 +1,17 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.ResponseSumTotalExpensesMonth;
 import com.semillero.Finavex.services.movementsS.SumTotalExpenseMonth;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/expenses/month/sum")
@@ -36,7 +41,12 @@ public class SumTotalExpensesMonthController {
             }
     )
     public ResponseEntity<ResponseSumTotalExpensesMonth> sumTotalExpensesMonth (){
-        ResponseSumTotalExpensesMonth response = sumTotalExpenseMonth.sumTotalExpenseMonth();
+        Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getName)
+                .filter(name -> !name.isBlank())
+                .map(name -> name.toLowerCase().trim());
+
+        ResponseSumTotalExpensesMonth response = sumTotalExpenseMonth.sumTotalExpenseMonth(DataService.builder().email(email).build());
         return ResponseEntity.ok(response);
     }
 }

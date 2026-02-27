@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySavingsPlan;
 import com.semillero.Finavex.dto.movementsMoney.ResponseListRegistrySavingsPlan;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsPlan;
@@ -10,11 +11,11 @@ import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.SavingsPlanR;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,15 +23,14 @@ public class SavingsPlanRegistry {
     private final SavingsPlanR savingsPlanR;
     private final UserR userR;
 
-    public ResponseRegistrySavingsPlan registrySavingPlan (RequestRegistrySavingsPlan requestRegistrySavingsPlan){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email.toLowerCase().trim();
+    public ResponseRegistrySavingsPlan registrySavingPlan (RequestRegistrySavingsPlan requestRegistrySavingsPlan, DataService dataService) {
+        Optional<String> email = dataService.email();
 
-        Long idUser = userR.getIdByEmail(emailFormat);
+        Long idUser = userR.getIdByEmail(email.orElse("No se pudo obtener el email!"));
 
         List<SavingsPlan> listPlansUser = savingsPlanR.getSavingsPlanByUserId(idUser);
 
-        if(!userR.existsByEmail(emailFormat)){
+        if(!userR.existsByEmail(email.orElse("No se pudo obtener el email!"))){
             throw new UserNotFoundException("Usuario no encontrado");
         } else if (listPlansUser.stream()
                 //Compare in list with the name of that the user want to registry.
@@ -38,7 +38,7 @@ public class SavingsPlanRegistry {
             throw new ExistElement("El plan de ahorro ya existe, por favor elige otro nombre");
         }
 
-        Long userId = userR.getIdByEmail(emailFormat);
+        Long userId = userR.getIdByEmail(email.orElse("No se pudo obtener el email!"));
         User user = userR.getReferenceById(userId);
 
         SavingsPlan savingsPlan = new SavingsPlan();
@@ -64,15 +64,14 @@ public class SavingsPlanRegistry {
     }
 
     // Implement method that return the name and id of the savings plan registered
-    public List<ResponseListRegistrySavingsPlan> listRegistrySavingsPlan (){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email.toLowerCase().trim();
+    public List<ResponseListRegistrySavingsPlan> listRegistrySavingsPlan (DataService dataService) {
+        Optional<String> email = dataService.email();
 
-        if(!userR.existsByEmail(emailFormat)){
+        if(!userR.existsByEmail(email.orElse("No se pudo obtener el email!"))){
             throw new UserNotFoundException("El usuario no existe!");
         }
 
-        Long userId = userR.getIdByEmail(emailFormat);
+        Long userId = userR.getIdByEmail(email.orElse("No se pudo obtener el email!"));
 
         if(!savingsPlanR.existsByUserId(userId)){
              // Si prefieres lanzar excepción cuando no hay datos:

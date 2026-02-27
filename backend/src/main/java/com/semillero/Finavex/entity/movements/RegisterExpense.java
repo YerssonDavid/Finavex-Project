@@ -2,6 +2,7 @@ package com.semillero.Finavex.entity.movements;
 
 import com.semillero.Finavex.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ public class RegisterExpense {
     private Long id;
 
     @Column(name="movement_type", nullable = false)
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String movementType;
 
     @Column(name="expense_value", nullable=false)
@@ -25,6 +27,7 @@ public class RegisterExpense {
     private LocalDateTime date;
 
     @Column(name="movement_note", nullable=true)
+    @Pattern(regexp = "^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$", message="El nombre es invalido!")
     private String noteMovement;
 
     @ManyToOne

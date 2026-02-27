@@ -1,5 +1,6 @@
 package com.semillero.Finavex.services.movementsS;
 
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.ResponseGetPlansSavings;
 import com.semillero.Finavex.dto.movementsMoney.SavingPlanDto;
 import com.semillero.Finavex.entity.movements.SavingsPlan;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +20,10 @@ public class GetPlanSavings {
     private final SavingsPlanR savingsPlanR;
     private final UserR userR;
 
-    public ResponseGetPlansSavings getPlanSavings(){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String emailFormat = email.toLowerCase().trim();
+    public ResponseGetPlansSavings getPlanSavings(DataService dataService) {
+        Optional<String> email = dataService.email();
 
-        Long id = userR.getIdByEmail(emailFormat);
+        Long id = userR.getIdByEmail(email.orElse("No se pudo obtener el email!"));
 
         if(!savingsPlanR.existsByUserId(id)){
             throw new UserNotFoundException("El usuario no tiene un plan de ahorro registrado!");
