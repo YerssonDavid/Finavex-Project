@@ -1,8 +1,10 @@
 package com.semillero.Finavex.services.recoveryPassword;
 
 import com.semillero.Finavex.dto.ApiResponse;
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.users.RecoverPassword.ChangePasswordDto;
 import com.semillero.Finavex.entity.User;
+import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.services.bucked.RateLimitingService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -27,13 +30,11 @@ public class ChangePassword {
     private final UserR userR;
     private final RateLimitingService rateLimitingService;
 
-    public ApiResponse changePassword(ChangePasswordDto changePasswordDto) {
+    public ApiResponse changePassword(ChangePasswordDto changePasswordDto, DataService dataService) {
+        Optional<String> emailOpt = dataService.email();
+        log.info("Email del usuario autenticado: {}", emailOpt.orElse("No se pudo obtener el email!"));
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String emailFormat = principal.toString();
-        log.info("Email del usuario autenticado: {}", emailFormat);
-
-        if(!userR.existsByEmail(emailFormat)){
+        if(!userR.existsByEmail(emailOpt.orElse("No se puede obtener el email!"))){
             return ApiResponse.builder()
                             .status(HttpStatus.NOT_FOUND.value())
                             .success(false)
@@ -42,7 +43,9 @@ public class ChangePassword {
                             .build();
         }
 
-        user = userR.findByEmail(emailFormat).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        user = emailOpt
+                .flatMap(userR::findByEmail)
+                .orElseThrow(() -> new UserNotFoundException("No se pudo encontrar el email!"));
 
         // update the password
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));

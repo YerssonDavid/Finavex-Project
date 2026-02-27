@@ -1,6 +1,7 @@
 package com.semillero.Finavex.controllers.password;
 
 import com.semillero.Finavex.dto.ApiResponse;
+import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.codePassword.ResponseComparisonCode;
 import com.semillero.Finavex.dto.users.RecoverPassword.ChangePasswordDto;
 import com.semillero.Finavex.dto.users.RecoverPassword.ComparisionCodeUser;
@@ -10,7 +11,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("recover-password")
@@ -70,7 +75,12 @@ public class RecoverPassword {
             }
     )
     public ResponseEntity<ApiResponse> recoverPassword(@RequestBody ChangePasswordDto changePasswordDto) {
-        ApiResponse response = changePassword.changePassword(changePasswordDto);
+        Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getName)
+                .filter(name -> !name.isBlank())
+                .map(name -> name.toLowerCase().trim());
+
+        ApiResponse response = changePassword.changePassword(changePasswordDto, DataService.builder().email(email).build());
         return ResponseEntity.ok().body(response);
 
     }
