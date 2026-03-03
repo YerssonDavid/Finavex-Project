@@ -15,6 +15,7 @@ import { LogoutButton } from "@/components/homePersonal/logout-button"
 import { TransactionSection } from "@/components/homePersonal/transaction-section"
 import { useUser } from "../../context/ContextUserData"
 import { Loader2 } from "lucide-react"
+import { PlanningService } from "@/services/planningService"
 
 export default function HomePage() {
   const [selectedNews, setSelectedNews] = useState<any>(null)
@@ -31,6 +32,11 @@ export default function HomePage() {
   useEffect(() => {
     setDisplayName(userData?.nombre || "Usuario")
   }, [userData?.nombre])
+
+  // Obtener y almacenar planes de ahorro en localStorage al cargar/recargar la página
+  useEffect(() => {
+    PlanningService.fetchAndStorePlans()
+  }, [])
 
   // Desactivar loading cuando la página esté lista
   useEffect(() => {

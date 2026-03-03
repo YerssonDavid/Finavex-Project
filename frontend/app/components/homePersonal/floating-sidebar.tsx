@@ -8,7 +8,7 @@ import { User, ArrowLeftRight, Wallet, AlertCircle, Target, Lightbulb, ChevronLe
 const menuItems = [
   { icon: User, label: "Perfil", color: "from-primary to-primary/70", route: null as string | null },
   { icon: ArrowLeftRight, label: "Movimientos", color: "from-secondary to-secondary/70", route: "/homePersonal/movements/user" },
-  { icon: Wallet, label: "Presupuesto", color: "from-accent to-accent/70", route: null as string | null },
+  { icon: Wallet, label: "Planeación", color: "from-accent to-accent/70", route: "/homePersonal/planning" },
   { icon: AlertCircle, label: "Límites", color: "from-destructive to-destructive/70", route: null as string | null },
   { icon: Target, label: "Metas", color: "from-success to-success/70", route: null as string | null },
   { icon: Lightbulb, label: "Tips", color: "from-chart-3 to-chart-3/70", route: null as string | null },

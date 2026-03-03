@@ -32,8 +32,8 @@ export class TransactionService {
           try {
             const userData = JSON.parse(userDataStr)
             userEmail = userData.email || ""
-          } catch (parseError) {
-            console.warn("⚠️ No se pudo parsear userData del localStorage:", parseError)
+          } catch {
+            // userData no se pudo parsear
           }
         }
       }
@@ -66,7 +66,6 @@ export class TransactionService {
 
         endpoint = API_ENDPOINTS.income
         transactionLabel = "Ingreso"
-        console.log("💰 Registrando INGRESO")
       } else {
         // Formato para GASTOS
         transactionData = {
@@ -82,18 +81,10 @@ export class TransactionService {
 
         endpoint = API_ENDPOINTS.expense
         transactionLabel = "Gasto"
-        console.log("💸 Registrando GASTO")
       }
 
-      const headers: HeadersInit = {
-        "Content-Type": "application/json",
-      }
-
-      //Obtenemos el token en Session Storage
-      const authToken = token || (typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null);
-
-      console.log(`📋 Endpoint: ${endpoint}`)
-      console.log("📋 Datos enviados:", JSON.stringify(transactionData, null, 2))
+      // Obtener el token de autenticación
+      const authToken = token || (typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null)
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -114,7 +105,6 @@ export class TransactionService {
 
       // Verificar si la respuesta fue exitosa
       if (response.ok) {
-        console.log(`✅ ${transactionLabel} registrado exitosamente:`, responseData)
 
         return {
           success: true,
@@ -122,7 +112,6 @@ export class TransactionService {
           data: responseData.data || transactionData,
         }
       } else {
-        console.error(`❌ Error en la respuesta del servidor:`, responseData)
         const errorMessage =
           responseData.message || `Error ${response.status}: ${response.statusText}`
 
@@ -133,7 +122,6 @@ export class TransactionService {
         }
       }
     } catch (error) {
-      console.error("❌ Error al registrar transacción:", error)
       const errorMessage = error instanceof Error ? error.message : "Error desconocido"
       const transactionLabel = transaction.type === "income" ? "ingreso" : "gasto"
       return {
