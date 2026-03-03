@@ -1,2 +1,2 @@
 //Barrels
-export * from "./shemas/UserRegistry"
+export * from "./schemas/UserRegistry"

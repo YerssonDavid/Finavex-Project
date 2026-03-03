@@ -65,3 +65,11 @@ export interface PlanningMovementsResponse {
   message: string
   data?: PlanningMovement[]
 }
+
+
+export interface SumTotalSavingsResponse {
+  success: boolean
+  message: string
+  data?: number
+}
+

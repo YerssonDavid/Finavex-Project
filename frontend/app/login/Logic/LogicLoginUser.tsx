@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {userLoginSchema, userLoginType} from "@/shemas/UserLogin";
+import {userLoginSchema, userLoginType} from "@/schemas/UserLogin";
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
