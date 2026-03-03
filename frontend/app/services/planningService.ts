@@ -2,7 +2,8 @@ import type {
   Planning,
   PlanningsResponse,
   PlanningResponse,
-  PlanningMovementsResponse
+  PlanningMovementsResponse,
+  SumTotalSavingsResponse
 } from "@/types/transaction"
 import Swal from "sweetalert2";
 
@@ -20,23 +21,69 @@ export const PLANNING_CATEGORIES = [
  * Servicio para manejar la planeación financiera del usuario
  */
 export class PlanningService {
+  private static parseAmount(value: unknown): number {
+    if (typeof value === "number") return value
+    if (typeof value !== "string") return 0
+
+    const normalizedValue = value
+      .replace(/\$/g, "")
+      .replace(/\s/g, "")
+      .replace(/\./g, "")
+      .replace(/,/g, ".")
+
+    const parsed = Number(normalizedValue)
+    return Number.isFinite(parsed) ? parsed : 0
+  }
+
+  private static getAuthToken(): string | undefined {
+    if (typeof window === "undefined") return undefined
+    return sessionStorage.getItem("authToken") || undefined
+  }
+
+  private static getPlanningsArray(data: unknown): any[] {
+    if (!data || typeof data !== "object") return []
+
+    const payload = data as Record<string, unknown>
+    const candidates = [
+      payload.savingsPlansList,
+      payload.nameSavingsPlan,
+      payload.data,
+      data,
+    ]
+
+    for (const candidate of candidates) {
+      if (Array.isArray(candidate)) return candidate
+    }
+
+    return []
+  }
+
+  private static mapPlanningFromApi(item: any): Planning {
+    return {
+      id: item.id || item._id,
+      name: item.nameSavingsPlan || item.name || item.planningName || "",
+      category: item.category || "otros",
+      totalAmount: this.parseAmount(item.amountMetaPlan ?? item.totalAmount ?? item.total),
+      currentAmount: this.parseAmount(item.currentAmount ?? item.current),
+      description: item.descriptionPlanSavings || item.description || item.note || "",
+      createdAt: item.createdAt || item.date || new Date().toISOString(),
+      updatedAt: item.updatedAt,
+    }
+  }
+
   /**
    * Obtiene todas las planeaciones del usuario
    * @returns Lista de planeaciones del usuario
    */
   static async getPlannings(): Promise<PlanningsResponse> {
     try {
-      // Obtener el token del sessionStorage
-      let authToken: string | undefined
-      if (typeof window !== "undefined") {
-        authToken = sessionStorage.getItem("authToken") || undefined
-      }
+      const authToken = this.getAuthToken()
 
       const response = await fetch(`http://localhost:8080/get/plan-savings`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`,
+          ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {}),
         }
       })
 
@@ -47,19 +94,8 @@ export class PlanningService {
 
       const data = await response.json()
 
-      // Adaptar los datos al formato esperado por el frontend
-      // Extraer de savingsPlansList del servidor
-      const planningsArray = data.savingsPlansList || data.nameSavingsPlan || data.data || data || []
-      const plannings = planningsArray.map((item: any) => ({
-        id: item.id || item._id,
-        name: item.nameSavingsPlan || item.name || item.planningName || "",
-        category: item.category || "otros",
-        totalAmount: item.amountMetaPlan || item.totalAmount || item.total || 0,
-        currentAmount: item.currentAmount || item.current || 0,
-        description: item.descriptionPlanSavings || item.description || item.note || "",
-        createdAt: item.createdAt || item.date || new Date().toISOString(),
-        updatedAt: item.updatedAt,
-      }))
+      const planningsArray = this.getPlanningsArray(data)
+      const plannings = planningsArray.map((item: any) => this.mapPlanningFromApi(item))
 
       // Almacenar los planes en localStorage para uso futuro
       if (typeof window !== "undefined") {
@@ -84,6 +120,7 @@ export class PlanningService {
     }
   }
 
+
   /**
    * Crea una nueva planeación
    * @param planning - Datos de la planeación
@@ -91,17 +128,13 @@ export class PlanningService {
    */
   static async createPlanning(planning: Omit<Planning, "id" | "createdAt" | "currentAmount">): Promise<PlanningResponse> {
     try {
-      // Obtener el token del sessionStorage
-      let authToken: string | undefined
-      if (typeof window !== "undefined") {
-        authToken = sessionStorage.getItem("authToken") || undefined
-      }
+      const authToken = this.getAuthToken()
 
       const response = await fetch(`http://localhost:8080/registry/saving-plan`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`,
+          ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {}),
         },
         body: JSON.stringify({
           nameSavingsPlan: planning.name,
@@ -152,23 +185,57 @@ export class PlanningService {
   }
 
   /**
+   * Obtiene la suma total de todos los planes de Ahorro desde el backend
+   */
+  static async getSumTotalPlanningSavings(): Promise<SumTotalSavingsResponse> {
+    try {
+      const authToken = this.getAuthToken()
+
+      const response = await fetch(`http://localhost:8080/sumTotal/savings`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {}),
+        }
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+
+      // Backend devuelve la suma
+      const total = this.parseAmount(data?.totalSavings ?? 0)
+
+      return {
+        success: true,
+        message: "Suma total obtenida exitosamente",
+        data: total,
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: error instanceof Error ? error.message : "Error al obtener la suma total de los ahorros",
+      }
+    }
+  }
+
+  /**
    * Obtiene los movimientos de una planeación específica
    * @param planningId - ID de la planeación
    * @returns Lista de movimientos de la planeación
    */
   static async getPlanningMovements(planningId: string): Promise<PlanningMovementsResponse> {
     try {
-      // Obtener el token del sessionStorage
-      let authToken: string | undefined
-      if (typeof window !== "undefined") {
-        authToken = sessionStorage.getItem("authToken") || undefined
-      }
+      const authToken = this.getAuthToken()
 
       const response = await fetch(`http://localhost:8080/plannings/${planningId}/movements`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`,
+          ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {}),
         }
       })
 
@@ -288,11 +355,7 @@ export class PlanningService {
    */
   static async registerSavingMovement(namePlan: string, amount: number): Promise<PlanningResponse> {
     try {
-      // Obtener el token del sessionStorage
-      let authToken: string | undefined
-      if (typeof window !== "undefined") {
-        authToken = sessionStorage.getItem("authToken") || undefined
-      }
+      const authToken = this.getAuthToken()
 
       // Obtener el idPlan desde localStorage
       const idPlan = this.getPlanIdByName(namePlan)
@@ -304,7 +367,7 @@ export class PlanningService {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`,
+          ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {}),
         },
         body: JSON.stringify({
           idPlan: idPlan,
@@ -346,17 +409,13 @@ export class PlanningService {
    */
   static async fetchAndStorePlans(): Promise<boolean> {
     try {
-      // Obtener el token del sessionStorage
-      let authToken: string | undefined
-      if (typeof window !== "undefined") {
-        authToken = sessionStorage.getItem("authToken") || undefined
-      }
+      const authToken = this.getAuthToken()
 
       const response = await fetch(`http://localhost:8080/list/registry/saving-plan`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${authToken}`,
+          ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {}),
         }
       })
 
@@ -367,7 +426,7 @@ export class PlanningService {
 
       const data = await response.json()
 
-      const planningsArray = data.savingsPlansList || data.nameSavingsPlan || data.data || data || []
+      const planningsArray = this.getPlanningsArray(data)
 
       if (typeof window !== "undefined") {
         const plansForStorage = planningsArray.map((item: any) => ({
@@ -383,4 +442,3 @@ export class PlanningService {
     }
   }
 }
-

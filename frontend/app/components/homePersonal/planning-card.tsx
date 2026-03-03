@@ -43,6 +43,7 @@ const categoryColors: Record<string, string> = {
 export function PlanningCard() {
   const router = useRouter()
   const [plannings, setPlannings] = useState<Planning[]>([])
+  const [totalSaved, setTotalSaved] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -55,17 +56,32 @@ export function PlanningCard() {
     setError(null)
 
     try {
-      const response = await PlanningService.getPlannings()
+      // Llamadas en paralelo: planes + suma total del backend
+      const [planningsRes, sumTotalRes] = await Promise.all([
+        PlanningService.getPlannings(),
+        PlanningService.getSumTotalPlanningSavings(),
+      ])
 
-      if (response.success && response.data) {
-        // Tomar solo los últimos 3 registros
-        const latestPlannings = response.data.slice(0, 3)
-        setPlannings(latestPlannings)
+      if (planningsRes.success && planningsRes.data) {
+        setPlannings(planningsRes.data.slice(0, 3))
       } else {
-        setError(response.message || "Error al cargar")
+        setPlannings([])
+      }
+
+      if (sumTotalRes.success && sumTotalRes.data !== undefined) {
+        setTotalSaved(sumTotalRes.data)
+      } else {
+        setTotalSaved(0)
+      }
+
+      // Si ambas fallaron, mostrar error
+      if (!planningsRes.success && !sumTotalRes.success) {
+        setError(planningsRes.message || sumTotalRes.message || "Error al cargar")
       }
     } catch (err) {
       setError("Error de conexión")
+      setPlannings([])
+      setTotalSaved(0)
     } finally {
       setIsLoading(false)
     }
@@ -79,9 +95,6 @@ export function PlanningCard() {
   const getCategoryColor = (category: string) => {
     return categoryColors[category] || categoryColors.otros
   }
-
-  // Calcular total ahorrado
-  const totalSaved = plannings.reduce((sum, p) => sum + p.currentAmount, 0)
 
   const handleViewAll = () => {
     router.push("/homePersonal/planning")
