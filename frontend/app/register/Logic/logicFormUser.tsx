@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { userRegistrySchema, userRegistryType } from "@/shemas/UserRegistry";
+import { userRegistrySchema, userRegistryType } from "@/schemas/UserRegistry";
 import Swal from 'sweetalert2';
 import { Confetti } from '@neoconfetti/react';
 import {useState} from 'react';

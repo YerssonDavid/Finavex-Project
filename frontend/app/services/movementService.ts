@@ -1,4 +1,4 @@
-import type { Movement, MovementsResponse } from "@/types/transaction"
+import type { MovementsResponse } from "@/types/transaction"
 
 /**
  * Servicio para manejar los movimientos del usuario
@@ -19,8 +19,8 @@ export class MovementService {
           try {
             const userData = JSON.parse(userDataStr)
             userEmail = userData.email || ""
-          } catch (parseError) {
-            console.warn("⚠️ No se pudo parsear userData del localStorage:", parseError)
+          } catch {
+            // userData no se pudo parsear
           }
         }
       }
@@ -35,13 +35,6 @@ export class MovementService {
         authToken = sessionStorage.getItem("authToken") || undefined
       }
 
-      const headers: HeadersInit = {
-        "Content-Type": "application/json",
-      }
-
-      console.log("📋 Obteniendo movimientos del usuario:", userEmail)
-
-      //SE DEBE DE ENVIAR EL CORREO Y TOKEN
       const response = await fetch(`http://localhost:8080/movements`, {
         method: "GET",
         headers: {
@@ -56,7 +49,6 @@ export class MovementService {
       }
 
       const data = await response.json()
-      console.log("✅ Movimientos obtenidos:", data)
 
       // Adaptar los datos al formato esperado por el frontend
       const movements = (data.movements || data.data || data || []).map((item: any) => ({
@@ -72,7 +64,6 @@ export class MovementService {
         data: movements,
       }
     } catch (error) {
-      console.error("❌ Error al obtener movimientos:", error)
       return {
         success: false,
         message: error instanceof Error ? error.message : "Error al obtener los movimientos",

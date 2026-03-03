@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { forgotPasswordSchema, forgotPasswordType } from "@/shemas/ForgotPassword";
+import { forgotPasswordSchema, forgotPasswordType } from "@/schemas/ForgotPassword";
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { verifyCodeSchema, verifyCodeType } from "@/shemas/VerifyCode";
+import { verifyCodeSchema, verifyCodeType } from "@/schemas/VerifyCode";
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';

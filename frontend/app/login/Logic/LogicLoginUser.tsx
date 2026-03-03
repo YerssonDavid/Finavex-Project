@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {userLoginSchema, userLoginType} from "@/shemas/UserLogin";
+import {userLoginSchema, userLoginType} from "@/schemas/UserLogin";
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { useUser } from "../../../context/ContextUserData";
 import { useState, useEffect } from 'react';
+import { PlanningService } from "@/services/planningService";
 
 // Constantes para el bloqueo
 const MAX_ATTEMPTS = 3;
@@ -136,6 +137,46 @@ export const useFormLoginUser = () => {
                 return;
             }
 
+            // ✅ MODO DESARROLLO: Credenciales de prueba
+            if (data.email === "prueba@gmail.com" && data.password === "Test222@") {
+                const userObj = {
+                    nombre: "Desarrollador",
+                    apellido: "Test",
+                    email: "prueba@gmail.com"
+                };
+
+                setUserData(userObj);
+
+                // Persistir datos de desarrollo en localStorage
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('userData', JSON.stringify(userObj));
+                    localStorage.setItem('userId', 'dev-user-123');
+                    sessionStorage.setItem('authToken', 'dev-token-mode');
+                }
+
+                clearAttempts();
+                reset();
+
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('isLoadingHomePersonal', 'true');
+                }
+
+                document.cookie = 'isAuthenticated=true; path=/; max-age=86400';
+
+                // Obtener y almacenar planes de ahorro en localStorage
+                await PlanningService.fetchAndStorePlans();
+
+                await Swal.fire({
+                    title: "Modo Desarrollo",
+                    text: "Acceso directo al modo desarrollo sin servidor",
+                    icon: "success",
+                    timer: 1500
+                });
+
+                router.push('/homePersonal');
+                return;
+            }
+
             const response = await fetch("http://localhost:8080/Users/login", {
                 method: "POST",
                 headers: {
@@ -224,6 +265,9 @@ export const useFormLoginUser = () => {
 
             console.log("Inicio de sesión exitoso!");
             reset();
+
+            // Obtener y almacenar planes de ahorro en localStorage
+            await PlanningService.fetchAndStorePlans();
 
             // Activar flag de loading para que persista durante la navegación
             if (typeof window !== 'undefined') {

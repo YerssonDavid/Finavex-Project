@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { changePasswordSchema, changePasswordType } from "@/shemas/ChangePassword";
+import { changePasswordSchema, changePasswordType } from "@/schemas/ChangePassword";
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';

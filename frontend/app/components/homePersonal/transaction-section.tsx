@@ -8,6 +8,16 @@ import type { Transaction } from "@/types/transaction"
 import { TransactionService } from "@/services/transactionService"
 import { balanceEvents } from "@/lib/balanceEvents"
 
+// Parsea un valor monetario formateado a número
+const parseCurrencyValue = (value: string): number => {
+  const cleanValue = value
+    .replace(/\$/g, '')
+    .replace(/\s/g, '')
+    .replace(/\./g, '')
+    .replace(',', '.')
+  return parseFloat(cleanValue) || 0
+}
+
 export function TransactionSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [transactionType, setTransactionType] = useState<"income" | "expense">("income")
@@ -17,7 +27,6 @@ export function TransactionSection() {
   useEffect(() => {
     fetchCurrentBalance()
 
-    // Escuchar cambios de balance
     const unsubscribe = balanceEvents.subscribe(() => {
       fetchCurrentBalance()
     })
@@ -29,19 +38,7 @@ export function TransactionSection() {
 
   const fetchCurrentBalance = async () => {
     try {
-      let userEmail = ""
-      if (typeof window !== "undefined") {
-        const userDataStr = localStorage.getItem("userData")
-        if (userDataStr) {
-          const userData = JSON.parse(userDataStr)
-          userEmail = userData.email || ""
-        }
-      }
-
-      //Obtenemos el token en Session Storage
-      const authToken = typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null;
-
-      if (!userEmail) return
+      const authToken = typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null
 
       // Obtener ingresos del mes
       const incomeResponse = await fetch("http://localhost:8080/sum-total-save-month", {
@@ -65,31 +62,15 @@ export function TransactionSection() {
         const incomeData = await incomeResponse.json()
         const expenseData = await expenseResponse.json()
 
-        // Parsear ingresos
-        let income = 0
-        if (incomeData.totalSavedMonth) {
-          const cleanValue = incomeData.totalSavedMonth
-            .replace(/\$/g, '')
-            .replace(/\s/g, '')
-            .replace(/\./g, '')
-            .replace(',', '.')
-          income = parseFloat(cleanValue) || 0
-        }
+        const income = incomeData.totalSavedMonth
+          ? parseCurrencyValue(incomeData.totalSavedMonth)
+          : 0
 
-        // Parsear gastos
-        let expense = 0
-        if (expenseData.totalExpensesMonth) {
-          const cleanValue = expenseData.totalExpensesMonth
-            .replace(/\$/g, '')
-            .replace(/\s/g, '')
-            .replace(/\./g, '')
-            .replace(',', '.')
-          expense = parseFloat(cleanValue) || 0
-        }
+        const expense = expenseData.totalExpensesMonth
+          ? parseCurrencyValue(expenseData.totalExpensesMonth)
+          : 0
 
-        // Calcular balance: ingresos - gastos
-        const balance = income - expense
-        setCurrentBalance(balance)
+        setCurrentBalance(income - expense)
       }
     } catch (err) {
       console.error("Error al obtener el balance:", err)
@@ -110,25 +91,12 @@ export function TransactionSection() {
       date: new Date().toISOString(),
     }
 
-    console.log("📤 Enviando transacción al servidor:", transactionData)
+    const response = await TransactionService.createTransaction(transactionData)
 
-    // 🚀 MODO PRODUCCIÓN (API Real)
-    console.log("🚀 Enviando a API real...")
-
-    // Obtener el token del usuario del localStorage o del contexto
-    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') || undefined : undefined
-
-    const response = await TransactionService.createTransaction(transactionData, token)
-
-    // Verificar si la respuesta fue exitosa
     if (response.success) {
-      console.log("✅ Transacción registrada exitosamente:", response.data)
-      // Emitir evento para actualizar el saldo
       balanceEvents.emit()
-
       return
     } else {
-      console.error("❌ Error en la respuesta:", response.message)
       throw new Error(response.message || "Error al registrar")
     }
   }
