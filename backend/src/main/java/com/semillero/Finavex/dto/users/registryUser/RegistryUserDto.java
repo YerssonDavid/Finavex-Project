@@ -24,18 +24,4 @@ public record RegistryUserDto(
                 password
         );
     }
-
-    public RegistryUserDto witchName(String newName) {
-        return new RegistryUserDto(
-                newName,
-                middleName,
-                surname,
-                secondSurname,
-                documentNumber,
-                dateOfBirth,
-                phone,
-                email,
-                password
-        );
-    }
 }

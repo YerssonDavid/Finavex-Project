@@ -1,4 +1,4 @@
-package com.semillero.Finavex.services.Users;
+package com.semillero.Finavex.services.auth;
 
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.users.registryUser.RegistryUserDto;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -49,6 +48,16 @@ public class RegistryServ {
             throw new DuplicateUserException("Ya existe un usuario registrado con el número telefonico ingresado");
         }
 
+        //Get date birth and set age
+        LocalDate dateBirthLocalDate = LocalDate.parse(registryUserDto.dateOfBirth());
+        LocalDate dateNow = LocalDate.now();
+        Period ageExact = Period.between(dateBirthLocalDate, dateNow);
+        int age = ageExact.getYears();
+
+        if(age < 18){
+            throw new IllegalArgumentException("El usuario debe ser mayor de edad");
+        }
+
         //Transform email to lowercase and trim spaces
         String email = registryUserDto.email().toLowerCase().trim();
         registryUserDto.withEmail(email);
@@ -64,13 +73,6 @@ public class RegistryServ {
         userNew.setPhone(registryUserDto.phone());
         userNew.setEmail(email);
         userNew.setPassword(registryUserDto.password());
-
-        //Get date birth and set age
-        LocalDate dateBirthLocalDate = LocalDate.parse(registryUserDto.dateOfBirth());
-        LocalDate dateNow = LocalDate.now();
-        Period ageExact = Period.between(dateBirthLocalDate, dateNow);
-        Integer age = ageExact.getYears();
-        userNew.setAge(age);
 
         // Hashear la contraseña
         String hashedPassword = passwordEncoder.encode(userNew.getPassword());
