@@ -46,11 +46,6 @@ public class User implements UserDetails {
     @NotBlank(groups={Create.class, Update.class}, message = "El número de documento es obligatorio")
     private String documentNumber;
 
-    @Column(name="age", nullable= false)
-    @NotNull(groups = {Create.class, Update.class}, message = "La edad es obligatoria")
-    @Min(value = 18, groups = {Create.class, Update.class}, message = "La edad debe ser mayor a 18")
-    private Integer age;
-
     @Column(name="date_of_birth", nullable = false, length = 10)
     @NotBlank(groups = {Create.class, Update.class}, message = "La fecha de nacimiento es obligatoria")
     private String dateOfBirth;
