@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(exclude="password")
-@Table(name= "users")
+@Table(name= "users", schema = "users")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
     @Id

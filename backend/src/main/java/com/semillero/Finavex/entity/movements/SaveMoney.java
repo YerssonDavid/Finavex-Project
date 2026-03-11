@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="Savings")
+@Table(name="Savings", schema="movement_money_normal")
 @Getter
 @Setter
 public class SaveMoney {
