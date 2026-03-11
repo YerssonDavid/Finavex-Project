@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="savings_movements")
+@Table(name="savings_movements", schema="savings")
 @Data
 public class SavingsMovements {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
