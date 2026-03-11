@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name="current_balances")
+@Table(name="current_balances", schema="movement_money_normal")
 public class MoneyNow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
