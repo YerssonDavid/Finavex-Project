@@ -1,7 +1,7 @@
 package com.semillero.Finavex.services.movementsS.limitExpense;
 
 import com.semillero.Finavex.dto.ApiResponse;
-import com.semillero.Finavex.dto.movementsMoney.limitExpense.requestRegistryLimitExpense;
+import com.semillero.Finavex.dto.movementsMoney.limitExpense.RequestRegistryLimitExpense;
 import com.semillero.Finavex.entity.User;
 import com.semillero.Finavex.entity.movements.LimitExpense;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
@@ -16,34 +16,27 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LimitExpenseRegistry {
     private final UserR userR;
     private final LimitExpenseR limitExpenseR;
 
-    public ApiResponse registerLimitExpense(requestRegistryLimitExpense request){
+    public ApiResponse registerLimitExpense(RequestRegistryLimitExpense request, String email){
         try{
-            String email = SecurityContextHolder.getContext().getAuthentication().getName().toLowerCase().trim();
             BigDecimal value = request.valueLimit();
-            log.warn("Email -> {}", email);
-            log.warn("Value -> {}", value);
 
-            if(email.isEmpty() && !userR.existsByEmail(email)){
+            if(email.isEmpty() || !userR.existsByEmail(email)){
                 throw new UserNotFoundException("El usuario no se encuentra!");
             }
 
-            Optional<User> user = userR.findByEmail(email);
-
-            if(user.isEmpty()){
-                throw new UserNotFoundException("El usuario no se encuentra registrado!");
-            }
+            User user = userR.findByEmail(email)
+                    .orElseThrow(() -> new UserNotFoundException("El usuario no se encuentra!"));
 
             LocalDateTime now = LocalDateTime.now();
 
             LimitExpense limitExpense = new LimitExpense();
-            limitExpense.setIdUser(user.get());
+            limitExpense.setIdUser(user);
             limitExpense.setValueLimit(request.valueLimit());
             limitExpense.setExpirationDate(request.expirationDateRegistry());
             limitExpense.setDateRegistryLimit(now);
