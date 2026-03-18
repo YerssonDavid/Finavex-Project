@@ -26,21 +26,6 @@ import java.util.Optional;
 public class RegistrySavingsUserController {
     private final RegistrySavingsUser registrySavingsUser;
 
-
-    @ExceptionHandler(PlanNotExist.class)
-    public ResponseEntity<ErrorGeneral> planNotExist (PlanNotExist ex, HttpServletRequest request){
-        //Intercept petition and escape the path to prevent XSS attacks
-        String safePath = HtmlUtils.htmlEscape(request.getRequestURI());
-
-        ErrorGeneral error = new ErrorGeneral(
-                HttpStatus.BAD_REQUEST_400,
-                "Error -> " + ex.getMessage(),
-                LocalDateTime.now(),
-                safePath
-                );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST_400).body(error);
-    }
-
     @PostMapping
     public ResponseEntity<ResponseRegistrySavingsUser> registrySavings (@Validated @RequestBody RequestRegistrySavingsUser request){
         Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
