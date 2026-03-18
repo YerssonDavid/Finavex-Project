@@ -2,6 +2,7 @@ package com.semillero.Finavex.services.emails.codeRecoverPassword;
 
 import com.semillero.Finavex.dto.codePassword.ResponseCodePassword;
 import com.semillero.Finavex.exceptions.EmailSendException;
+import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class EmailSendCode {
 
             if (!userR.existsByEmail(normalizedEmail)) {
                 log.warn("Usuario no encontrado para email: {}", normalizedEmail);
-                throw new EmailSendException("El email no está registrado en el sistema.");
+                throw new UserNotFoundException("El email no está registrado en el sistema.");
             }
 
             log.info("Usuario encontrado!");

@@ -1,11 +1,9 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
 import com.semillero.Finavex.dto.DataService;
-import com.semillero.Finavex.dto.exception.ErrorGeneral;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySavingsPlan;
 import com.semillero.Finavex.dto.movementsMoney.ResponseListRegistrySavingsPlan;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsPlan;
-import com.semillero.Finavex.exceptions.ExistElement;
 import com.semillero.Finavex.services.movementsS.SavingsPlanRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,16 +42,5 @@ public class RegistrySavingPlanController {
 
         List<ResponseListRegistrySavingsPlan> response = savingsPlanRegistry.listRegistrySavingsPlan(DataService.builder().email(email).build());
         return ResponseEntity.status(200).body(response);
-    }
-
-    @ExceptionHandler(ExistElement.class)
-    public ResponseEntity<ErrorGeneral> existElement (ExistElement ex){
-        ErrorGeneral error = new ErrorGeneral (
-                HttpStatus.BAD_REQUEST.value(),
-                "Error -> " + ex.getMessage(),
-                java.time.LocalDateTime.now(),
-                "/registry/saving-plan"
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }
