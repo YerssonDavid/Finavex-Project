@@ -73,3 +73,24 @@ export interface SumTotalSavingsResponse {
   data?: number
 }
 
+export interface ExpenseLimit {
+  id?: string
+  amount: number
+  dueDate: string
+  email?: string
+  createdAt?: string
+  updatedAt?: string
+  isActive?: boolean
+}
+
+export interface ExpenseLimitResponse {
+  success: boolean
+  message: string
+  data?: ExpenseLimit
+}
+
+export interface ExpenseLimitsResponse {
+  success: boolean
+  message: string
+  data?: ExpenseLimit[]
+}
