@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.Optional;
 
@@ -20,6 +21,18 @@ public class SumTotalSavingsUserController {
     private final SumAllTotalSavingsUser sumAllTotalSavingsUser;
 
     @GetMapping()
+    @Operation(
+            summary = "Sum total savings",
+            description = "Get the total sum of all savings for the authenticated user.",
+            method = "GET",
+            tags = {"Savings Plans"},
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Total savings calculated successfully"
+                    )
+            }
+    )
     public ResponseEntity<ResponseSumAllTotalSavingsUser> sumAllTotalSavingsUser (){
         Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getName)
