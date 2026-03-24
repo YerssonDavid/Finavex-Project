@@ -5,7 +5,6 @@ import com.semillero.Finavex.services.emails.codeRecoverPassword.EmailSendCode;
 import com.semillero.Finavex.services.recoveryPassword.ConfirmationCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
