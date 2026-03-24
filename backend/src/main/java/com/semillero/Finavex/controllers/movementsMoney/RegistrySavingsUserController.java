@@ -1,22 +1,16 @@
 package com.semillero.Finavex.controllers.movementsMoney;
 
 import com.semillero.Finavex.dto.DataService;
-import com.semillero.Finavex.dto.exception.ErrorGeneral;
 import com.semillero.Finavex.dto.movementsMoney.RequestRegistrySavingsUser;
 import com.semillero.Finavex.dto.movementsMoney.ResponseRegistrySavingsUser;
-import com.semillero.Finavex.exceptions.PlanNotExist;
 import com.semillero.Finavex.services.movementsS.RegistrySavingsUser;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.HtmlUtils;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
