@@ -3,7 +3,6 @@ package com.semillero.Finavex.controllers.aiControllers;
 import com.semillero.Finavex.dto.aiDto.ResponseAI;
 import com.semillero.Finavex.services.assistendAI.JobStore;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
