@@ -25,6 +25,8 @@ public class LimitExpenseRegistry {
 
             if(email.isEmpty() || !userR.existsByEmail(email)){
                 throw new UserNotFoundException("El usuario no se encuentra!");
+            } else if (value.compareTo(BigDecimal.ZERO) <= 0){
+                throw new IllegalArgumentException("El valor debe ser mayor a 0");
             }
 
             User user = userR.findByEmail(email)
