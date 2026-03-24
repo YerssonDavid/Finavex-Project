@@ -2,8 +2,6 @@ package com.semillero.Finavex.controllers.aiControllers;
 
 import com.semillero.Finavex.dto.aiDto.JobResponseID;
 import com.semillero.Finavex.dto.aiDto.RequestAI;
-import com.semillero.Finavex.dto.aiDto.ResponseAI;
-import com.semillero.Finavex.services.assistendAI.AIClientOpenAI;
 import com.semillero.Finavex.services.assistendAI.AiOpenAI;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/AI/chat")
