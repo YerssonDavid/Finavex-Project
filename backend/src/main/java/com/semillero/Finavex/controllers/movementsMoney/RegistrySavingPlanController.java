@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 @RequestMapping()
@@ -23,6 +26,26 @@ public class RegistrySavingPlanController {
     private final SavingsPlanRegistry savingsPlanRegistry;
 
     @PostMapping("/registry/saving-plan")
+    @Operation(
+            summary = "Registry saving plan",
+            description = "Registers a new saving plan for the authenticated user.",
+            method = "POST",
+            tags = {"Savings Plans"},
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Saving plan details",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = RequestRegistrySavingsPlan.class)
+                    ),
+                    required = true
+            ),
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Saving plan successfully registered"
+                    )
+            }
+    )
     public ResponseEntity<ResponseRegistrySavingsPlan> registrySavingPlan (@RequestBody RequestRegistrySavingsPlan requestRegistrySavingsPlan){
         Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getName)
@@ -34,6 +57,18 @@ public class RegistrySavingPlanController {
     }
 
     @GetMapping("/list/registry/saving-plan")
+    @Operation(
+            summary = "List saving plans",
+            description = "Get the list of saving plans for the authenticated user.",
+            method = "GET",
+            tags = {"Savings Plans"},
+            responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                            responseCode = "200",
+                            description = "Saving plans retrieved successfully"
+                    )
+            }
+    )
     public ResponseEntity<List<ResponseListRegistrySavingsPlan>> listRegistrySavingPlan (){
         Optional<String> email = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                 .map(Authentication::getName)
