@@ -3,15 +3,12 @@ package com.semillero.Finavex.services.movementsS;
 import com.semillero.Finavex.dto.DataService;
 import com.semillero.Finavex.dto.movementsMoney.ResponseGetPlansSavings;
 import com.semillero.Finavex.dto.movementsMoney.SavingPlanDto;
-import com.semillero.Finavex.entity.movements.SavingsPlan;
 import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.SavingsPlanR;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
