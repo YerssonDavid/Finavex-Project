@@ -2,7 +2,6 @@ package com.semillero.Finavex.services.assistendAI;
 
 import com.semillero.Finavex.config.timeOut.AiTimeout;
 import com.semillero.Finavex.dto.aiDto.RequestAI;
-import com.semillero.Finavex.dto.aiDto.ResponseAI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
