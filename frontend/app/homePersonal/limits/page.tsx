@@ -30,15 +30,24 @@ export default function ExpenseLimitsPage() {
     setIsLoading(true)
     setError(null)
 
-    const [limitResponse, movementsResponse] = await Promise.all([
-      ExpenseLimitService.getCurrentLimit(),
+    const [limitsResponse, movementsResponse] = await Promise.all([
+      ExpenseLimitService.getRegisteredLimits(),
       MovementService.getMovements(),
     ])
 
-    if (limitResponse.success) {
-      setCurrentLimit(limitResponse.data || null)
+    if (limitsResponse.success) {
+      const limits = limitsResponse.data || []
+      const selectedLimit =
+        limits.find((limit) => limit.isActive) ||
+        [...limits].sort(
+          (a, b) => new Date(b.createdAt || b.dueDate).getTime() - new Date(a.createdAt || a.dueDate).getTime()
+        )[0] ||
+        null
+
+      setCurrentLimit(selectedLimit)
     } else {
-      setError(limitResponse.message)
+      setCurrentLimit(null)
+      setError(limitsResponse.message)
     }
 
     if (movementsResponse.success) {
