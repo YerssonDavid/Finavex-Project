@@ -50,7 +50,7 @@ public class LimitExpenseRegistry {
                     limitExpense.getDateRegistryLimit()
             );
         }catch(Exception e){
-            throw new UserNotFoundException("Error, intenta más tarde");
+            throw new UserNotFoundException("El usuario tiene un registro activo");
         }
     }
 }
