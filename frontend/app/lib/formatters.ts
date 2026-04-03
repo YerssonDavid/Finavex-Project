@@ -39,16 +39,24 @@ export function formatDateLocal(dateString: string): string {
  */
 export function cleanAmountInput(value: string): string | null {
   // Remove everything except numbers and comma (for decimals)
-  let cleaned = value.replace(/[^\d,]/g, "")
+  const cleaned = value.replace(/[^\d,]/g, "")
+  if (!cleaned) return ""
 
-  // Replace comma with dot to process internally
-  cleaned = cleaned.replace(",", ".")
+  const commaMatches = cleaned.match(/,/g)
+  const commaCount = commaMatches ? commaMatches.length : 0
+  if (commaCount > 1) return null
 
-  // Validate format: only one decimal point and maximum 2 decimals
-  const parts = cleaned.split(".")
-  if (parts.length > 2) return null // Don't allow more than one point
-  if (parts[1] && parts[1].length > 2) return null // Max 2 decimals
+  if (commaCount === 1) {
+    const parts = cleaned.split(",")
+    const integerPart = parts[0]
+    const decimalPart = parts[1]
 
+    if (decimalPart === undefined || decimalPart.length === 0) return null
+    if (!/^\d+$/.test(decimalPart)) return null
+    if (decimalPart.length > 2) return null
+
+    return `${integerPart}.${decimalPart}`
+  }
   return cleaned
 }
 
