@@ -32,3 +32,52 @@ export function formatDateLocal(dateString: string): string {
   })
 }
 
+/**
+ * Cleans an amount input string by removing everything except digits and a single comma.
+ * Replaces the comma with a dot for internal decimal representation.
+ * Validates that there's at most one decimal point and maximum 2 decimal places.
+ */
+export function cleanAmountInput(value: string): string | null {
+  // Remove everything except numbers and comma (for decimals)
+  const cleaned = value.replace(/[^\d,]/g, "")
+  if (!cleaned) return ""
+
+  const commaMatches = cleaned.match(/,/g)
+  const commaCount = commaMatches ? commaMatches.length : 0
+  if (commaCount > 1) return null
+
+  if (commaCount === 1) {
+    const parts = cleaned.split(",")
+    const integerPart = parts[0]
+    const decimalPart = parts[1]
+
+    if (decimalPart === undefined || decimalPart.length === 0) return null
+    if (!/^\d+$/.test(decimalPart)) return null
+    if (decimalPart.length > 2) return null
+
+    return `${integerPart}.${decimalPart}`
+  }
+  return cleaned
+}
+
+/**
+ * Formats a decimal string (using dot as separator) with thousand separators (dots)
+ * and decimal separator (comma).
+ */
+export function formatAmountWithThousands(value: string): string {
+  if (!value) return ""
+
+  // Separate integer and decimal parts
+  const parts = value.split(".")
+  const integerPart = parts[0]
+  const decimalPart = parts[1]
+
+  // Add dots as thousands separators
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+
+  // Reconstruct the number with comma for decimals
+  if (decimalPart !== undefined) {
+    return `${formattedInteger},${decimalPart}`
+  }
+  return formattedInteger
+}
