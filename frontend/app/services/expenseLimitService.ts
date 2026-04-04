@@ -1,8 +1,8 @@
-import type { ExpenseLimit, ExpenseLimitResponse, ExpenseLimitsResponse, Movement } from "@/types/transaction"
+import type { ExpenseLimit, ExpenseLimitResponse, Movement } from "@/types/transaction"
 import { formatCurrencyCOP, formatDateLocal } from "@/lib/formatters"
 
 const REGISTER_EXPENSE_LIMIT_ENDPOINT = "http://localhost:8080/registry/limitExpense"
-const GET_EXPENSE_LIMIT_ENDPOINT = "http://localhost:8080/get/data/limit-expense"
+const GET_EXPENSE_LIMIT_ENDPOINT = "http://localhost:8080/expenses/limits/monthly"
 
 export interface RegisterExpenseLimitPayload {
   amount: number
@@ -22,47 +22,18 @@ export class ExpenseLimitService {
 	return sessionStorage.getItem("authToken") || undefined
   }
 
-  private static normalizeToken(token: string): string {
-	return token.replace(/^Bearer\s+/i, "").trim()
-  }
+  private static getUserEmail(): string {
+	if (typeof window === "undefined") return ""
 
-  private static getTokenHeader(token?: string, mode: "raw" | "bearer" = "raw"): Record<string, string> {
-	const authToken = this.getAuthToken(token)
-	if (!authToken) return {}
+	const userData = localStorage.getItem("userData")
+	if (!userData) return ""
 
-	const normalized = this.normalizeToken(authToken)
-	return {
-	  Authorization: mode === "bearer" ? `Bearer ${normalized}` : normalized,
+	try {
+	  const parsed = JSON.parse(userData)
+	  return parsed?.email || ""
+	} catch {
+	  return ""
 	}
-  }
-
-  private static async fetchWithAuthFallback(
-	url: string,
-	init: RequestInit,
-	token: string,
-	primaryMode: "raw" | "bearer"
-  ): Promise<Response> {
-	const secondaryMode = primaryMode === "raw" ? "bearer" : "raw"
-
-	const firstResponse = await fetch(url, {
-	  ...init,
-	  headers: {
-		...(init.headers || {}),
-		...this.getTokenHeader(token, primaryMode),
-	  },
-	})
-
-	if (firstResponse.status !== 401) {
-	  return firstResponse
-	}
-
-	return fetch(url, {
-	  ...init,
-	  headers: {
-		...(init.headers || {}),
-		...this.getTokenHeader(token, secondaryMode),
-	  },
-	})
   }
 
   private static parseAmount(value: unknown): number {
@@ -76,31 +47,29 @@ export class ExpenseLimitService {
   private static mapFromApi(data: any): ExpenseLimit {
 	return {
 	  id: data?.id || data?._id,
-	  amount: this.parseAmount(data?.amount ?? data?.value ?? data?.valueLimit ?? data?.limitAmount ?? data?.monthlyLimit),
-	  dueDate: data?.dueDate || data?.expiration || data?.expirationDateRegistry || data?.expirationDate || data?.expiredAt || "",
+	  amount: this.parseAmount(data?.amount ?? data?.valueLimit ?? data?.limitAmount ?? data?.monthlyLimit),
+	  dueDate: data?.dueDate || data?.expirationDateRegistry || data?.expirationDate || data?.expiredAt || "",
 	  email: data?.email,
-	  createdAt: data?.createdAt || data?.dateRegistry,
+	  createdAt: data?.createdAt,
 	  updatedAt: data?.updatedAt,
 	  isActive: data?.isActive ?? data?.active,
 	}
   }
 
-  static async getRegisteredLimits(token?: string): Promise<ExpenseLimitsResponse> {
+  static async getCurrentLimit(token?: string): Promise<ExpenseLimitResponse> {
 	try {
 	  const authToken = this.getAuthToken(token)
-	  if (!authToken) {
-		return {
-		  success: false,
-		  message: "No se encontro el token de autenticacion. Inicia sesion nuevamente.",
-		}
-	  }
+	  const email = this.getUserEmail()
 
-	  const response = await this.fetchWithAuthFallback(GET_EXPENSE_LIMIT_ENDPOINT, {
+	  const query = email ? `?email=${encodeURIComponent(email)}` : ""
+
+	  const response = await fetch(`${GET_EXPENSE_LIMIT_ENDPOINT}${query}`, {
 		method: "GET",
 		headers: {
 		  "Content-Type": "application/json",
+		  ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
 		},
-	  }, authToken, "raw")
+	  })
 
 	  const data = await response.json().catch(() => ({}))
 
@@ -111,55 +80,18 @@ export class ExpenseLimitService {
 		}
 	  }
 
-	  const payload = data?.data ?? data
-	  const limitsArray: unknown[] = Array.isArray(payload)
-		? payload
-		: Array.isArray(payload?.limits)
-		  ? payload.limits
-		  : payload
-			? [payload]
-			: []
-
-	  return {
-		success: true,
-		message: data.message || "Limites mensuales obtenidos correctamente",
-		data: limitsArray.map((limit: unknown) => this.mapFromApi(limit)),
-	  }
-	} catch (error) {
-	  return {
-		success: false,
-		message: error instanceof Error ? error.message : "Error al obtener los limites mensuales",
-	  }
-	}
-  }
-
-  static async getCurrentLimit(token?: string): Promise<ExpenseLimitResponse> {
-	try {
-	  const limitsResponse = await this.getRegisteredLimits(token)
-
-	  if (!limitsResponse.success) {
-		return {
-		  success: false,
-		  message: limitsResponse.message,
-		}
-	  }
-
-	  const limits = limitsResponse.data || []
-	  if (limits.length === 0) {
+	  const payload = data?.data || data
+	  if (!payload) {
 		return {
 		  success: false,
 		  message: "No se encontro un limite mensual activo",
 		}
 	  }
 
-	  const activeLimit =
-		limits.find((limit) => limit.isActive) ||
-		[...limits].sort((a, b) => new Date(b.createdAt || b.dueDate).getTime() - new Date(a.createdAt || a.dueDate).getTime())[0]
-
 	  return {
 		success: true,
-		message: limitsResponse.message || "Limite mensual obtenido correctamente",
-		data: activeLimit,
+		message: data.message || "Limite mensual obtenido correctamente",
+		data: this.mapFromApi(payload),
 	  }
 	} catch (error) {
 	  return {
@@ -190,13 +122,14 @@ export class ExpenseLimitService {
 		expirationDateRegistry: dueDate.toISOString().split("T")[0],
 	  }
 
-	  const response = await this.fetchWithAuthFallback(REGISTER_EXPENSE_LIMIT_ENDPOINT, {
+	  const response = await fetch(REGISTER_EXPENSE_LIMIT_ENDPOINT, {
 		method: "POST",
 		headers: {
 		  "Content-Type": "application/json",
+		  Authorization: `Bearer ${authToken}`,
 		},
 		body: JSON.stringify(body),
-	  }, authToken, "bearer")
+	  })
 
 	  const data = await response.json().catch(() => ({}))
 
@@ -248,8 +181,5 @@ export class ExpenseLimitService {
   static formatDueDate(date: string): string {
 	return formatDateLocal(date)
   }
-
-
-
 }
 
