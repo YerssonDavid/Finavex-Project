@@ -1,0 +1,23 @@
+# Dockerfile for Development with Hot Reload
+FROM oven/bun:latest
+
+WORKDIR /app
+
+# Copy package files
+COPY bun.lock .
+COPY package.json .
+COPY frontend/package.json ./frontend/
+
+# Install dependencies
+RUN bun install
+
+# Expose port 3000
+EXPOSE 3000
+
+# Set environment to development
+ENV NODE_ENV=development
+
+# Start development server with turbopack
+WORKDIR /app/frontend
+CMD ["bun", "run", "dev", "--", "--hostname", "0.0.0.0"]
+
