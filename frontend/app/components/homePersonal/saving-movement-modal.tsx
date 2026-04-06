@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import { X, DollarSign, Loader2, CheckCircle2, AlertCircle, Sparkles, PiggyBank } from "lucide-react"
+import { cleanAmountInput, formatAmountWithThousands } from "@/lib/formatters"
 
 interface SavingMovementModalProps {
   isOpen: boolean
@@ -95,43 +96,16 @@ export function SavingMovementModal({ isOpen, onClose, planName, onSubmit }: Sav
     onClose()
   }
 
-  // Formatear número con separadores de miles (puntos)
-  const formatWithThousands = (value: string): string => {
-    if (!value) return ""
-
-    // Separar parte entera y decimal
-    const parts = value.split(".")
-    const integerPart = parts[0]
-    const decimalPart = parts[1]
-
-    // Agregar puntos como separadores de miles
-    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-
-    // Reconstruir el número
-    if (decimalPart !== undefined) {
-      return `${formattedInteger},${decimalPart}`
-    }
-    return formattedInteger
-  }
-
   // Manejar cambio en el input de monto
   const handleAmountChange = (value: string) => {
-    // Remover todo excepto números y coma (para decimales)
-    let cleaned = value.replace(/[^\d,]/g, "")
-
-    // Reemplazar coma por punto para procesar internamente
-    cleaned = cleaned.replace(",", ".")
-
-    // Validar formato: solo un punto decimal y máximo 2 decimales
-    const parts = cleaned.split(".")
-    if (parts.length > 2) return // No permitir más de un punto
-    if (parts[1] && parts[1].length > 2) return // Máximo 2 decimales
+    const cleaned = cleanAmountInput(value)
+    if (cleaned === null) return
 
     // Guardar el valor real (sin formato)
     setAmount(cleaned)
 
     // Mostrar el valor formateado
-    setDisplayAmount(formatWithThousands(cleaned))
+    setDisplayAmount(formatAmountWithThousands(cleaned))
   }
 
   if (!isOpen || !mounted) return null
