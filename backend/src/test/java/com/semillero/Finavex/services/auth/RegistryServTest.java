@@ -1,4 +1,4 @@
-package com.semillero.Finavex.auth;
+package com.semillero.Finavex.services.auth;
 
 import com.semillero.Finavex.dto.ApiResponse;
 import com.semillero.Finavex.dto.users.registryUser.RegistryUserDto;
