@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-class EmailAlertLoginTest {
+class EmailAlertLoginControllerTest {
 
     @Mock
     private JavaMailSender mailSender;
