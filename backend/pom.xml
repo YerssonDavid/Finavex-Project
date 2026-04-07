@@ -23,6 +23,15 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <logback.version>1.5.25</logback.version>
+        <jackson-bom.version>2.21.1</jackson-bom.version>
+        <netty.version>4.1.132.Final</netty.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <tomcat.version>10.1.52</tomcat.version>
+        <assertj.version>3.27.7</assertj.version>
+        <jetty.version>12.0.32</jetty.version>
+        <spring-security.version>6.5.9</spring-security.version>
+        <spring-framework.version>6.2.17</spring-framework.version>
     </properties>
 
     <dependencies>
@@ -75,7 +84,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.6.0</version>  <!-- Última versión estable -->
+            <version>42.6.1</version>  <!-- Versión segura de seguridad -->
         </dependency>
 
         <!-- Spring Boot Starter Test -->
@@ -134,13 +143,6 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>0.11.5</version>
-        </dependency>
-
-        <!-- Mockito for testing -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.21.0</version>
         </dependency>
 
         <!-- Spring Boot Starter WebFlux -->
