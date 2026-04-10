@@ -1,0 +1,64 @@
+# Production Database Configuration - EXTERNAL DATABASE REQUIRED
+# Must provide DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD as environment variables
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    # Production connection pool settings
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true  # Evita errores si ya existen tablas sin historial de Flyway
+    baseline-version: 0        # Versión base inicial
+    locations: classpath:db/migration
+
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Only validate schema, don't modify
+    show-sql: false  # Disable SQL logging in production
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    from: ${MAIL_USERNAME_SEND}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+ai:
+  timeout:
+    execution: 40s
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  send-default-pii: false
+  environment: production
+  enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.semillero.Finavex: INFO

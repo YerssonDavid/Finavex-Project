@@ -1,0 +1,45 @@
+# Database Configuration for Dev Profile - OPTIONAL
+# If not provided, app runs WITHOUT database functionality
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true  # Permite ejecutar migraciones en DB existente
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+        format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL:true}
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    from: ${MAIL_USERNAME_SEND}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+ai:
+  timeout:
+    execution: 40s
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  send-default-pii: true
+  environment: development
+  enabled: true
+  traces-sample-rate: 1.0

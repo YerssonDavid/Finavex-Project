@@ -1,0 +1,24 @@
+services:
+  # PostgreSQL Database para desarrollo
+  postgres-dev:
+    image: postgres:17
+    container_name: postgresDevFx
+    environment:
+      POSTGRES_DB: ${DATABASE_DB}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "${DATABASE_PORT}:5432"
+    networks:
+      - finavex-network
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+
+networks:
+  finavex-network:
+    driver: bridge
+
+volumes:
+  postgres-dev-data:
+    driver: local
+

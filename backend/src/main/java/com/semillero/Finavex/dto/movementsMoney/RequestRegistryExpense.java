@@ -1,0 +1,13 @@
+package com.semillero.Finavex.dto.movementsMoney;
+
+import jakarta.validation.constraints.NotNull;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public record RequestRegistryExpense(
+        @NotNull(message="Debe ingresar un monto")
+        BigDecimal expenseAmount,
+        String note,
+        LocalDate date
+){ }
