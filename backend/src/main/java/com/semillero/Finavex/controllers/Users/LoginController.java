@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/Users")
 @RequiredArgsConstructor
-public class Login {
+public class LoginController {
     private final LoginServ loginServ;
 
     /**
@@ -27,9 +27,9 @@ public class Login {
             summary="User login",
             description="Authenticates user and returns JWT token for subsequent requests",
             method="POST",
-            tags={"User Login"},
+            tags={"User LoginController"},
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Login credentials (email and password)",
+                    description = "LoginController credentials (email and password)",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = DtoLogin.class)
@@ -39,7 +39,7 @@ public class Login {
             responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(
                             responseCode = "200",
-                            description = "Login successful - Returns JWT token",
+                            description = "LoginController successful - Returns JWT token",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = ApiResponse.class)

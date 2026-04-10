@@ -8,13 +8,10 @@ import com.semillero.Finavex.exceptions.UserNotFoundException;
 import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.LimitExpenseR;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +25,8 @@ public class LimitExpenseRegistry {
 
             if(email.isEmpty() || !userR.existsByEmail(email)){
                 throw new UserNotFoundException("El usuario no se encuentra!");
+            } else if (value.compareTo(BigDecimal.ZERO) <= 0){
+                throw new IllegalArgumentException("El valor debe ser mayor a 0");
             }
 
             User user = userR.findByEmail(email)
@@ -51,7 +50,7 @@ public class LimitExpenseRegistry {
                     limitExpense.getDateRegistryLimit()
             );
         }catch(Exception e){
-            throw new UserNotFoundException("Error, intenta más tarde");
+            throw new UserNotFoundException("El usuario tiene un registro activo");
         }
     }
 }

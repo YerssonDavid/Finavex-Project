@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -19,9 +20,13 @@ import java.util.List;
 @ToString(exclude="password")
 @Table(name= "users", schema = "users")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(name="name", nullable = false, length = 100)
@@ -57,6 +62,7 @@ public class User implements UserDetails {
     @Column(name="email", nullable = false, length = 150, unique = true)
     @NotBlank(groups = {Create.class, Update.class}, message = "El email es obligatorio")
     @Email(groups = {Create.class, Update.class}, message = "Email inválido")
+    @EqualsAndHashCode.Include
     private String email;
 
     @PrePersist
@@ -73,12 +79,38 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        //Basic Role -> User
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public String getUsername() {
         return this.email;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     //Guarda el registro en la tabla MoneyNow con una relación uno a uno

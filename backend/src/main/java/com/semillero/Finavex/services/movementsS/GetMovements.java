@@ -8,7 +8,6 @@ import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import com.semillero.Finavex.repository.movementsR.SaveR;
 import com.semillero.Finavex.services.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

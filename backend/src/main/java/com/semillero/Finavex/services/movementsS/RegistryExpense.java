@@ -11,7 +11,6 @@ import com.semillero.Finavex.repository.UserR;
 import com.semillero.Finavex.repository.movementsR.ExpenseR;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
